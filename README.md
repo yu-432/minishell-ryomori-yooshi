@@ -11,6 +11,9 @@ https://nafuka.hatenablog.com/entry/2021/03/29/194200
 1. https://qiita.com/risagon/items/0cd3592b08ee058ffb80
 2. https://qiita.com/yukiya1006/items/4a491df3595662d8f781
 
+###コミットメッセージ記法'a'禁止令
+https://qiita.com/shun198/items/72511bd95e13cf0be88c
+
 ##pipeについて
 https://www.coins.tsukuba.ac.jp/~syspro/2023/2023-06-14/index.html
 
