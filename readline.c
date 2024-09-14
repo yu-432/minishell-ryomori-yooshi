@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:29:30 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/14 16:47:03 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/14 20:41:38 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	main(void)
 {
 	char	*line;
 
+	rl_outstream = stderr;
 	while (1)
 	{
 		line = readline("test> ");
