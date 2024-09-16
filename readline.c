@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:29:30 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/14 20:41:38 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:32:20 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ int	main(void)
 	while (1)
 	{
 		line = readline("test> ");
-		if (line == NULL || strlen(line) == 0)
+		if (line == NULL)
 		{
-			free(line);
+			printf("Rreadline error\n");
 			break ;
 		}
 		printf("input = %s\n", line);
-		if (line)
+		if (*line != '\0')
 			add_history(line);
 		free(line);
 	}
