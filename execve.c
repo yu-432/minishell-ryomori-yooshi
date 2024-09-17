@@ -16,7 +16,6 @@
 //親プロセスで有効なパスをaccess関数で検索しておいて存在すればforkして子プロセスでexecveする
 //子プロセスが終了次第親プロセスでfreeする
 // access関数を用いることでファイルの確認をすることが可能だが、する必要性が特にないため書いていない
-
 // cc execve.c libft/ft_split.c libft/ft_memcpy.c libft/ft_strjoin.c libft/ft_strlen.c -lreadline -lhistory
 
 // unset PATH
@@ -64,13 +63,13 @@ int	interpret(char *line, char **argv)
 	pid_t		pid;
 	int			waitstat;
 
+	absolute_path = find_command(line);
 	pid = fork();
 	if (pid < 0)
 	{
 		printf("fork error\n");
 		exit(1);
 	}
-	absolute_path = find_command(line);
 	if (pid == 0)
 	{
 		printf("child active\n");
