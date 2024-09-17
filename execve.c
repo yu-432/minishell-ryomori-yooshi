@@ -18,6 +18,21 @@
 
 // cc execve.c libft/ft_split.c libft/ft_memcpy.c libft/ft_strjoin.c libft/ft_strlen.c -lreadline -lhistory
 
+unset PATH
+
+1. t_item (structure - linked list)
+name
+value
+*next
+
+2. t_map (structure)
+{
+t_item *item
+extern char **environ
+}
+
+extern sig_atomic g_signal;
+
 int interpret(char *line, char **argv)
 {
 	extern char **environ;
