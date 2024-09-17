@@ -5,7 +5,6 @@
 #include <sys/wait.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-
 #include "libft/libft.h"
 
 //execve関数(関数へのフルパス、起動する関数への引数(オプション)、環境変数へのポインタ)
@@ -14,62 +13,80 @@
 //execve関数が正常に動作した場合このプロセスは参照先のコマンドのプロセスに完全に置き換わるため、
 // どこでmallocした文字列をfreeするかが問題
 // 	->構造体かなにかにアドレスを保持しておく？
+//親プロセスで有効なパスをaccess関数で検索しておいて存在すればforkして子プロセスでexecveする
+//子プロセスが終了次第親プロセスでfreeする
 // access関数を用いることでファイルの確認をすることが可能だが、する必要性が特にないため書いていない
 
 // cc execve.c libft/ft_split.c libft/ft_memcpy.c libft/ft_strjoin.c libft/ft_strlen.c -lreadline -lhistory
 
-unset PATH
+// unset PATH
 
-1. t_item (structure - linked list)
-name
-value
-*next
+// 1. t_item (structure - linked list)
+// name
+// value
+// *next
 
-2. t_map (structure)
+// 2. t_map (structure)
+// {
+// t_item *item
+// extern char **environ
+// }
+
+// extern sig_atomic g_signal;
+
+char	*find_command(char *line)
 {
-t_item *item
-extern char **environ
+	int		i;
+	char	**path;
+	char	*slash;
+	char	*joined;
+
+	path = ft_split(getenv("PATH"), ':');
+	i = 0;
+	while (path[i])
+	{
+		slash = ft_strjoin("/", line);
+		joined = ft_strjoin(path[i], slash);
+		free(slash);
+		if (!access(joined, F_OK))
+			return (free(path), joined);
+		free(joined);
+		i++;
+	}
+	free(path);
+	return (NULL);
 }
 
-extern sig_atomic g_signal;
-
-int interpret(char *line, char **argv)
+int	interpret(char *line, char **argv)
 {
-	extern char **environ;
-	char **path;
-	char *joined;
-	char *adsl;
-	pid_t pid;
-	int waitstat;
+	extern char	**environ;
+	char		*absolute_path;
+	pid_t		pid;
+	int			waitstat;
 
 	pid = fork();
 	if (pid < 0)
 	{
 		printf("fork error\n");
-		exit(EXIT_FAILURE);
+		exit(1);
 	}
+	absolute_path = find_command(line);
 	if (pid == 0)
 	{
-		path = ft_split(getenv("PATH"), ':');
 		printf("child active\n");
-		for(int i = 0; path[i] != NULL; i++)
-		{
-			adsl = ft_strjoin("/", line);
-			joined = ft_strjoin(path[i], adsl);
-			free(adsl);
-			execve(joined, argv, environ);
-			printf("invalid path\n");
-			free(joined);
-		}
-		printf("command not found\n");
-		exit(EXIT_SUCCESS);
+		if (absolute_path)
+			execve(absolute_path, argv, environ);
+		else
+			printf("Command not found\n");
+		exit(0);
 	}
 	if (pid > 0)
 	{
 		wait(&waitstat);
-		return(printf("wait status = %d\n", waitstat), 0);
+		free(absolute_path);
+		return (printf("wait status = %d\n", waitstat), 0);
 	}
-	return(0);
+	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)
