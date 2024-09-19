@@ -106,6 +106,7 @@ int	main(int argc, char **argv, char **envp)
 			printf("token = %s\n", token->token);
 			token = token->next;
 		}
+		printf("-------------------------------------------------\n");
 	}
 	printf("exit\n");
 }
