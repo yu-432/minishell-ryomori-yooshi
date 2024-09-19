@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:29:30 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/16 16:32:20 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/18 18:02:28 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 int	main(void)
 {
 	char	*line;
+	t_token *token;
 
 	rl_outstream = stderr;
 	while (1)

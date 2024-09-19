@@ -1,11 +1,5 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "libft/libft.h"
+
+#include "test.h"
 
 //execve関数(関数へのフルパス、起動する関数への引数(オプション)、環境変数へのポインタ)
 //第一引数にはフルパスを渡す必要がある(今試した所)のでどこかでPATHに対してコマンドを付け加えた
@@ -91,6 +85,7 @@ int	interpret(char *line, char **argv)
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
+	t_token *token;
 
 	rl_outstream = stderr;
 	while (1)
@@ -101,10 +96,16 @@ int	main(int argc, char **argv, char **envp)
 			printf("Rreadline error\n");
 			break ;
 		}
-		interpret(line, argv);
+		token = tokenize(line);
+		// interpret(line, argv);
 		if (*line != '\0')
 			add_history(line);
 		free(line);
+		while(token->next)
+		{
+			printf("token = %s\n", token->token);
+			token = token->next;
+		}
 	}
 	printf("exit\n");
 }
