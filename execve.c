@@ -96,17 +96,30 @@ int	main(int argc, char **argv, char **envp)
 			printf("Rreadline error\n");
 			break ;
 		}
+
+		if (ft_strlen(line) == 0)//テスト用SIGINTが入力された場合の処理を仮定
+		{
+			free(line);
+			break ;
+		}
 		token = tokenize(line);
-		// interpret(line, argv);
 		if (*line != '\0')
 			add_history(line);
 		free(line);
 		while(token->next)
 		{
-			printf("token = %s\n", token->token);
-			token = token->next;
+			t_token *temp;
+			printf("token freed[%s]\n", token->token);
+			if (token->next)
+				temp = token->next;
+				free(token->token);
+			free(token);
+			token = temp;
 		}
+		free(token->token);
+		free(token);
 		printf("-------------------------------------------------\n");
 	}
+	rl_clear_history();
 	printf("exit\n");
 }
