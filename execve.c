@@ -86,6 +86,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
 	t_token *token;
+	
 
 	rl_outstream = stderr;
 	while (1)
@@ -102,10 +103,11 @@ int	main(int argc, char **argv, char **envp)
 			free(line);
 			break ;
 		}
-		token = tokenize(line);
-		if (*line != '\0')
-			add_history(line);
-		free(line);
+		token = tokenize(line);//トークン化Lexer
+		
+		// if (*line != '\0')
+		// 	add_history(line);
+		// free(line);
 		while(token->next)
 		{
 			t_token *temp;

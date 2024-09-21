@@ -6,14 +6,13 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:08:58 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/19 17:50:48 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:32:20 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test.h"
 
 // cc execve.c tokenizer.c libft.a test.h -lreadline -lhistory
-
 
 t_token	*new_token(char *word, t_token_kind kind)
 {
@@ -30,7 +29,6 @@ t_token	*new_token(char *word, t_token_kind kind)
 
 void add_token(t_token *list, t_token *new)
 {
-
 	if (!list)
 		return ;
 	while (list->next)
@@ -109,28 +107,45 @@ t_token *word_token(char **line , t_token *head)
 {
 	int i;
 	char *word;
-	char quote;
-	int quote_count;
 	t_token *new;
 
 	i = 0;
-	quote_count = 0;
-	quote = '\0';
-	while ((*line)[i] && (quote || !is_metacharacter((*line)[i])))
+	while ((*line)[i] && !is_metacharacter((*line)[i]))
 	{
-		if (quote == (*line)[i] && is_metacharacter((*line)[i + 1]))
+		if ((*line)[i] == '\'')
 		{
 			i++;
-			break ;
+			while ((*line)[i] != '\'')
+			{
+				if ((*line)[i] == '\0')
+				{
+					printf("unclosed quote error\n");
+					exit(1);
+				}
+				i++;
+			}
+			i++;
 		}
-		if (is_quote((*line)[i]) && quote == '\0')
-			quote = (*line)[i];
-		else if (quote == (*line)[i])
-			quote = '\0';
-		i++;
+		else if ((*line)[i] == '\"')
+		{
+			i++;
+			while ((*line)[i] != '\"')
+			{
+				if ((*line)[i] == '\0')
+				{
+					printf("unclosed quote error\n");
+					exit(1);
+				}
+				i++;
+			}
+			i++;
+		}
+		else
+			i++;
 	}
-		// printf("word token %s\n", *line);
+	printf("i = %d\n", i);
 	word = ft_substr(*line, 0, i);
+	printf("word = %s\n", word);
 	if (!word)
 		return (NULL);
 	*line += i;
@@ -152,21 +167,21 @@ t_token *metacharacter_token(char **line, t_token *head)
 	if (!redirection)
 		return (NULL);
 	*line += i;
-	new = new_token(redirection, TOKEN_REDIRECT);
+	new = new_token(redirection, TOKEN_META);
 	add_token(head, new);
 	return (new);//sample
 }
 
 t_token *tokenize(char *line)
 {
-	t_token head;
+	t_token	head;
 
 	ft_memset(&head, 0, sizeof(t_token));
 	while (*line)
 	{
 		if (is_space(*line))
 			line++;
-		else if(is_metacharacter(*line))
+		else if (is_metacharacter(*line))
 			metacharacter_token(&line, &head);
 		else if (is_operator(line))
 			op_token(&line, &head);
@@ -175,10 +190,12 @@ t_token *tokenize(char *line)
 		else
 		{
 			printf("error\n");
-			break;
+			break ;
 		}
 	}
 	add_token(&head, new_token(NULL, TOKEN_EOF));//いる？
 	return (head.next);
 }
-
+// parser 
+// simple command
+// connection commad-> pipe
