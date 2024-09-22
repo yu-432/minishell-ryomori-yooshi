@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:10:17 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/20 21:41:28 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/22 12:43:04 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,18 @@
 
 
 typedef struct s_token	t_token;
+typedef struct s_node	t_node;
 
 typedef enum {
 	TOKEN_WORD,//文字列
 	TOKEN_OPE,//operator
-	TOKEN_META,
-	TOKEN_EOF,
+	TOKEN_META,//メタ文字
+	TOKEN_EOF, //終端
 }	t_token_kind;
+
+typedef enum {
+	NODE_SIMPLE_CMD, //単純なコマンド
+}	t_node_kind;
 
 struct	s_token	{
 	char 			*token;
@@ -39,16 +44,18 @@ struct	s_token	{
 	t_token			*next;
 }	;
 
-struct s_cmd_tree {
-	char *cmd;
-	struct s_cmd_tree *first;
-	struct s_cmd_tree *second;
-};
+struct s_node {
+	t_token			*args;
+	t_node_kind		kind;
+	t_node			*next;
+}	;
 
 int	main(int argc, char **argv, char **envp);
 int	interpret(char *line, char **argv);
 char	*find_command(char *line);
 t_token *tokenize(char *line);
+t_token	*new_token(char *word, t_token_kind kind);
+t_node	*parser(t_token *token);
 
 
 #endif

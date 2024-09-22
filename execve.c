@@ -85,8 +85,8 @@ int	interpret(char *line, char **argv)
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
-	t_token *token;
-	
+	t_token	*token;
+	t_node	*node;
 
 	rl_outstream = stderr;
 	while (1)
@@ -104,10 +104,23 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		}
 		token = tokenize(line);//トークン化Lexer
-		
-		// if (*line != '\0')
-		// 	add_history(line);
-		// free(line);
+		if (*line != '\0')
+			add_history(line);
+		free(line);
+		node = parser(token);//パーサーparser
+		if (!node)
+			printf("node is NULL\n");
+		// interpret(node);//実行器interpreter
+		for (int i = 0; node; i++)
+		{
+			for(int j = 0; node->args; j++)
+			{
+				printf("node[%d] = %s\n", i, node->args->token);
+				node->args = node->args->next;
+			}
+			node = node->next;
+			printf("test\n");
+		}
 		while(token->next)
 		{
 			t_token *temp;
