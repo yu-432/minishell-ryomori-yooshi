@@ -7,39 +7,50 @@
 
 int main ()
 {
-    pid_t   pid;
+    pid_t   pid1;
+    pid_t   pid2;
     int fds[2];
-
-    fds[0] = 100;
-    fds[1] = 200;
+    
 
     pipe(fds); 
-    pid = fork();
-    if (pid > 0)
+    pid1 = fork();
+    if (pid1 == 0)
     {
-        int status;
-
-        // printf("before wait\n");
-        waitpid(pid, &status, 0);
-        
         close(fds[0]);
         // printf("fds[0]%d,fds[1]%d\n", fds[0], fds[1]);
-        
-
-        printf("parent\n");
-        exit(0);
-    }
-    if (pid == 0)
-    {
-        printf("I am good\n");
+	
+        dup2(fds[1], STDOUT_FILENO);
         close(fds[1]);
-        // printf("fds[0]%d,fds[1]%d\n", fds[0], fds[1]);
-        exit(0);
+        		// example
+		execlp("ls", "ls", (char *) NULL);
     }
-    else
+    if(pid1 < 0)
     {
-        fprintf(stderr, "error\n");
         exit (1);
     }
+
+    pid2 = fork();//uwagakisareru;
+    if(pid2 == 0)
+    {
+        if(close(fds[1]) == -1)
+            exit(1);
+        if (dup2(fds[0], STDIN_FILENO) == -1)
+                exit(1);
+        if (close(fds[0]) == -1)
+            exit(1);
+            // example
+        execlp("wc", "wc", "-l", (char *) NULL);
+    }
+    if(pid2 < 0)
+    {
+        exit (1);
+    }
+
+
+    close(fds[0]);
+    close(fds[1]);
+    waitpid(pid1, NULL, 0);
+    waitpid(pid2, NULL, 0);
+    return(0);
 
 }
