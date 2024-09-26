@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:08:58 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/20 18:32:20 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/26 11:11:32 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void add_token(t_token *list, t_token *new)
 
 bool is_operator(char *line)
 {
-	char *op[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "|&", "\n", NULL};
+	char *op[] = {"&&", "&", ";;", ";", "(", ")", "||", "|&", "|", "\n", NULL};
 	int i;
 
 	i = 0;
@@ -79,12 +79,18 @@ bool is_quote(char c)
 
 int op_len(char *line)
 {
+	char *op[] = {"&&", "&", ";;", ";", "(", ")", "||", "|&", "|", "\n", NULL};
 	int i;
+	int len;
 
-	i = 0;
-	while (line[i] && !is_space(line[i]))
+	while (op[i])
+	{
+		len = ft_strlen(op[i]);
+		if (!ft_strncmp(line, op[i], len))
+			return (len);
 		i++;
-	return (i);
+	}
+	return (0);
 }
 
 t_token *op_token(char **line, t_token *head)
@@ -181,16 +187,16 @@ t_token *tokenize(char *line)
 	{
 		if (is_space(*line))
 			line++;
-		else if (is_metacharacter(*line))
-			metacharacter_token(&line, &head);
+		// else if (is_metacharacter(*line))
+		// 	metacharacter_token(&line, &head);
 		else if (is_operator(line))
 			op_token(&line, &head);
 		else if (is_word(*line))
 			word_token(&line, &head);
 		else
 		{
-			printf("error\n");
-			break ;
+			printf("error line++\n");
+			line++;
 		}
 	}
 	add_token(&head, new_token(NULL, TOKEN_EOF));//いる？

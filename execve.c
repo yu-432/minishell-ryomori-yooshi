@@ -110,7 +110,6 @@ int	main(int argc, char **argv, char **envp)
 		node = parser(token);//パーサーparser
 		if (!node)
 			printf("node is NULL\n");
-		// interpret(node);//実行器interpreter
 		for (int i = 0; node; i++)
 		{
 			for(int j = 0; node->args; j++)
@@ -118,16 +117,15 @@ int	main(int argc, char **argv, char **envp)
 				printf("node[%d] = %s\n", i, node->args->token);
 				node->args = node->args->next;
 			}
+			printf("----------Change kinds----------\n");
 			node = node->next;
-			printf("test\n");
 		}
 		while(token->next)
 		{
 			t_token *temp;
-			printf("token freed[%s]\n", token->token);
 			if (token->next)
 				temp = token->next;
-				free(token->token);
+			free(token->token);
 			free(token);
 			token = temp;
 		}
