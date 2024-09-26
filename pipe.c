@@ -15,15 +15,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-
-
-int	main()
+typedef struct
 {
-	char	*command[] = {"/bin/ls", "/bin/grep", "/usr/bin/wc"};
-	char	*args[][3] = {{command[0], NULL}, {command[1], ".c", NULL}, {command[2], "-l", NULL}};
-	char	*envp[] = {NULL};
+	char	*path;
+	char	*args[3];
+	char	**envp;
+} parse_element;
 
-	int	num_com = 3;
+
+
+void	command_pipe(parse_element element[], int num_com)
+{
 	int	fds[2];
 	int	keep_fd = 0;
 	pid_t	pid;
@@ -64,7 +66,7 @@ int	main()
 				close(fds[1]);
 			}
 
-			execve(command[i], args[i], envp);
+			execve(element[i].path, element[i].args, element[i].envp);
 			exit(0);
 		}
 		else if (pid > 0)
@@ -87,6 +89,14 @@ int	main()
 		wait(NULL);
 		i++;
 	}
-	return(0);
-	
+}
+
+int main()
+{
+	parse_element element[] = {{"/bin/ls",{"/bin/ls, NULL"}, NULL}, {"/bin/grep", {"/bin/grep", ".c"}, NULL}, {"/usr/bin/wc", {"/usr/bin/wc", "-l"}, NULL}};
+
+	int i = 3; //commandの数
+
+	command_pipe(element, i);
+	return (0);
 }
