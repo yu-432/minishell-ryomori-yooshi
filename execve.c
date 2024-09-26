@@ -112,12 +112,12 @@ int	main(int argc, char **argv, char **envp)
 			printf("node is NULL\n");
 		for (int i = 0; node; i++)
 		{
+			printf("----------%s----------\n", node->kind == NODE_CMD ? "NODE_CMD" : "NODE_OPE");
 			for(int j = 0; node->args; j++)
 			{
 				printf("node[%d] = %s\n", i, node->args->token);
 				node->args = node->args->next;
 			}
-			printf("----------Change kinds----------\n");
 			node = node->next;
 		}
 		while(token->next)

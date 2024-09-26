@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:08:58 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/26 11:11:32 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/26 15:01:19 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,46 +112,25 @@ t_token *op_token(char **line, t_token *head)
 t_token *word_token(char **line , t_token *head)
 {
 	int i;
+	char quote;
 	char *word;
 	t_token *new;
 
 	i = 0;
 	while ((*line)[i] && !is_metacharacter((*line)[i]))
 	{
-		if ((*line)[i] == '\'')
+		if((*line)[i] == '\'' || (*line)[i] == '\"')
 		{
+			quote = (*line)[i];
 			i++;
-			while ((*line)[i] != '\'')
-			{
-				if ((*line)[i] == '\0')
-				{
-					printf("unclosed quote error\n");
-					exit(1);
-				}
+			while ((*line)[i] && (*line)[i] != quote)
 				i++;
-			}
-			i++;
-		}
-		else if ((*line)[i] == '\"')
-		{
-			i++;
-			while ((*line)[i] != '\"')
-			{
-				if ((*line)[i] == '\0')
-				{
-					printf("unclosed quote error\n");
-					exit(1);
-				}
-				i++;
-			}
 			i++;
 		}
 		else
 			i++;
 	}
-	printf("i = %d\n", i);
 	word = ft_substr(*line, 0, i);
-	printf("word = %s\n", word);
 	if (!word)
 		return (NULL);
 	*line += i;

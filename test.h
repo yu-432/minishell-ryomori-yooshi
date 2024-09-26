@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:10:17 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/25 17:07:46 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/26 17:40:31 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef enum {
 }	t_token_kind;
 
 typedef enum {
+	NODE_EOF,
 	NODE_CMD,
 	NODE_OPE
 }	t_node_kind;

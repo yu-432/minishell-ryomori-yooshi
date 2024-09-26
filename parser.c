@@ -6,12 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 16:22:32 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/25 17:21:24 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/26 21:36:12 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//cc execve.c tokenizer.c parser.c libft.a test.h -lreadline -lhistory
-
+//usr/bin/cc execve.c tokenizer.c parser.c libft.a test.h -lreadline -lhistory && ./a.out; exit;
 #include "test.h"
 
 t_token *token_dup(t_token *token)
@@ -66,6 +65,31 @@ t_node	*find_last_node(t_node *node)
 	return (node);
 }
 
+void	syntax_check(t_node *node)
+{
+	t_node_kind	prev;
+
+	prev = NODE_OPE;//先頭にOPEが来る場合を弾くため。
+	while (node)
+	{
+		if (prev == node->kind)
+		{
+			printf("syntax error argc[0] == OPE\n");
+			break;
+		}
+		if (node->kind == NODE_OPE)
+		{
+			if (!(prev == NODE_CMD && node->next->kind == NODE_CMD))
+			{
+				printf("syntax error !(CMD OPE CMD)\n");
+				break;
+			}
+		}
+		prev = node->kind;
+		node = node->next;
+	}
+}
+
 t_node	*parser(t_token *token)
 {
 	t_node	*node;
@@ -97,5 +121,8 @@ t_node	*parser(t_token *token)
 		}
 		token = token->next;
 	}
+	append_node(last_node, NODE_EOF);
+	syntax_check(node);//tokenize->word_token内でエラーが存在する場合でも一度はparserに入る
+		//この関数で文法エラーを検出する ' " |
 	return (node);
 }

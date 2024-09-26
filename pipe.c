@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryomori <ryomori@student.42.fr>            #+#  +:+       +#+        */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-09-24 03:43:12 by ryomori           #+#    #+#             */
-/*   Updated: 2024-09-24 03:43:12 by ryomori          ###   ########.fr       */
+/*   Created: 2024/09/24 03:43:12 by ryomori           #+#    #+#             */
+/*   Updated: 2024/09/26 21:38:57 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ void	command_pipe(parse_element element[], int num_com)
 		{
 			if (keep_fd != 0)
 				close(keep_fd);
-			
 			if (i < num_com - 1)
 			{
 				close (fds[1]);
