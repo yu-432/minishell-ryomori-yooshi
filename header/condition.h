@@ -5,15 +5,15 @@
 
 typedef struct s_item
 {
-	char *name;
+	char * key;
 	char *value;
-	t_list	*next;
-}	t_list;
+	struct s_item	*next;
+}	t_item;
 
 typedef struct s_condition
 {
 	// char	*shell_name;
-	t_list	*environ;
+	t_item	*environ;
 	char	*cwd;
 	int		exit_status;
 }	t_condition;
