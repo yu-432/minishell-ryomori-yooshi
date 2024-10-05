@@ -8,11 +8,11 @@ int main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	init_shell(&condition, argv, envp);
-	// t_item *test;//check environ t_item
-	// test = condition.environ;
-	// while(test) 
-	// {
-	// 	printf("%s = %s\n", test->key, test->value);
-	// 	test = test->next;
-	// }
+	t_item *test;//check environ t_item
+	test = condition.environ;
+	while(test) 
+	{
+		printf("%s = %s\n", test->key, test->value);
+		test = test->next;
+	}
 }

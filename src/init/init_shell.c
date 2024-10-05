@@ -29,8 +29,9 @@ int init_condition(t_condition *condition, char **argv, char **envp)
 	}
 	errno = 0;
 	init_environ(condition, envp);
-	//exportは自作関数のため、独自に作成したenvironに保存する
+	//TODO:exportは自作関数のため、独自に作成したenvironに保存する
 	//unsetも同様
+	condition->cwd = getenv("PWD");
 	(void)argv;
 	return(0);
 }

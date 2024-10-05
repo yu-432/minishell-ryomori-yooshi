@@ -1,7 +1,7 @@
 NAME		= minishell
 
 SRCS		= 	src/main.c \
-				src/environ/env_util.c \
+				src/environ/env_util.c src/environ/add_env.c \
 				src/init/init_shell.c
 
 OBJS		= ${SRCS:.c=.o}
