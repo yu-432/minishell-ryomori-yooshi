@@ -1,11 +1,9 @@
 #ifndef CONDITION_H
 # define CONDITION_H
 
-#include <errno.h>
-
 typedef struct s_item
 {
-	char * key;
+	char *key;
 	char *value;
 	struct s_item	*next;
 }	t_item;

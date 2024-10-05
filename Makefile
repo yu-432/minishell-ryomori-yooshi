@@ -1,7 +1,7 @@
 NAME		= minishell
 
 SRCS		= 	src/main.c \
-				src/environ/add_env.c \
+				src/environ/env_util.c \
 				src/init/init_shell.c
 
 OBJS		= ${SRCS:.c=.o}
@@ -9,7 +9,7 @@ OBJS		= ${SRCS:.c=.o}
 LIBFT		= libft/libft.a
 
 CC			= cc
-# CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror
 
 AR			= ar rcs
 

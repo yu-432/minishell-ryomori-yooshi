@@ -1,8 +1,6 @@
 #ifndef TOKEN_H
 # define TOKEN_H
 
-#include "stdbool.h"
-
 typedef enum e_token_kind
 {
 	TOKEN_UNKNOWN,
