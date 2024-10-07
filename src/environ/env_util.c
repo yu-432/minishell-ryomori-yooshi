@@ -3,18 +3,6 @@
 #include "../../header/environ.h"
 #include "../../libft/libft.h"
 
-int find_equal_index(char *env_str)
-{
-	int end;
-
-	end = 0;
-	while(env_str[end] != '=' || env_str[end])
-		end++;
-	if (env_str[end] != '=')
-		return (-1);
-	return (end);
-}
-
 t_item *serch_dup_key(t_condition *condition, char *key)
 {
 	t_item *cur;
@@ -45,13 +33,13 @@ t_item *set_tail(t_item *head)
 
 t_item *touch_t_item()
 {
-	t_item *head;
+	t_item *item;
 
-	head = ft_calloc(1, sizeof(t_item));
-	if (!head)
+	item = ft_calloc(1, sizeof(t_item));
+	if (!item)
 	{
-		printf("touch environ malloc error\n");
+		printf("TODO:touch environ malloc error\n");
 		return (NULL);
 	}
-	return (head);
+	return (item);
 }
