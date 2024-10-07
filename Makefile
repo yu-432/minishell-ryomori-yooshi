@@ -17,7 +17,7 @@ all:		${NAME}
 
 ${NAME}:	${OBJS}
 			${MAKE} -C libft
-			${CC} ${OBJS} $(LIBFT) -o ${NAME}
+			${CC} -lreadline ${OBJS} $(LIBFT) -o ${NAME}
 
 %.o: %.c
 		$(CC) $(CFLAGS) -c $< -o $@
