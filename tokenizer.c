@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 15:08:58 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/26 15:01:19 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/27 15:15:12 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,6 @@ bool is_space(char c)
 bool is_word(char c)
 {
 	return (c && !is_metacharacter(c));
-}
-
-bool is_quote(char c)
-{
-	return (c && (c == '\'' || c == '\"'));
 }
 
 int op_len(char *line)

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 13:10:17 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/26 17:40:31 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/29 11:57:17 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 # include "libft/libft.h"
+
+# define SINGLE_QUOTE '\''
+# define DOUBLE_QUOTE '\"'
 
 
 typedef struct s_token	t_token;
@@ -58,6 +61,7 @@ char	*find_command(char *line);
 t_token *tokenize(char *line);
 t_token	*new_token(char *word, t_token_kind kind);
 t_node	*parser(t_token *token);
+int expantion_token(t_token *token);
 
 
 #endif

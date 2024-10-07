@@ -6,11 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 16:22:32 by yooshima          #+#    #+#             */
-/*   Updated: 2024/09/26 21:36:12 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/09/28 17:18:43 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//usr/bin/cc execve.c tokenizer.c parser.c libft.a test.h -lreadline -lhistory && ./a.out; exit;
+//usr/bin/clang execve.c tokenizer.c parser.c expantion.c libft.a test.h -lreadline -lhistory && ./a.out; exit;
 #include "test.h"
 
 t_token *token_dup(t_token *token)
@@ -65,6 +65,38 @@ t_node	*find_last_node(t_node *node)
 	return (node);
 }
 
+int	quote_check(t_token *token)
+{
+	int	quote;
+	int	quote_count;
+	int i;
+
+	while(token)
+	{
+		i = 0;
+		while(token->token[i])
+		{
+			if (token->token[i] == '\'' || token->token[i] == '\"')
+			{
+				quote = token->token[i];
+				i++;
+				while(token->token[i] && token->token[i] != quote)
+					i++;
+				if(token->token[i] != quote)
+				{
+					printf("quote error\n");
+					return (1);
+				}
+				i++;
+			}
+			else
+				i++;
+		}
+		token = token->next;
+	}
+	return (0);
+}
+
 void	syntax_check(t_node *node)
 {
 	t_node_kind	prev;
@@ -74,7 +106,7 @@ void	syntax_check(t_node *node)
 	{
 		if (prev == node->kind)
 		{
-			printf("syntax error argc[0] == OPE\n");
+			printf("syntax error argv[0] == OPE\n");
 			break;
 		}
 		if (node->kind == NODE_OPE)
@@ -85,6 +117,8 @@ void	syntax_check(t_node *node)
 				break;
 			}
 		}
+		if (quote_check(node->args))
+			break;
 		prev = node->kind;
 		node = node->next;
 	}
