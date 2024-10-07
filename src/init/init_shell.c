@@ -5,17 +5,21 @@
 #include "../../libft/libft.h"
 
 
-int init_environ(t_condition *condition, char **envp)
+bool init_environ(t_condition *condition, char **envp)
 {
 	int	i;
 
 	i = 0;
 	while(envp[i])
 	{
-		add_env(condition, envp[i]);//condition->environにtouch t itemにinitしたnullが含まれている、が、問題ないので一旦放置
+		if(!add_env(condition, envp[i]))
+		{
+			//TODO:エラー処理
+			return(false);
+		}
 		i++;
 	}
-	return(0);
+	return(true);
 }
 
 int init_condition(t_condition *condition, char **argv, char **envp)
@@ -31,7 +35,7 @@ int init_condition(t_condition *condition, char **argv, char **envp)
 	init_environ(condition, envp);
 	//TODO:exportは自作関数のため、独自に作成したenvironに保存する
 	//unsetも同様
-	condition->cwd = getenv("PWD");
+	// condition->cwd = getenv("PWD");//必要？
 	(void)argv;
 	return(0);
 }

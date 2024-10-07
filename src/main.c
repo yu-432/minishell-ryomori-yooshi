@@ -8,7 +8,7 @@
 #define PROMPT "minishell$ "
 #define PATH_NAME_SIZE 1024
 
-void read_loop(t_condition *condition)
+char *read_command_line()
 {
 	char *line;
 
@@ -18,51 +18,48 @@ void read_loop(t_condition *condition)
 		printf("TODO:readline error\n");
 		exit(1);
 	}
-	printf("readline = %s\n", line);//check用
-	//TODO:tokenizer->parser
 	if (*line == '\0')
 		add_history(line);
-	free(line);
+	return (line);
+}
+
+void update_condition(t_condition *condition)
+{
+	errno = 0;
+	//g-signal?
 	(void)condition;
 }
 
-// void update_condition(t_condition *condition)
-// {
-// 	char *cwd_path;
-// 	cwd_path = malloc(sizeof(char) * PATH_NAME_SIZE);
-// 	if (!cwd_path)
-// 	{
-// 		printf("TODO:cwd_path malloc failed\n");
-// 		exit(1);
-// 	}
-// 	printf("%s\n", condition->cwd);
-// 	condition->cwd = getcwd(cwd_path, PATH_NAME_SIZE);
-// 	//signal?
-// }
-
 void shell_loop(t_condition *condition)
 {
+	char *line;
+
 	while (true)
 	{
-		// update_condition(condition);いるかわからない
-		read_loop(condition);
+		update_condition(condition);//いるかわからない
+		line = read_command_line();
+		//TODO:tokenizer->parser
+		if (*line == '\0')//仮にlineがNULLだった場合終了させる
+			break ;
+		free(line);
 	}
-	(void)condition;
 	return ;
 }
 
 int main(int argc, char **argv, char **envp)
 {
 	t_condition condition;
+	t_item *temp;
 
-	(void)argc;
 	init_shell(&condition, argv, envp);
-	// t_item *test;//check environ t_item
-	// test = condition.environ;
-	// while(test) 
-	// {
-	// 	printf("%s = %s\n", test->key, test->value);
-	// 	test = test->next;
-	// }
 	shell_loop(&condition);
+	while(condition.environ)//仮
+	{
+		temp = condition.environ->next;
+		free(condition.environ->key);
+		free(condition.environ->value);
+		free(condition.environ);
+		condition.environ = temp;
+	}
+	(void)argc;
 }
