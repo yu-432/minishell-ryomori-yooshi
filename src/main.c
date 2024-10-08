@@ -1,5 +1,6 @@
 #include "../header/condition.h"
 #include "../header/standard.h"
+#include "../header/lexer.h"
 #include "../header/init.h"
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -18,7 +19,7 @@ char *read_command_line()
 		printf("TODO:readline error\n");
 		exit(1);
 	}
-	if (*line == '\0')
+	if (*line != '\0')
 		add_history(line);
 	return (line);
 }
@@ -38,6 +39,7 @@ void shell_loop(t_condition *condition)
 	{
 		update_condition(condition);//いるかわからない
 		line = read_command_line();
+		lexer(condition, line);
 		//TODO:tokenizer->parser
 		if (*line == '\0')//仮にlineがNULLだった場合終了させる
 			break ;

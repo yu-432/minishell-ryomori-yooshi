@@ -1,6 +1,9 @@
 #ifndef TOKEN_H
 # define TOKEN_H
 
+#include "standard.h"
+#include "token.h"
+
 typedef enum e_token_kind
 {
 	TOKEN_UNKNOWN,
@@ -19,10 +22,10 @@ typedef enum e_token_kind
 
 typedef struct s_token
 {
-	t_token_kind	kind;
 	char			*token;
-	// bool			has_dollar;
-	t_token			*next;
+	t_token_kind	kind;
+	bool			has_dollar;
+	struct s_token	*next;
 }	t_token;
 
 # endif

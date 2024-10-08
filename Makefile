@@ -2,7 +2,8 @@ NAME		= minishell
 
 SRCS		= 	src/main.c \
 				src/environ/env_util.c src/environ/add_env.c \
-				src/init/init_shell.c
+				src/init/init_shell.c \
+				src/lexer/lexer.c src/lexer/tokenize_util.c src/lexer/tokenizer.c
 
 OBJS		= ${SRCS:.c=.o}
 
