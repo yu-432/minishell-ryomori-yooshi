@@ -23,7 +23,7 @@ t_token *find_tail_token(t_token *token)
 	return (temp);
 }
 
-t_token *new_token(char *token, t_token_kind kind, bool has_dollar)
+t_token *new_token(char *token, t_token_kind kind)
 {
 	t_token *new;
 
@@ -35,6 +35,5 @@ t_token *new_token(char *token, t_token_kind kind, bool has_dollar)
 	}
 	new->token = token;
 	new->kind = kind;
-	new->has_dollar = has_dollar;
 	return (new);
 }

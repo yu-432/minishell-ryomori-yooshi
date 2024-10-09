@@ -3,15 +3,15 @@
 
 bool lexer(t_condition *condition, char *line)
 {
-	t_token *tokened;
+	t_token *tokenized;
 
-	tokened = tokenizer(line);
-	while(tokened)
+	tokenized = tokenizer(line);
+	// expand_dollar(tokenized);
+	while(tokenized)
 	{
-		printf("token:%s ", tokened->token);
-		printf("kind:%d ", tokened->kind);
-		printf("has_dollar:%d\n", tokened->has_dollar);
-		tokened = tokened->next;
+		printf("token:%s ", tokenized->token);
+		printf("kind:%d ", tokenized->kind);
+		tokenized = tokenized->next;
 		printf("----------next----------\n");
 	}
 	(void)condition;

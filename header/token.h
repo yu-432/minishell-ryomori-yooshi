@@ -24,7 +24,6 @@ typedef struct s_token
 {
 	char			*token;
 	t_token_kind	kind;
-	bool			has_dollar;
 	struct s_token	*next;
 }	t_token;
 

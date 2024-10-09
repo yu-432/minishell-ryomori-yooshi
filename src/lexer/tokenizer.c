@@ -4,23 +4,23 @@
 
 int get_token_kind(char *token)
 {
-	if (ft_strncmp(token, ">>", 2) == 0)
+	if (ft_strncmp(token, ">>\0", 3) == 0)
 		return (TOKEN_REDIRECT_APPEND);
-	else if (ft_strncmp(token, ">", 1) == 0)
+	else if (ft_strncmp(token, ">\0", 2) == 0)
 		return(TOKEN_REDIRECT_IN);
-	else if (ft_strncmp(token, "<<", 2) == 0)
+	else if (ft_strncmp(token, "<<\0", 3) == 0)
 		return (TOKEN_REDIRECT_HEREDOC);
-	else if (ft_strncmp(token, "<", 1) == 0)
+	else if (ft_strncmp(token, "<\0", 2) == 0)
 		return (TOKEN_REDIRECT_OUT);
-	else if (ft_strncmp(token, "&&", 2) == 0)
+	else if (ft_strncmp(token, "&&\0", 3) == 0)
 		return (TOKEN_AND);
-	else if (ft_strncmp(token, "||", 2) == 0)
+	else if (ft_strncmp(token, "||\0", 3) == 0)
 		return (TOKEN_OR);
-	else if (ft_strncmp(token, "(", 1) == 0)
+	else if (ft_strncmp(token, "(\0", 2) == 0)
 		return (TOKEN_LPARENT);
-	else if (ft_strncmp(token, ")", 1) == 0)
+	else if (ft_strncmp(token, ")\0", 2) == 0)
 		return (TOKEN_RPARENT);
-	else if (ft_strncmp(token, "|", 1) == 0)
+	else if (ft_strncmp(token, "|\0", 2) == 0)
 		return (TOKEN_PIPE);
 	else
 		return (TOKEN_UNKNOWN);
@@ -49,13 +49,15 @@ void meta_token(char **line, t_token *tail_token)
 		exit(1);
 	}
 	ft_memset(token, (*line)[0], count);
-	printf("token = %s, token_kind = %d \n", token, get_token_kind(token));
-	tail_token->next = new_token(token, get_token_kind(token), false);
-	printf("%s\n", tail_token->next->token);
+	tail_token->next = new_token(token, get_token_kind(token));
 	if (!tail_token->next)
 	{
 		printf("TODO:meta_token new_token failed\n");
 		exit(1);
+	}
+	if (tail_token->next->kind == TOKEN_UNKNOWN)
+	{
+		printf("TODO:UNKNOWN TOKEN must be handled\n");
 	}
 	*line += count;
 }
@@ -70,18 +72,13 @@ void word_token(char **line, t_token *tail_token)
 	quote = 0;
 	while ((*line)[count] && !is_metacharacter((*line)[count]))
 	{
-		// printf("%c %i\n", (*line)[count], is_metacharacter((*line)[count]));
 		if ((*line)[count] == '\'' || (*line)[count] =='\"')
 		{
 			quote = (*line)[count];
 			count++;
 			while ((*line)[count] && (*line)[count] != quote)
-			{
-				printf("%c  %c\n", (*line)[count], quote);
 				count++;
-			}
 			count++;
-			continue;
 		}
 		else
 			count++;
@@ -92,7 +89,7 @@ void word_token(char **line, t_token *tail_token)
 		printf("TODO:word_token substr failed\n");
 		exit(1);
 	}
-	tail_token->next = new_token(token, TOKEN_WORD, false);
+	tail_token->next = new_token(token, TOKEN_WORD);
 	if (!tail_token->next)
 	{
 		printf("TODO:word_token new_token failed\n");
@@ -111,15 +108,9 @@ t_token *tokenizer(char *line)
 		if (is_space(*line))
 			line++;
 		else if (is_metacharacter(*line))
-		{
-			printf("meta in line = %s\n", line);
 			meta_token(&line, find_tail_token(&head));
-		}
 		else
-		{
-			printf("word in line = %s\n", line);
 			word_token(&line, find_tail_token(&head));
-		}
 	}
 	return(head.next);
 }
