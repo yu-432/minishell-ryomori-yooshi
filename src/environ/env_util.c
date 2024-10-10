@@ -3,10 +3,12 @@
 #include "../../header/environ.h"
 #include "../../libft/libft.h"
 
-t_item *serch_dup_key(t_condition *condition, char *key)
+t_item *search_dup_key(t_condition *condition, char *key)
 {
 	t_item *cur;
 
+	if (!condition->environ)
+		return (NULL);
 	cur = condition->environ;
 	while (cur)
 	{

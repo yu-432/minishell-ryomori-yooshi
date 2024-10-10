@@ -12,7 +12,8 @@ bool init_environ(t_condition *condition, char **envp)
 	i = 0;
 	while(envp[i])
 	{
-		if(!add_env(condition, envp[i]))
+		// printf("%s\n", envp[i]);
+		if(!add_eenv(condition, envp[i]))
 		{
 			//TODO:エラー処理
 			return(false);
@@ -25,12 +26,6 @@ bool init_environ(t_condition *condition, char **envp)
 int init_condition(t_condition *condition, char **argv, char **envp)
 {
 	ft_memset(condition, 0, sizeof(t_condition));
-	condition->environ = touch_t_item();
-	if (!condition->environ)
-	{
-		printf("TODO:touch_environ_list failed\n");
-		return (1);
-	}
 	errno = 0;
 	init_environ(condition, envp);
 	//TODO:exportは自作関数のため、独自に作成したenvironに保存する

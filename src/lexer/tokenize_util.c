@@ -13,6 +13,11 @@ bool is_metacharacter(char c)
 			|| c == '<' || c =='>' || c == ' ' || c == '\t' || c == '\n');
 }
 
+bool is_quote(char c)
+{
+	return (c == '\'' || c == '\"');
+}
+
 t_token *find_tail_token(t_token *token)
 {
 	t_token *temp;

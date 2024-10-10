@@ -17,6 +17,11 @@ bool insert_env(t_condition *condition, char *key, char *value)
 	}
 	new->key = key;
 	new->value = value;
+	if (condition->environ == NULL)
+	{
+		condition->environ = new;
+		return (true);
+	}
 	tail = set_tail(condition->environ);
 	tail->next = new;
 	return (true);
@@ -39,7 +44,7 @@ bool add_env(t_condition *condition, char *env_str)
 	value = ft_strdup(equal + 1);
 	if (!key || !value)
 		return (false);//TODO-----------------------
-	dup_key = serch_dup_key(condition, key);
+	dup_key = search_dup_key(condition, key);
 	if (dup_key)
 	{
 		free(dup_key->value);

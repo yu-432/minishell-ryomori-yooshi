@@ -54,6 +54,12 @@ int main(int argc, char **argv, char **envp)
 	t_item *temp;
 
 	init_shell(&condition, argv, envp);
+	// temp = condition.environ;
+	// while (temp)
+	// {
+	// 	printf("main:key:%s value:%s\n", temp->key, temp->value);
+	// 	temp = temp->next;
+	// }
 	shell_loop(&condition);
 	while(condition.environ)//仮
 	{
