@@ -1,6 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
+/*   test.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ryomori <ryomori@student.42.fr>            #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024-10-11 03:59:08 by ryomori           #+#    #+#             */
+/*   Updated: 2024-10-11 03:59:08 by ryomori          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ryomori <ryomori@student.42.fr>            #+#  +:+       +#+        */
@@ -190,111 +203,114 @@ void	command_pipe(t_node *node, int num_com)
 	int	keep_fd = 0;
 	pid_t	pid;
 	int	i = 0;
+	t_node *tmp = node;
 
-	while (i < num_com)
+	while (i < num_com && tmp)
 	{
-		if (i < num_com - 1 && pipe(fds) == -1)
+		if (tmp->kind == NODE_CMD)
 		{
-			exit(1);
-		}
-
-		pid = fork();
-		if (pid == -1)
-		{
-			exit(1);
-		}
-
-		if (pid == 0)
-		{
-			if (keep_fd != 0)
+			if (i < num_com - 1 && pipe(fds) == -1)
 			{
-				if (dup2(keep_fd, STDIN_FILENO) == -1)
+				exit(1);
+			}
+
+			pid = fork();
+			if (pid == -1)
+			{
+				exit(1);
+			}
+
+			if (pid == 0)
+			{
+				if (keep_fd != 0)
 				{
-					exit(1);
+					if (dup2(keep_fd, STDIN_FILENO) == -1)
+					{
+						exit(1);
+					}
+					close(keep_fd);
 				}
-				close(keep_fd);
-			}
 
-			if (i < num_com - 1)
-			{
-				close(fds[0]);
-				if (dup2(fds[1], STDOUT_FILENO) == -1)
+				if (i < num_com - 1)
 				{
-					exit(1);
+					close(fds[0]);
+					if (dup2(fds[1], STDOUT_FILENO) == -1)
+					{
+						exit(1);
+					}
+					close(fds[1]);
 				}
-				close(fds[1]);
-			}
-// -----------------------------------------
+	// -----------------------------------------
 
 
-			int list_elem_num = 0;
-			// "/bin/ls", 
-			t_node	*tmp_node;
-			t_token *tmp;
+				t_node	*tmp_node;
+				t_token *tmp_token;
 
-			tmp_node = node;
-			
-			tmp = tmp_node->args;
+				tmp_node = node;
+				tmp_token = tmp_node->args;
+				int list_elem_num = 0;
+				
 
-			while (tmp_node->args != NULL)
-			{
-				list_elem_num++;
-				tmp_node->args = tmp_node->args->next;
-			}
+				while (tmp_token != NULL)
+				{
+					list_elem_num++;
+					tmp_token = tmp_token->next;
+				}
 
-			printf("list_elem_num: %d\n", list_elem_num);
+				printf("list_elem_num: %d\n", list_elem_num);
 
-			char **args = (char**)malloc(sizeof(char*) * (list_elem_num + 1));
+				char **args = (char**)malloc(sizeof(char*) * (list_elem_num + 1));
 
-			tmp_node->args = tmp;
-			int x = 0;
-			while(tmp_node->args != NULL)
-			{
-				int num = 0;
-
-				printf("node->args->token: %s\n", tmp_node->args->token);
-				num = strlen(tmp_node->args->token);
-				char *str = (char*)malloc(sizeof(char) * (num + 1));
-				strcpy(str, tmp_node->args->token);
-				args[x] = str;
+				tmp_token = tmp->args;
+				int x = 0;
+				while(tmp_token != NULL)
+				{
+					args[x] = strdup(tmp_token->token);
+					tmp_token = tmp_token->next;
+					x++;
+				}
 				x++;
-				tmp_node->args = tmp_node->args->next;
+				args[x] = NULL;
+
+
+				// args の中身
+				int a = 0;
+				while(args[a])
+				{
+					printf("args[%d]: %s\n", a, args[a]);
+					a++;
+				}
+
+				execve(find_command(args[0]), args, NULL);
+				
+				// TODO: free args elements
+				// while (/* condition */)
+				// {
+				// 	/* code */
+				// }
+				// // TODO: free args
+				free(args);
+
+				exit(0);
 			}
-			x++;
-			args[x] = NULL;
-
-
-			// args の中身
-			int a = 0;
-			while(args[a])
+			else if (pid > 0)
 			{
-				printf("args[%d]: %s\n", a, args[a]);
-				a++;
+				if (keep_fd != 0)
+					close(keep_fd);
+				if (i < num_com - 1)
+				{
+					close (fds[1]);
+					keep_fd = fds[0];
+				}
 			}
-
-			execve(find_command(args[0]), args, NULL);
-			
-			// TODO: free args elements
-			// while (/* condition */)
-			// {
-			// 	/* code */
-			// }
-			// // TODO: free args
-			free(args);
-
-			exit(0);
+			i++;
 		}
-		else if (pid > 0)
+		tmp = tmp->next;
+		while (tmp && tmp->kind == NODE_OPE)
 		{
-			if (keep_fd != 0)
-				close(keep_fd);
-			if (i < num_com - 1)
-			{
-				close (fds[1]);
-				keep_fd = fds[0];
-			}
+			tmp = tmp->next;
 		}
-		i++;
+		
 	}
 
 	i = 0;
@@ -338,21 +354,60 @@ int main()
 
 	// int i = 3; //commandの数
 
-	    // t_tokenのリストを作成
+	    //node1   t_tokenのリストを作成
     t_token *token1 = create_token("ls", TOKEN_WORD);
-    t_token *token2 = create_token("-l", TOKEN_WORD);
-    t_token *token3 = create_token("-a", TOKEN_WORD);
-	t_token *token4 = create_token("/home", TOKEN_WORD);
+    // t_token *token2 = create_token("-l", TOKEN_WORD);
+    // t_token *token3 = create_token("-a", TOKEN_WORD);
+	// t_token *token4 = create_token("/home", TOKEN_WORD);
 
-    // token1 -> token2 -> token3 をリンク
-    token1->next = token2;
-    token2->next = token3;
-	token3->next = token4;
+		//node2
+	t_token *token5 = create_token("|", TOKEN_OPE);
+
+		//node3
+	t_token	*token6 = create_token("grep", TOKEN_WORD);
+	t_token	*token7 = create_token(".c", TOKEN_WORD);
+
+		//node4
+	t_token	*token8 = create_token("|", TOKEN_OPE);
+
+		//node5
+	t_token *token9 = create_token("wc", TOKEN_WORD);
+	t_token *token10 = create_token("-l", TOKEN_WORD);
+
+    // node1のリンクーーー＞token1 -> token2 -> token3 をリンク
+    // token1->next = token2;
+    // token2->next = token3;
+	// token3->next = token4;
+
+	// node2のリンク(パイプ)
+	
+	// node3のリンク
+	token6->next = token7;
+
+	// node4のリンク(パイプ)
+	
+	// noke5のリンク
+	token9->next = token10;
+
+
 
     // t_nodeのリストを作成
-    t_node *node1 = create_node(token1, TOKEN_WORD);
+    t_node *node1 = create_node(token1, NODE_CMD);
+	t_node *node2 = create_node(token5, NODE_OPE);
+	t_node *node3 = create_node(token6, NODE_CMD);
+	t_node *node4 = create_node(token8, NODE_OPE);
+	t_node *node5 = create_node(token9, NODE_CMD);
+
+
+	node1->next = node2;
+	node2->next = node3;
+	node3->next = node4;
+	node4->next = node5;
+
 
 	command_pipe(node1, 3);
+
+
 	return (0);
 }
 
