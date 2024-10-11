@@ -8,6 +8,12 @@
 # define SINGLE_QUOTE '\''
 # define DOUBLE_QUOTE '\"'
 
+typedef struct s_lexer
+{
+	char *env_key;
+	char quote;
+}	t_lexer;
+
 bool is_space(char c);
 bool is_metacharacter(char c);
 bool is_quote(char c);

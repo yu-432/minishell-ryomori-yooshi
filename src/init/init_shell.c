@@ -13,7 +13,7 @@ bool init_environ(t_condition *condition, char **envp)
 	while(envp[i])
 	{
 		// printf("%s\n", envp[i]);
-		if(!add_eenv(condition, envp[i]))
+		if(!add_env(condition, envp[i]))
 		{
 			//TODO:エラー処理
 			return(false);

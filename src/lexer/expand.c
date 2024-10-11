@@ -34,6 +34,8 @@ void replace_env(t_token *token, char *env_value, int env_len)
 		{
 			new = ft_strjoin(new, env_value);
 			i += env_len + 1;
+			new = ft_strjoin(new, token->token + i);
+			break ;
 		}
 		else
 			append_char(&new, token->token[i++]);
@@ -47,6 +49,8 @@ char *find_env(t_condition *condition, char *env_key)
 	t_item *temp;
 
 	temp = condition->environ;
+	if (ft_strncmp(env_key, "?\0", 2) == 0)
+		return (ft_itoa(condition->exit_status));
 	while(temp)
 	{
 		if(ft_strncmp(temp->key, env_key, ft_strlen(temp->key) + 1) == 0)
@@ -57,38 +61,73 @@ char *find_env(t_condition *condition, char *env_key)
 ;	return (NULL);
 }
 
+void update_quote_status(t_lexer *info, char c)
+{
+	if (info->quote == 0)
+		info->quote = c;
+	else if (info->quote == c)
+		info->quote = 0;
+}
+
 void expand_dollar(t_condition *condition, t_token *tokenized)
 {
 	int i;
 	int env_len;
-	char *env_key;
-	char quote;
+	t_lexer info;
 
 	i = 0;
 	env_len = 0;
-	quote = 0;
+	ft_memset(&info, 0, sizeof(t_lexer));
 	while (tokenized->kind == TOKEN_WORD && tokenized->token[i])
 	{
-		if (is_quote(tokenized->token[i]) && quote == 0)
-			quote = tokenized->token[i];
-		else if (tokenized->token[i] == quote)
-			quote = 0;
-		if (tokenized->token[i] == '$' && quote != SINGLE_QUOTE)
+		if (is_quote(tokenized->token[i]))
+			update_quote_status(&info, tokenized->token[i]);
+		if (tokenized->token[i] == '$' && info.quote != SINGLE_QUOTE)
 		{
 			i++;
 			while (ft_isalnum(tokenized->token[i + env_len]))
 				env_len++;
-			env_key = ft_substr(tokenized->token, i , env_len);
-			if(!env_key)
+			info.env_key = ft_substr(tokenized->token, i , env_len);
+			if(!info.env_key)
 			{
 				printf("TODO:expand_dollar malloc failed\n");
 				exit(1);
 			}
-			replace_env(tokenized, find_env(condition, env_key), ft_strlen(env_key));
+			if (ft_strlen(info.env_key) == 0)
+			{
+				i++;//$の後ろに何もない場合
+				continue;
+			}
+			replace_env(tokenized, find_env(condition, info.env_key), ft_strlen(info.env_key));
 		}
 		else
 			i++;
 	}
+}
+
+void expand_quote(t_token *tokenized)
+{
+	int i;
+	char quote;
+	char *new;
+
+	i = 0;
+	quote = 0;
+	new = ft_strdup("");
+	while (tokenized->kind ==TOKEN_WORD && tokenized->token[i])
+	{
+		if (is_quote(tokenized->token[i]) && quote == 0)
+			quote = tokenized->token[i++];
+		else if(tokenized->token[i] == quote)
+		{
+			quote = 0;
+			i++;
+		}
+		else
+			append_char(&new, tokenized->token[i++]);
+	}
+	free(tokenized->token);
+	tokenized->token = new;
 }
 
 void expand_token(t_condition *condition, t_token *tokenized)
@@ -103,7 +142,7 @@ void expand_token(t_condition *condition, t_token *tokenized)
 		if (tokenized->kind == TOKEN_WORD)
 		{
 			expand_dollar(condition, tokenized);
-			// expand_quote(tokenized);
+			expand_quote(tokenized);
 		}
 		tokenized = tokenized->next;
 	}
