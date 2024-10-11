@@ -193,6 +193,51 @@ char	*find_command(char *line)
 	free(path);
 	return (NULL);
 }
+//==============================================================================
+//dicision_args
+
+char **decision_args(t_node *node)
+{
+	t_node	*tmp_node;
+	t_token *tmp_token;
+
+	tmp_node = node;	
+	tmp_token = tmp_node->args;
+	int list_elem_num = 0;
+				
+	while (tmp_token != NULL)
+	{
+		list_elem_num++;
+		tmp_token = tmp_token->next;
+	}
+	printf("list_elem_num: %d\n", list_elem_num);
+
+	char **args = (char**)malloc(sizeof(char*) * (list_elem_num + 1));
+
+	tmp_token = tmp_node->args;
+	int x = 0;
+	while(tmp_token != NULL)
+	{
+		args[x] = strdup(tmp_token->token);
+		tmp_token = tmp_token->next;
+		x++;
+	}
+	x++;
+	args[x] = NULL;
+
+	// args の中身
+	int a = 0;
+	while(args[a])
+	{
+		printf("args[%d]: %s\n", a, args[a]);
+		a++;
+	}
+
+	return(&*args);
+
+
+}
+
 
 //==============================================================================
 //pipe
@@ -204,6 +249,7 @@ void	command_pipe(t_node *node, int num_com)
 	pid_t	pid;
 	int	i = 0;
 	t_node *tmp = node;
+	char **args;
 
 	while (i < num_com && tmp)
 	{
@@ -241,46 +287,7 @@ void	command_pipe(t_node *node, int num_com)
 					close(fds[1]);
 				}
 	// -----------------------------------------
-
-
-				t_node	*tmp_node;
-				t_token *tmp_token;
-
-				tmp_node = node;
-				tmp_token = tmp_node->args;
-				int list_elem_num = 0;
-				
-
-				while (tmp_token != NULL)
-				{
-					list_elem_num++;
-					tmp_token = tmp_token->next;
-				}
-
-				printf("list_elem_num: %d\n", list_elem_num);
-
-				char **args = (char**)malloc(sizeof(char*) * (list_elem_num + 1));
-
-				tmp_token = tmp->args;
-				int x = 0;
-				while(tmp_token != NULL)
-				{
-					args[x] = strdup(tmp_token->token);
-					tmp_token = tmp_token->next;
-					x++;
-				}
-				x++;
-				args[x] = NULL;
-
-
-				// args の中身
-				int a = 0;
-				while(args[a])
-				{
-					printf("args[%d]: %s\n", a, args[a]);
-					a++;
-				}
-
+				args = decision_args(tmp);
 				execve(find_command(args[0]), args, NULL);
 				
 				// TODO: free args elements

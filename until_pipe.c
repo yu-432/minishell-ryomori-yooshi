@@ -68,25 +68,67 @@ struct s_node {
 //until
 
 //(ex)>ls | grep .c | wc -l のcommandの部分をcountする。この場合だと３。
-int	com_count_pipe(t_node *node)
+// int	com_count_pipe(t_node *node)
+// {
+// 	t_node *com_count_node;
+// 	int	count;
+
+// 	com_count_node = node;
+// 	count = 0;
+
+// 	while(com_count_node)
+// 	{
+// 		if (com_count_node->kind == NODE_CMD)
+// 			count++;
+// 		com_count_node = com_count_node->next;
+// 	}
+// 	return (count);
+// }
+
+
+
+//================================================================================================
+//decision_args
+
+char **decision_args(t_node *node)
 {
-	t_node *com_count_node;
-	int	count;
+	t_node	*tmp_node;
+	t_token *tmp_token;
 
-	com_count_node = node;
-	count = 0;
-
-	while(com_count_node)
+	tmp_node = node;	
+	tmp_token = tmp_node->args;
+	int list_elem_num = 0;
+				
+	while (tmp_token != NULL)
 	{
-		if (com_count_node->kind == NODE_CMD)
-			count++;
-		com_count_node = com_count_node->next;
+		list_elem_num++;
+		tmp_token = tmp_token->next;
 	}
-	return (count);
+	printf("list_elem_num: %d\n", list_elem_num);
+
+	char **args = (char**)malloc(sizeof(char*) * (list_elem_num + 1));
+
+	tmp_token = tmp_node->args;
+	int x = 0;
+	while(tmp_token != NULL)
+	{
+		args[x] = strdup(tmp_token->token);
+		tmp_token = tmp_token->next;
+		x++;
+	}
+	x++;
+	args[x] = NULL;
+
+	// args の中身
+	int a = 0;
+	while(args[a])
+	{
+		printf("args[%d]: %s\n", a, args[a]);
+		a++;
+	}
+
+	return(&*args);
 }
-
-
-
 
 
 
@@ -122,64 +164,96 @@ t_node *create_node(t_token *args, t_node_kind kind) {
 }
 
 
-
 int main()
 {
 	// parse_element element[] = {{"/bin/ls",{"/bin/ls", "NULL"}, NULL}, {"/bin/grep", {"/bin/grep", ".c", "NULL"}, NULL}, {"/usr/bin/wc", {"/usr/bin/wc", "-l", "NULL"}, NULL}};
 
 	// int i = 3; //commandの数
 
-	    //node1   t_tokenのリストを作成
+	    // t_tokenのリストを作成
     t_token *token1 = create_token("ls", TOKEN_WORD);
-    // t_token *token2 = create_token("-l", TOKEN_WORD);
-    // t_token *token3 = create_token("-a", TOKEN_WORD);
-	// t_token *token4 = create_token("/home", TOKEN_WORD);
+    t_token *token2 = create_token("-l", TOKEN_WORD);
+    t_token *token3 = create_token("-a", TOKEN_WORD);
+	t_token *token4 = create_token("/home", TOKEN_WORD);
 
-		//node2
-	t_token *token5 = create_token("|", TOKEN_OPE);
-
-		//node3
-	t_token	*token6 = create_token("grep", TOKEN_WORD);
-	t_token	*token7 = create_token(".c", TOKEN_WORD);
-
-		//node4
-	t_token	*token8 = create_token("|", TOKEN_OPE);
-
-		//node5
-	t_token *token9 = create_token("wc", TOKEN_WORD);
-	t_token *token10 = create_token("-l", TOKEN_WORD);
-
-    // node1のリンクーーー＞token1 -> token2 -> token3 をリンク
-    // token1->next = token2;
-    // token2->next = token3;
-	// token3->next = token4;
-
-	// node2のリンク(パイプ)
-	
-	// node3のリンク
-	token6->next = token7;
-
-	// node4のリンク(パイプ)
-	
-	// noke5のリンク
-	token9->next = token10;
-
-
+    // token1 -> token2 -> token3 をリンク
+    token1->next = token2;
+    token2->next = token3;
+	token3->next = token4;
 
     // t_nodeのリストを作成
-    t_node *node1 = create_node(token1, NODE_CMD);
-	t_node *node2 = create_node(token5, NODE_OPE);
-	t_node *node3 = create_node(token6, NODE_CMD);
-	t_node *node4 = create_node(token8, NODE_OPE);
-	t_node *node5 = create_node(token9, NODE_CMD);
+    t_node *node1 = create_node(token1, TOKEN_WORD);
 
 
-	node1->next = node2;
-	node2->next = node3;
-	node3->next = node4;
-	node4->next = node5;
+	 char **result = decision_args(node1);
 
-	printf("command数 : %d\n", com_count_pipe(node1));
-	// command_pipe(node1, 3);
+    // 取得した結果を解放
+	printf("node1 args:\n");
+    for (int i = 0; result[i] != NULL; i++) {
+        printf("token [%d]: %s\n", i, result[i]);
+    }
+
 	return (0);
 }
+
+
+// int main()
+// {
+// 	// parse_element element[] = {{"/bin/ls",{"/bin/ls", "NULL"}, NULL}, {"/bin/grep", {"/bin/grep", ".c", "NULL"}, NULL}, {"/usr/bin/wc", {"/usr/bin/wc", "-l", "NULL"}, NULL}};
+
+// 	// int i = 3; //commandの数
+
+// 	    //node1   t_tokenのリストを作成
+//     t_token *token1 = create_token("ls", TOKEN_WORD);
+//     // t_token *token2 = create_token("-l", TOKEN_WORD);
+//     // t_token *token3 = create_token("-a", TOKEN_WORD);
+// 	// t_token *token4 = create_token("/home", TOKEN_WORD);
+
+// 		//node2
+// 	t_token *token5 = create_token("|", TOKEN_OPE);
+
+// 		//node3
+// 	t_token	*token6 = create_token("grep", TOKEN_WORD);
+// 	t_token	*token7 = create_token(".c", TOKEN_WORD);
+
+// 		//node4
+// 	t_token	*token8 = create_token("|", TOKEN_OPE);
+
+// 		//node5
+// 	t_token *token9 = create_token("wc", TOKEN_WORD);
+// 	t_token *token10 = create_token("-l", TOKEN_WORD);
+
+//     // node1のリンクーーー＞token1 -> token2 -> token3 をリンク
+//     // token1->next = token2;
+//     // token2->next = token3;
+// 	// token3->next = token4;
+
+// 	// node2のリンク(パイプ)
+	
+// 	// node3のリンク
+// 	token6->next = token7;
+
+// 	// node4のリンク(パイプ)
+	
+// 	// noke5のリンク
+// 	token9->next = token10;
+
+
+
+//     // t_nodeのリストを作成
+//     t_node *node1 = create_node(token1, NODE_CMD);
+// 	t_node *node2 = create_node(token5, NODE_OPE);
+// 	t_node *node3 = create_node(token6, NODE_CMD);
+// 	t_node *node4 = create_node(token8, NODE_OPE);
+// 	t_node *node5 = create_node(token9, NODE_CMD);
+
+
+// 	node1->next = node2;
+// 	node2->next = node3;
+// 	node3->next = node4;
+// 	node4->next = node5;
+
+// 	printf("command数 : %d\n", com_count_pipe(node1));
+// 	// command_pipe(node1, 3);
+// 	return (0);
+// }
