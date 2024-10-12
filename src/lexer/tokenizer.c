@@ -36,7 +36,7 @@ int count_same_char(char *line, char c)
 	return (count);
 }
 
-void meta_token(char **line, t_token *tail_token)
+void take_meta_token(char **line, t_token *tail_token)
 {
 	char *token;
 	int count;
@@ -45,14 +45,14 @@ void meta_token(char **line, t_token *tail_token)
 	token = ft_calloc(count + 1, sizeof(char));
 	if (!token)
 	{
-		printf("TODO:meta_token malloc failed\n");
+		printf("TODO:take_meta_token malloc failed\n");
 		exit(1);
 	}
 	ft_memset(token, (*line)[0], count);
 	tail_token->next = new_token(token, get_token_kind(token));
 	if (!tail_token->next)
 	{
-		printf("TODO:meta_token new_token failed\n");
+		printf("TODO:take_meta_token new_token failed\n");
 		exit(1);
 	}
 	if (tail_token->next->kind == TOKEN_UNKNOWN)
@@ -62,37 +62,43 @@ void meta_token(char **line, t_token *tail_token)
 	*line += count;
 }
 
-void word_token(char **line, t_token *tail_token)
+int count_word_len(char *line)
 {
-	char *token;
-	char quote;
 	int count;
+	char quote;
 
 	count = 0;
-	quote = 0;
-	while ((*line)[count] && !is_metacharacter((*line)[count]))
+	while (line[count] && !is_metacharacter(line[count]))
 	{
-		if ((*line)[count] == '\'' || (*line)[count] =='\"')
+		if (is_quote(line[count]))
 		{
-			quote = (*line)[count];
-			count++;
-			while ((*line)[count] && (*line)[count] != quote)
+			quote = line[count++];
+			while (line[count] && line[count - 1] != quote)
 				count++;
-			count++;
 		}
 		else
 			count++;
 	}
+	return (count);
+}
+
+void take_word_token(char **line, t_token *tail_token)
+{
+	char *token;
+	int count;
+
+	count = 0;
+	count = count_word_len(*line);
 	token = ft_substr(*line, 0, count);
 	if (!token)
 	{
-		printf("TODO:word_token substr failed\n");
+		printf("TODO:take_word_token substr failed\n");
 		exit(1);
 	}
 	tail_token->next = new_token(token, TOKEN_WORD);
 	if (!tail_token->next)
 	{
-		printf("TODO:word_token new_token failed\n");
+		printf("TODO:take_word_token new_token failed\n");
 		exit(1);
 	}
 	*line += count;
@@ -108,9 +114,9 @@ t_token *tokenizer(char *line)
 		if (is_space(*line))
 			line++;
 		else if (is_metacharacter(*line))
-			meta_token(&line, find_tail_token(&head));
+			take_meta_token(&line, find_tail_token(&head));
 		else
-			word_token(&line, find_tail_token(&head));
+			take_word_token(&line, find_tail_token(&head));
 	}
 	return(head.next);
 }

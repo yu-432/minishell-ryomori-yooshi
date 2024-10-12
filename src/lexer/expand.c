@@ -69,6 +69,28 @@ void update_quote_status(t_lexer *info, char c)
 		info->quote = 0;
 }
 
+void get_env_name(t_condition *condition, t_token *tokenized, t_lexer *info, int *i)
+{
+	int env_len;
+
+	env_len = 0;
+	(*i)++;
+	while (ft_isalnum(tokenized->token[*i + env_len]))
+		env_len++;
+	info->env_key = ft_substr(tokenized->token, *i, env_len);
+	if (!info->env_key)
+	{
+		printf("TODO:get_env_name malloc failed\n");
+		exit(1);
+	}
+	if (info->env_key[0] == '\0')
+	{
+		(*i)++;
+		return ;
+	}
+	replace_env(tokenized, find_env(condition, info->env_key), ft_strlen(info->env_key));
+}
+
 void expand_dollar(t_condition *condition, t_token *tokenized)
 {
 	int i;
@@ -83,23 +105,7 @@ void expand_dollar(t_condition *condition, t_token *tokenized)
 		if (is_quote(tokenized->token[i]))
 			update_quote_status(&info, tokenized->token[i]);
 		if (tokenized->token[i] == '$' && info.quote != SINGLE_QUOTE)
-		{
-			i++;
-			while (ft_isalnum(tokenized->token[i + env_len]))
-				env_len++;
-			info.env_key = ft_substr(tokenized->token, i , env_len);
-			if(!info.env_key)
-			{
-				printf("TODO:expand_dollar malloc failed\n");
-				exit(1);
-			}
-			if (ft_strlen(info.env_key) == 0)
-			{
-				i++;//$の後ろに何もない場合
-				continue;
-			}
-			replace_env(tokenized, find_env(condition, info.env_key), ft_strlen(info.env_key));
-		}
+			get_env_name(condition, tokenized, &info, &i);
 		else
 			i++;
 	}
