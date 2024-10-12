@@ -73,8 +73,9 @@ int count_word_len(char *line)
 		if (is_quote(line[count]))
 		{
 			quote = line[count++];
-			while (line[count] && line[count - 1] != quote)
+			while (line[count] && line[count] != quote)
 				count++;
+			count++;
 		}
 		else
 			count++;
