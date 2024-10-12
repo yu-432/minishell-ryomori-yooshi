@@ -6,11 +6,11 @@ bool lexer(t_condition *condition, char *line)
 	t_token *tokenized;
 
 	tokenized = tokenizer(line);
-	// expand_dollar(tokenized);
+	expand_token(condition, tokenized);
 	while(tokenized)
 	{
 		printf("token:%s ", tokenized->token);
-		printf("kind:%d ", tokenized->kind);
+		printf("kind:%d\n", tokenized->kind);
 		tokenized = tokenized->next;
 		printf("----------next----------\n");
 	}
