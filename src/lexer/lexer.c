@@ -7,7 +7,6 @@ bool lexer(t_condition *condition, char *line)
 
 	tokenized = tokenizer(line);
 	expand_token(condition, tokenized);
-	find_command_path(condition, tokenized);
 
 	while(tokenized)
 	{
