@@ -2,6 +2,7 @@
 #include "../header/standard.h"
 #include "../header/lexer.h"
 #include "../header/init.h"
+#include "../libft/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <unistd.h>
@@ -39,10 +40,12 @@ void shell_loop(t_condition *condition)
 	{
 		update_condition(condition);//いるかわからない
 		line = read_command_line();
+		if (*line == '\0')
+			continue;
 		lexer(condition, line);
 		//TODO:tokenizer->parser
-		if (*line == '\0')//仮にlineがNULLだった場合終了させる
-			break ;
+		// if (*line == '\0')//仮にlineがNULLだった場合終了させる
+		// 	break ;
 		free(line);
 	}
 	return ;
