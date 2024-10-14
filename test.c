@@ -238,6 +238,49 @@ char **decision_args(t_node *node)
 
 }
 
+//===============================================================================================
+//fd_input
+
+void	fd_input_child(int keep_fd)
+{
+	if (keep_fd != 0)
+	{
+		if (dup2(keep_fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2");
+			exit(1);
+		}
+		close(keep_fd);
+	}
+}
+
+//===============================================================================================
+//fd_output
+
+void	fd_output_child(int *fds)
+{
+	close(fds[0]);
+	if (dup2(fds[1], STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		exit(1);
+	}
+	close(fds[1]);
+}
+
+//===============================================================================================
+//keep_fd_update
+
+void	keep_fd_update(int *fds, int *keep_fd, int i, int num_com)
+{
+	if (*keep_fd != 0)
+		close(*keep_fd);
+	if (i < num_com - 1)
+	{
+		close(fds[1]);
+		*keep_fd = fds[0];
+	}
+}
 
 //==============================================================================
 //pipe
@@ -256,70 +299,28 @@ void	command_pipe(t_node *node, int num_com)
 		if (tmp->kind == NODE_CMD)
 		{
 			if (i < num_com - 1 && pipe(fds) == -1)
-			{
 				exit(1);
-			}
-
 			pid = fork();
 			if (pid == -1)
-			{
 				exit(1);
-			}
-
 			if (pid == 0)
 			{
-				if (keep_fd != 0)
-				{
-					if (dup2(keep_fd, STDIN_FILENO) == -1)
-					{
-						exit(1);
-					}
-					close(keep_fd);
-				}
-
+				fd_input_child(keep_fd);
 				if (i < num_com - 1)
-				{
-					close(fds[0]);
-					if (dup2(fds[1], STDOUT_FILENO) == -1)
-					{
-						exit(1);
-					}
-					close(fds[1]);
-				}
-	// -----------------------------------------
+					fd_output_child(fds);
 				args = decision_args(tmp);
 				execve(find_command(args[0]), args, NULL);
-				
-				// TODO: free args elements
-				// while (/* condition */)
-				// {
-				// 	/* code */
-				// }
-				// // TODO: free args
 				free(args);
-
 				exit(0);
 			}
 			else if (pid > 0)
-			{
-				if (keep_fd != 0)
-					close(keep_fd);
-				if (i < num_com - 1)
-				{
-					close (fds[1]);
-					keep_fd = fds[0];
-				}
-			}
+				keep_fd_update(fds, &keep_fd, i, num_com);
 			i++;
 		}
 		tmp = tmp->next;
 		while (tmp && tmp->kind == NODE_OPE)
-		{
 			tmp = tmp->next;
-		}
-		
 	}
-
 	i = 0;
 	while (i < num_com)
 	{
@@ -362,7 +363,7 @@ int main()
 	// int i = 3; //commandの数
 
 	    //node1   t_tokenのリストを作成
-    t_token *token1 = create_token("ls", TOKEN_WORD);
+    t_token *token1 = create_token("echo", TOKEN_WORD);
     // t_token *token2 = create_token("-l", TOKEN_WORD);
     // t_token *token3 = create_token("-a", TOKEN_WORD);
 	// t_token *token4 = create_token("/home", TOKEN_WORD);
@@ -371,15 +372,15 @@ int main()
 	t_token *token5 = create_token("|", TOKEN_OPE);
 
 		//node3
-	t_token	*token6 = create_token("grep", TOKEN_WORD);
-	t_token	*token7 = create_token(".c", TOKEN_WORD);
+	t_token	*token6 = create_token("wc", TOKEN_WORD);
+	t_token	*token7 = create_token("-l", TOKEN_WORD);
 
 		//node4
-	t_token	*token8 = create_token("|", TOKEN_OPE);
+	// t_token	*token8 = create_token("|", TOKEN_OPE);
 
 		//node5
-	t_token *token9 = create_token("wc", TOKEN_WORD);
-	t_token *token10 = create_token("-l", TOKEN_WORD);
+	// t_token *token9 = create_token("wc", TOKEN_WORD);
+	// t_token *token10 = create_token("-l", TOKEN_WORD);
 
     // node1のリンクーーー＞token1 -> token2 -> token3 をリンク
     // token1->next = token2;
@@ -394,7 +395,7 @@ int main()
 	// node4のリンク(パイプ)
 	
 	// noke5のリンク
-	token9->next = token10;
+	// token9->next = token10;
 
 
 
@@ -402,17 +403,17 @@ int main()
     t_node *node1 = create_node(token1, NODE_CMD);
 	t_node *node2 = create_node(token5, NODE_OPE);
 	t_node *node3 = create_node(token6, NODE_CMD);
-	t_node *node4 = create_node(token8, NODE_OPE);
-	t_node *node5 = create_node(token9, NODE_CMD);
+	// t_node *node4 = create_node(token8, NODE_OPE);
+	// t_node *node5 = create_node(token9, NODE_CMD);
 
 
 	node1->next = node2;
 	node2->next = node3;
-	node3->next = node4;
-	node4->next = node5;
+	// node3->next = node4;
+	// node4->next = node5;
 
 
-	command_pipe(node1, 3);
+	command_pipe(node1, 2);
 
 
 	return (0);

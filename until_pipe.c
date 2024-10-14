@@ -126,14 +126,59 @@ char **decision_args(t_node *node)
 		printf("args[%d]: %s\n", a, args[a]);
 		a++;
 	}
+	// TODO: free args elements
+	// while (/* condition */)
+	// {
+	// 	/* code */
+	// }
+	// // TODO: free args
 
 	return(&*args);
 }
 
+//===============================================================================================
+//fd_input
 
+void	fd_input_child(int keep_fd)
+{
+	if (keep_fd != 0)
+	{
+		if (dup2(keep_fd, STDIN_FILENO) == -1)
+		{
+			perror("dup2");
+			exit(1);
+		}
+		close(keep_fd);
+	}
+}
 
+//===============================================================================================
+//fd_output
 
+void	fd_output_child(int *fds)
+{
+	close(fds[0]);
+	if (dup2(fds[1], STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		exit(1);
+	}
+	close(fds[1]);
+}
 
+//===============================================================================================
+//keep_fd_update
+
+void	keep_fd_update(int *fds, int *keep_fd, int i, int num_com)
+{
+	if (*keep_fd != 0)
+		close(*keep_fd);
+	if (i < num_com - 1)
+	{
+		close(fds[1]);
+		*keep_fd = fds[0];
+	}
+}
 
 //===============================================================================================
 //main関数 + create_token + create_node
