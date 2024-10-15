@@ -4,7 +4,8 @@ SRCS		= 	src/main.c \
 				src/environ/env_util.c src/environ/add_env.c \
 				src/init/init_shell.c \
 				src/lexer/lexer.c src/lexer/tokenize_util.c src/lexer/tokenizer.c src/lexer/expand.c src/lexer/expand_dollar.c \
-				src/lexer/find_syntax_error.c
+				src/lexer/find_syntax_error.c\
+				src/print/put_error.c
 
 OBJS		= ${SRCS:.c=.o}
 

@@ -49,9 +49,7 @@ void find_syntax_error(t_condition *condition, t_token *tokenized)
 	{
 		check_token_kind(tokenized->kind);
 		check_quote_error(tokenized->token);
-
 		tokenized = tokenized->next;
 	}
-
 	(void)condition;
 }

@@ -6,4 +6,7 @@
 #include <stdbool.h>
 #include <errno.h>
 
+void put_error(char *str);
+
+
 # endif

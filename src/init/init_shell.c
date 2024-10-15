@@ -5,6 +5,22 @@
 #include "../../libft/libft.h"
 
 
+void free_environ(t_item *environ)
+{
+	t_item *temp;
+
+	if (!environ)
+		return;
+	while (environ)
+	{
+		temp = environ->next;
+		free(environ->key);
+		free(environ->value);
+		free(environ);
+		environ = temp;
+	}
+}
+
 bool init_environ(t_condition *condition, char **envp)
 {
 	int	i;
@@ -12,10 +28,9 @@ bool init_environ(t_condition *condition, char **envp)
 	i = 0;
 	while(envp[i])
 	{
-		// printf("%s\n", envp[i]);
 		if(!add_env(condition, envp[i]))
 		{
-			//TODO:エラー処理
+			free_environ(condition->environ);
 			return(false);
 		}
 		i++;
@@ -23,20 +38,22 @@ bool init_environ(t_condition *condition, char **envp)
 	return(true);
 }
 
-int init_condition(t_condition *condition, char **argv, char **envp)
+bool init_condition(t_condition *condition, char **argv, char **envp)
 {
 	ft_memset(condition, 0, sizeof(t_condition));
 	errno = 0;
-	init_environ(condition, envp);
+	if (!init_environ(condition, envp))
+		return(false);
 	//TODO:exportは自作関数のため、独自に作成したenvironに保存する
 	//unsetも同様
 	// condition->cwd = getenv("PWD");//必要？
 	(void)argv;
-	return(0);
+	return(true);
 }
 
-int	init_shell(t_condition *condition, char **argv, char **envp)
+bool	init_shell(t_condition *condition, char **argv, char **envp)
 {
-	init_condition(condition, argv, envp);
-	return(0);
+	if (!init_condition(condition, argv, envp))
+		return(false);
+	return(true);
 }

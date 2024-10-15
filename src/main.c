@@ -3,12 +3,12 @@
 #include "../header/lexer.h"
 #include "../header/init.h"
 #include "../libft/libft.h"
+#include "../header/print.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <unistd.h>
 
 #define PROMPT "minishell$ "
-#define PATH_NAME_SIZE 1024
 
 char *read_command_line()
 {
@@ -16,10 +16,7 @@ char *read_command_line()
 
 	line = readline(PROMPT);
 	if (!line)
-	{
-		printf("TODO:readline error\n");
-		exit(1);
-	}
+		return (NULL);
 	if (*line != '\0')
 		add_history(line);
 	return (line);
@@ -38,14 +35,16 @@ void shell_loop(t_condition *condition)
 
 	while (true)
 	{
-		update_condition(condition);//いるかわからない
+		update_condition(condition);
 		line = read_command_line();
 		if (*line == '\0')
+		{
+			free(line);
 			continue;
+		}
+		if(line == NULL)
+			break;//minishell_exit的な関数を作成しfreeする必要がある
 		lexer(condition, line);
-		//TODO:tokenizer->parser
-		// if (*line == '\0')//仮にlineがNULLだった場合終了させる
-		// 	break ;
 		free(line);
 	}
 	return ;
@@ -56,13 +55,11 @@ int main(int argc, char **argv, char **envp)
 	t_condition condition;
 	t_item *temp;
 
-	init_shell(&condition, argv, envp);
-	// temp = condition.environ;
-	// while (temp)
-	// {
-	// 	printf("main:key:%s value:%s\n", temp->key, temp->value);
-	// 	temp = temp->next;
-	// }
+	if (!init_shell(&condition, argv, envp))
+	{
+		put_error("initialization error");
+		exit(1);
+	}
 	shell_loop(&condition);
 	while(condition.environ)//仮
 	{
