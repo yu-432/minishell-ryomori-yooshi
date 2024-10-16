@@ -13,14 +13,14 @@ int get_token_kind(char *token)
 		return (TOKEN_REDIRECT_HEREDOC);
 	else if (ft_strncmp(token, "<\0", 2) == 0)
 		return (TOKEN_REDIRECT_OUT);
-	else if (ft_strncmp(token, "&&\0", 3) == 0)
-		return (TOKEN_AND);
-	else if (ft_strncmp(token, "||\0", 3) == 0)
-		return (TOKEN_OR);
-	else if (ft_strncmp(token, "(\0", 2) == 0)
-		return (TOKEN_LPARENT);
-	else if (ft_strncmp(token, ")\0", 2) == 0)
-		return (TOKEN_RPARENT);
+	// else if (ft_strncmp(token, "&&\0", 3) == 0)
+	// 	return (TOKEN_AND);
+	// else if (ft_strncmp(token, "||\0", 3) == 0)
+	// 	return (TOKEN_OR);
+	// else if (ft_strncmp(token, "(\0", 2) == 0)
+	// 	return (TOKEN_LPARENT);
+	// else if (ft_strncmp(token, ")\0", 2) == 0)
+	// 	return (TOKEN_RPARENT);
 	else if (ft_strncmp(token, "|\0", 2) == 0)
 		return (TOKEN_PIPE);
 	else
@@ -35,6 +35,12 @@ int count_same_char(char *line, char c)
 	while(line[count] == c)
 		count++;
 	return (count);
+}
+
+//仮置き
+void unexpected_token_error(char *token)
+{
+
 }
 
 bool take_meta_token(char **line, t_token *tail_token)
@@ -52,6 +58,7 @@ bool take_meta_token(char **line, t_token *tail_token)
 		return (put_error(strerror(errno)), false);
 	if (tail_token->next->kind == TOKEN_UNKNOWN)
 	{
+		unexpected_token_error(tail_token->token);
 		printf("TODO:UNKNOWN TOKEN must be handled\n");
 	}
 	*line += count;
@@ -110,7 +117,7 @@ t_token *tokenizer(char *line)
 		if (is_space(*line))
 			line++;
 		else if (is_metacharacter(*line))
-			meta_ret = take_meta_token(&line, find_tail_token(&head))
+			meta_ret = take_meta_token(&line, find_tail_token(&head));
 		else
 			word_ret = take_word_token(&line, find_tail_token(&head));
 		if (!meta_ret || !word_ret)

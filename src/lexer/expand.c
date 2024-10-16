@@ -38,11 +38,11 @@ void expand_quote(t_token *tokenized)
 void expand_dollar(t_condition *condition, t_token *tokenized)
 {
 	int i;
-	int env_len;
+	// int env_len;
 	t_lexer info;
 
 	i = 0;
-	env_len = 0;
+	// env_len = 0;
 	ft_memset(&info, 0, sizeof(t_lexer));
 	while (tokenized->kind == TOKEN_WORD && tokenized->token[i])
 	{
@@ -57,11 +57,11 @@ void expand_dollar(t_condition *condition, t_token *tokenized)
 
 void expand_token(t_condition *condition, t_token *tokenized)
 {
-	int i;
-	int env_len;
+	// int i;
+	// int env_len;
 
-	i = 0;
-	env_len = 0;
+	// i = 0;
+	// env_len = 0;
 	while(tokenized)
 	{
 		if (tokenized->kind == TOKEN_WORD)
