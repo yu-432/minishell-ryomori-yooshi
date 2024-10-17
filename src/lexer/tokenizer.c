@@ -37,11 +37,7 @@ int count_same_char(char *line, char c)
 	return (count);
 }
 
-//仮置き
-void unexpected_token_error(char *token)
-{
 
-}
 
 bool take_meta_token(char **line, t_token *tail_token)
 {
@@ -56,11 +52,11 @@ bool take_meta_token(char **line, t_token *tail_token)
 	tail_token->next = new_token(token, get_token_kind(token));
 	if (!tail_token->next)
 		return (put_error(strerror(errno)), false);
-	if (tail_token->next->kind == TOKEN_UNKNOWN)
-	{
-		unexpected_token_error(tail_token->token);
-		printf("TODO:UNKNOWN TOKEN must be handled\n");
-	}
+	// if (tail_token->next->kind == TOKEN_UNKNOWN)
+	// {
+	// 	unexpected_token_error(tail_token->next->token);
+	// 	return (false);
+	// }
 	*line += count;
 	return (true);
 }
@@ -122,8 +118,8 @@ t_token *tokenizer(char *line)
 			word_ret = take_word_token(&line, find_tail_token(&head));
 		if (!meta_ret || !word_ret)
 		{
-			printf("TODO:tokenizer failed\n");
-			exit(1);
+			free_tokens(head.next);
+			return (NULL);
 		}
 	}
 	return(head.next);

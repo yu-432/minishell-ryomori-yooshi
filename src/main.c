@@ -1,6 +1,7 @@
-#include "../header/condition.h"
 #include "../header/standard.h"
+#include "../header/condition.h"
 #include "../header/lexer.h"
+#include "../header/signal.h" 
 #include "../header/init.h"
 #include "../libft/libft.h"
 #include "../header/print.h"
@@ -9,6 +10,22 @@
 #include <unistd.h>
 
 #define PROMPT "minishell$ "
+sig_atomic_t g_sig = 0;
+
+
+void free_tokens(t_token *token)
+{
+	t_token *temp;
+
+	while (token)
+	{
+		temp = token->next;
+		printf("freed token = %s\n", token->token);
+		free(token->token);
+		free(token);
+		token = temp;
+	}
+}
 
 char *read_command_line()
 {
@@ -25,14 +42,21 @@ char *read_command_line()
 void update_condition(t_condition *condition)
 {
 	errno = 0;
-	//g-signal?
+	set_shell_input_sig_handler();
+	if (g_sig != 0)
+	{
+		condition->exit_status = g_sig + 128;
+		g_sig = 0;
+	}
 	(void)condition;
 }
 
 void shell_loop(t_condition *condition)
 {
 	char *line;
+	t_token *tokenized;
 
+	signal(SIGINT, SIG_IGN);
 	while (true)
 	{
 		update_condition(condition);
@@ -44,8 +68,10 @@ void shell_loop(t_condition *condition)
 		}
 		if(line == NULL)
 			break;//minishell_exit的な関数を作成しfreeする必要がある
-		lexer(condition, line);
+		tokenized = lexer(condition, line);
 		free(line);
+		if (!tokenized)
+			free_tokens(tokenized);
 	}
 	return ;
 }
@@ -56,12 +82,10 @@ int main(int argc, char **argv, char **envp)
 	t_item *temp;
 
 	if (!init_shell(&condition, argv, envp))
-	{
-		put_error("initialization error");
-		exit(1);
-	}
+		return (put_error(strerror(errno)), 1);
 	shell_loop(&condition);
-	while(condition.environ)//仮
+	/////////仮///////////
+	while(condition.environ)
 	{
 		temp = condition.environ->next;
 		free(condition.environ->key);

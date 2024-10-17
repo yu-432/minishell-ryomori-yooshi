@@ -1,6 +1,8 @@
 #ifndef CONDITION_H
 # define CONDITION_H
 
+#include <signal.h>
+
 typedef struct s_item
 {
 	char *key;
@@ -15,5 +17,6 @@ typedef struct s_condition
 	char	*cwd;
 	int		exit_status;
 }	t_condition;
+
 
 #endif
