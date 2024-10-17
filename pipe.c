@@ -27,6 +27,9 @@ typedef enum e_token_kind
 	TOKEN_RPARENT,
 }	t_token_kind;
 
+extern char **environ;
+
+
 typedef struct s_token
 {
 	char			*token;
@@ -253,13 +256,12 @@ char **decision_args(t_token *token)
 		i++;
 	}
 	args[i] = NULL;
-	
-	int num = 0;
-	while(args[num])
-	{
-		printf("args[%d] : %s\n", num, args[num]);
-		num++;
-	}
+	// int num = 0;
+	// while(args[num])
+	// {
+	// 	printf("args[%d] : %s\n", num, args[num]);
+	// 	num++;
+	// }
 
 	return(args);
 }
@@ -301,11 +303,15 @@ void	com_token_pipe(t_token *token, int num_com)
 				{
 					fd_output_child(fds);
 				}
-				// printf("befor -> tmp->token %s\n", tmp_token->token);
+				// printf("tmp->token %s\n", tmp_token->token);
 
 				args = decision_args(tmp_token);
-				// printf("args[0] = %s\n args[1] = %s\n", args[0], args[1]);
-				execve(find_command(args[0]), args, NULL);
+				fprintf(stderr, "find_command :%s\n", find_command(args[0]));
+				fprintf(stderr, "args[0] = %s\n args[1] = %s\n", args[0], args[1]);
+				execve(find_command(args[0]), args, environ);
+				perror("execve");  // エラーが発生した場合のメッセージを表示
+					exit(1);
+
 
 				free(args);
 				exit(0);
@@ -352,29 +358,29 @@ t_token *create_token(char *str, t_token_kind kind) {
 int main()
 {
     t_token *token1 = create_token("ls", TOKEN_WORD);
-    t_token *token2 = create_token("-l", TOKEN_WORD);
+    t_token *token2 = create_token("-al", TOKEN_WORD);
 
     t_token *token3 = create_token("|", TOKEN_PIPE);
     
-	t_token *token4 = create_token("grep", TOKEN_WORD);
-    t_token *token5 = create_token(".c", TOKEN_WORD);
+	t_token *token4 = create_token("wc", TOKEN_WORD);
+    t_token *token5 = create_token("-l", TOKEN_WORD);
     
-	t_token *token6 = create_token("|", TOKEN_PIPE);
+	// t_token *token6 = create_token("|", TOKEN_PIPE);
     
-	t_token *token7 = create_token("wc", TOKEN_WORD);
-	t_token *token8 = create_token("-l", TOKEN_WORD);
+	t_token *token7 = create_token("touch", TOKEN_WORD);
+	// t_token *token8 = create_token("-l", TOKEN_WORD);
 
     // トークンをリンク
     token1->next = token2;
     token2->next = token3;
     token3->next = token4;
     token4->next = token5;
-    token5->next = token6;
-    token6->next = token7;
-	token7->next = token8;
+    token5->next = token7;
+    // token6->next = token7;
+	// token7->next = token8;
 
     // パイプを用いてコマンド実行
-    com_token_pipe(token1, 1);
+    com_token_pipe(token1, 2);
 
     return (0);
 }
