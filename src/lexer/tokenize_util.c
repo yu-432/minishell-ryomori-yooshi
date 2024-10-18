@@ -34,10 +34,7 @@ t_token *new_token(char *token, t_token_kind kind)
 
 	new = ft_calloc(1, sizeof(t_token));
 	if (!new)
-	{
-		printf("TODO:new_token malloc failed\n");
-		exit(1);
-	}
+		return (NULL);
 	new->token = token;
 	new->kind = kind;
 	return (new);

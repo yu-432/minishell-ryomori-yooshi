@@ -1,6 +1,13 @@
 #ifndef CONDITION_H
 # define CONDITION_H
 
+#include <signal.h>
+
+#define PROMPT "minishell$ "
+
+extern pid_t g_foreground_pid;
+
+
 typedef struct s_item
 {
 	char *key;

@@ -11,10 +11,7 @@ bool insert_env(t_condition *condition, char *key, char *value)
 
 	new = touch_t_item();
 	if (!new)
-	{
-		printf("TODO if touch item failed\n");
 		return (false);
-	}
 	new->key = key;
 	new->value = value;
 	if (condition->environ == NULL)
@@ -36,14 +33,11 @@ bool add_env(t_condition *condition, char *env_str)
 
 	equal = ft_strchr(env_str, '=');
 	if (!equal)
-	{
-		//TODO:エラー処理
 		return (false);
-	}
 	key = ft_substr(env_str, 0, equal - env_str);
 	value = ft_strdup(equal + 1);
 	if (!key || !value)
-		return (false);//TODO-----------------------
+		return (false);
 	dup_key = search_dup_key(condition, key);
 	if (dup_key)
 	{
@@ -52,6 +46,7 @@ bool add_env(t_condition *condition, char *env_str)
 		free(key);
 	}
 	else
-		insert_env(condition, key, value);
+		if (!insert_env(condition, key, value))
+			return (false);
 	return(true);
 }
