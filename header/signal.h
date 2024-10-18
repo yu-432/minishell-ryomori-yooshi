@@ -5,7 +5,6 @@
 
 extern sig_atomic_t g_sig;
 
-void set_global_sig(int sig);
 void set_shell_input_sig_handler(void);
 
 # endif

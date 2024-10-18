@@ -5,8 +5,7 @@
 #include "../header/init.h"
 #include "../libft/libft.h"
 #include "../header/print.h"
-#include <readline/readline.h>
-#include <readline/history.h>
+
 #include <unistd.h>
 
 sig_atomic_t g_sig = 0;
