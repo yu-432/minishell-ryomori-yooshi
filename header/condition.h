@@ -3,6 +3,11 @@
 
 #include <signal.h>
 
+#define PROMPT "minishell$ "
+
+extern pid_t g_foreground_pid;
+
+
 typedef struct s_item
 {
 	char *key;
@@ -17,6 +22,5 @@ typedef struct s_condition
 	char	*cwd;
 	int		exit_status;
 }	t_condition;
-
 
 #endif

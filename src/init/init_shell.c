@@ -38,7 +38,7 @@ bool init_environ(t_condition *condition, char **envp)
 	return(true);
 }
 
-bool init_condition(t_condition *condition, char **argv, char **envp)
+bool first_init_condition(t_condition *condition, char **argv, char **envp)
 {
 	ft_memset(condition, 0, sizeof(t_condition));
 	errno = 0;
@@ -53,7 +53,7 @@ bool init_condition(t_condition *condition, char **argv, char **envp)
 
 bool	init_shell(t_condition *condition, char **argv, char **envp)
 {
-	if (!init_condition(condition, argv, envp))
+	if (!first_init_condition(condition, argv, envp))
 		return(false);
 	return(true);
 }

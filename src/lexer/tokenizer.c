@@ -52,11 +52,6 @@ bool take_meta_token(char **line, t_token *tail_token)
 	tail_token->next = new_token(token, get_token_kind(token));
 	if (!tail_token->next)
 		return (put_error(strerror(errno)), false);
-	// if (tail_token->next->kind == TOKEN_UNKNOWN)
-	// {
-	// 	unexpected_token_error(tail_token->next->token);
-	// 	return (false);
-	// }
 	*line += count;
 	return (true);
 }

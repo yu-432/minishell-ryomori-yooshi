@@ -72,16 +72,6 @@ char *find_env(t_condition *condition, char *env_key)
 	return (NULL);
 }
 
-// bool append_env(t_token *token, char **new, char *env_value, int *i)
-// {
-// 	if (!ft_strjoin_free(new, env_value))
-// 		return (false);
-// 	*i += ft_strlen(env_value);
-// 	if (!ft_strjoin_free(new, token->token + *i))
-// 		return(false);
-// 	return (true);
-// }
-
 bool replace_env(t_token *token, char *env_value, int env_len)
 {
 	char *new;

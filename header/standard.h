@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <signal.h>
 #include <errno.h>
+#include <unistd.h>
 
 void put_error(char *str);
 

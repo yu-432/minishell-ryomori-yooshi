@@ -9,8 +9,8 @@
 #include <readline/history.h>
 #include <unistd.h>
 
-#define PROMPT "minishell$ "
 sig_atomic_t g_sig = 0;
+pid_t g_foreground_pid = 0;
 
 
 void free_tokens(t_token *token)
@@ -39,7 +39,7 @@ char *read_command_line()
 	return (line);
 }
 
-void update_condition(t_condition *condition)
+void init_condition(t_condition *condition)
 {
 	errno = 0;
 	set_shell_input_sig_handler();
@@ -56,18 +56,20 @@ void shell_loop(t_condition *condition)
 	char *line;
 	t_token *tokenized;
 
-	signal(SIGINT, SIG_IGN);
 	while (true)
 	{
-		update_condition(condition);
+		init_condition(condition);
 		line = read_command_line();
+		if(!line)
+		{
+			printf("exit\n");//exit関数を作成しfreeする必要がある
+			break;//minishell_exit的な関数を作成しfreeする必要がある
+		}
 		if (*line == '\0')
 		{
 			free(line);
 			continue;
 		}
-		if(line == NULL)
-			break;//minishell_exit的な関数を作成しfreeする必要がある
 		tokenized = lexer(condition, line);
 		free(line);
 		if (!tokenized)
