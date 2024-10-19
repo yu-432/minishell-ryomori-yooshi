@@ -358,16 +358,16 @@ t_token *create_token(char *str, t_token_kind kind) {
 int main()
 {
     t_token *token1 = create_token("ls", TOKEN_WORD);
-    t_token *token2 = create_token("-al", TOKEN_WORD);
+    t_token *token2 = create_token("-l", TOKEN_WORD);
 
     t_token *token3 = create_token("|", TOKEN_PIPE);
     
-	t_token *token4 = create_token("wc", TOKEN_WORD);
-    t_token *token5 = create_token("-l", TOKEN_WORD);
+	t_token *token4 = create_token("grep", TOKEN_WORD);
+    t_token *token5 = create_token(".c", TOKEN_WORD);
     
 	// t_token *token6 = create_token("|", TOKEN_PIPE);
     
-	t_token *token7 = create_token("touch", TOKEN_WORD);
+	// t_token *token7 = create_token("touch", TOKEN_WORD);
 	// t_token *token8 = create_token("-l", TOKEN_WORD);
 
     // トークンをリンク
@@ -375,7 +375,7 @@ int main()
     token2->next = token3;
     token3->next = token4;
     token4->next = token5;
-    token5->next = token7;
+    // token5->next = token7;
     // token6->next = token7;
 	// token7->next = token8;
 
