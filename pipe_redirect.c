@@ -265,19 +265,30 @@ t_token *token_not_pipe_count(t_token *token)
 
 // 	return(args);
 // }
-char **decision_args(t_token *token) {
+char **decision_args(t_token *token)//argsにリダイレクトと理大レクド後のファイル名を入れたくないが動作しなくなる
+{
     t_token *tmp_token = token;
     int list_elem_num = 0;
     int i;
 
     // リダイレクト用トークンを無視して引数の数を数える
-    while (tmp_token && tmp_token->kind != TOKEN_PIPE) {
-        if (tmp_token->kind != TOKEN_REDIRECT_IN &&
-            tmp_token->kind != TOKEN_REDIRECT_OUT &&
-            tmp_token->kind != TOKEN_REDIRECT_APPEND) {
-            list_elem_num++;
+    while (tmp_token && tmp_token->kind != TOKEN_PIPE)
+	{
+        if (tmp_token->kind == TOKEN_REDIRECT_IN ||
+            tmp_token->kind == TOKEN_REDIRECT_OUT ||
+            tmp_token->kind == TOKEN_REDIRECT_APPEND)
+		{
+            tmp_token = tmp_token->next;
+			if (tmp_token)
+			{
+				tmp_token = tmp_token->next;
+			}
         }
-        tmp_token = tmp_token->next;
+		else
+		{
+			list_elem_num++;
+			tmp_token = tmp_token->next;
+		}
     }
 
     // 引数リストを作成
@@ -290,13 +301,23 @@ char **decision_args(t_token *token) {
     // 再度トークンを辿って、リダイレクト以外のトークンを格納
     tmp_token = token;
     i = 0;
-    while (tmp_token && tmp_token->kind != TOKEN_PIPE) {
-        if (tmp_token->kind != TOKEN_REDIRECT_IN &&
-            tmp_token->kind != TOKEN_REDIRECT_OUT &&
-            tmp_token->kind != TOKEN_REDIRECT_APPEND) {
-            args[i++] = strdup(tmp_token->token);
+    while (tmp_token && tmp_token->kind != TOKEN_PIPE)
+	{
+        if (tmp_token->kind == TOKEN_REDIRECT_IN ||
+            tmp_token->kind == TOKEN_REDIRECT_OUT ||
+            tmp_token->kind == TOKEN_REDIRECT_APPEND)
+		{
+			tmp_token = tmp_token->next;
+			if(tmp_token)
+			{
+				tmp_token = tmp_token->next;
+			}
         }
-        tmp_token = tmp_token->next;
+		else
+		{
+			args[i++] = strdup(tmp_token->token);
+			tmp_token =tmp_token->next;
+		}
     }
     args[i] = NULL;  // 引数リストの終端
 
@@ -311,27 +332,35 @@ char **decision_args(t_token *token) {
 int handle_redirections(t_token **token) {
     int fd = -1;
 
-    while (*token) {
-        if ((*token)->kind == TOKEN_REDIRECT_IN) {
+    while (*token)
+	{
+        if ((*token)->kind == TOKEN_REDIRECT_IN)
+		{
             *token = (*token)->next;
-            if (!*token) {
+            if (!*token)
+			{
                 fprintf(stderr, "Error: Missing file for input redirection\\n");
                 return -1;
             }
             fd = open((*token)->token, O_RDONLY);
-            if (fd == -1) {
+            if (fd == -1)
+			{
                 perror("open");
                 return -1;
             }
-            if (dup2(fd, STDIN_FILENO) == -1) {
+            if (dup2(fd, STDIN_FILENO) == -1)
+			{
                 perror("dup2");
                 close(fd);
                 return -1;
             }
             close(fd);
-        } else if ((*token)->kind == TOKEN_REDIRECT_OUT) {
+        }
+		else if ((*token)->kind == TOKEN_REDIRECT_OUT)
+		{
             *token = (*token)->next;
-            if (!*token) {
+            if (!*token)
+			{
                 fprintf(stderr, "Error: Missing file for output redirection\\n");
                 return -1;
             }
@@ -340,30 +369,38 @@ int handle_redirections(t_token **token) {
                 perror("open");
                 return -1;
             }
-            if (dup2(fd, STDOUT_FILENO) == -1) {
+            if (dup2(fd, STDOUT_FILENO) == -1)
+			{
                 perror("dup2");
                 close(fd);
                 return -1;
             }
             close(fd);
-        } else if ((*token)->kind == TOKEN_REDIRECT_APPEND) {
+        }
+		else if ((*token)->kind == TOKEN_REDIRECT_APPEND)
+		{
             *token = (*token)->next;
-            if (!*token) {
+            if (!*token)
+			{
                 fprintf(stderr, "Error: Missing file for append redirection\\n");
                 return -1;
             }
             fd = open((*token)->token, O_WRONLY | O_CREAT | O_APPEND, 0644);
-            if (fd == -1) {
+            if (fd == -1)
+			{
                 perror("open");
                 return -1;
             }
-            if (dup2(fd, STDOUT_FILENO) == -1) {
+            if (dup2(fd, STDOUT_FILENO) == -1)
+			{
                 perror("dup2");
                 close(fd);
                 return -1;
             }
             close(fd);
-        } else {
+        }
+		else
+		{
             break;  // リダイレクト以外のトークンに遭遇したら終了
         }
         *token = (*token)->next;  // 次のトークンに移動
@@ -376,7 +413,8 @@ int handle_redirections(t_token **token) {
 //com_token_pipe
 
 
-void com_token_pipe(t_token *token, int num_com) {
+void com_token_pipe(t_token *token, int num_com)
+{
     int fds[2];
     int keep_fd = 0;
     int i;
@@ -386,25 +424,32 @@ void com_token_pipe(t_token *token, int num_com) {
 
     tmp_token = token;
     i = 0;
-    while (i < num_com && tmp_token) {
-        if (tmp_token->kind == TOKEN_WORD) {
-            if (i < num_com - 1 && pipe(fds) == -1) {
+    while (i < num_com && tmp_token)
+	{
+        if (tmp_token->kind == TOKEN_WORD)
+		{
+            if (i < num_com - 1 && pipe(fds) == -1)
+			{
                 perror("pipe");
                 exit(1);
             }
             pid = fork();
-            if (pid == -1) {
+            if (pid == -1)
+			{
                 perror("fork");
                 exit(1);
             }
-            if (pid == 0) {  // 子プロセス
+            if (pid == 0)
+			{  // 子プロセス
                 fd_input_child(keep_fd);
-                if (i < num_com - 1) {
+                if (i < num_com - 1)
+				{
                     fd_output_child(fds);
                 }
 
                 // リダイレクトを処理
-                if (handle_redirections(&tmp_token) == -1) {
+                if (handle_redirections(&tmp_token) == -1)
+				{
                     exit(1);
                 }
 
@@ -416,7 +461,9 @@ void com_token_pipe(t_token *token, int num_com) {
                 perror("execve");  // エラー時
                 free(args);
                 exit(1);
-            } else {  // 親プロセス
+            }
+			else
+			{  // 親プロセス
                 keep_fd_update(fds, &keep_fd, i, num_com);
             }
             i++;
@@ -466,7 +513,7 @@ int main()
     t_token *token4 = create_token("|", TOKEN_PIPE);
     
 	t_token *token5 = create_token("grep", TOKEN_WORD);
-    t_token *token6 = create_token(".c", TOKEN_WORD);
+    t_token *token6 = create_token("a", TOKEN_WORD);
     
 	t_token *token7 = create_token("|", TOKEN_PIPE);
     
@@ -487,18 +534,19 @@ int main()
     token2->next = token3;
     token3->next = token4;
     token4->next = token5;
-    token5->next = token7;
+    token5->next = token6;
     token6->next = token7;
 	token7->next = token8;
 	token8->next = token9;
 	token9->next = token10;
 	token10->next = token11;
+	token11->next = token12;
 	token12->next = token13;
 	token13->next = token14;
 
 
     // パイプを用いてコマンド実行
-    com_token_pipe(token1, 4);
+    com_token_pipe(token1, 5);
 
     return (0);
 }
