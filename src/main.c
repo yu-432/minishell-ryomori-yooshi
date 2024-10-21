@@ -5,6 +5,8 @@
 #include "../header/init.h"
 #include "../libft/libft.h"
 #include "../header/print.h"
+#include "../header/execve.h"
+#include "../header/execve.h"
 
 #include <unistd.h>
 
@@ -71,8 +73,9 @@ void shell_loop(t_condition *condition)
 		}
 		tokenized = lexer(condition, line);
 		free(line);
-		if (!tokenized)
-			free_tokens(tokenized);
+		// if (!tokenized)
+		// 	free_tokens(tokenized);？？？？？？
+		execve_command(condition, tokenized);//TOKEN_UNKNOWNが含まれている場合止めておいたほうがいい
 	}
 	return ;
 }

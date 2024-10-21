@@ -6,7 +6,8 @@ SRCS		= 	src/main.c \
 				src/lexer/lexer.c src/lexer/tokenize_util.c src/lexer/tokenizer.c src/lexer/expand.c src/lexer/expand_dollar.c \
 				src/lexer/find_syntax_error.c\
 				src/print/put_error.c\
-				src/signal/signal.c
+				src/signal/signal.c \
+				src/execve/execve.c src/execve/redirect.c src/execve/heredoc.c
 
 OBJS		= ${SRCS:.c=.o}
 

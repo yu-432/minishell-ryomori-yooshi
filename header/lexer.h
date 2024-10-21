@@ -28,5 +28,7 @@ char *find_env(t_condition *condition, char *env_key);
 bool append_char(char **str, char c);
 bool find_syntax_error(t_condition *condition, t_token *tokenized);
 void free_tokens(t_token *token);
+int get_token_kind(char *token);
+
 
 # endif
