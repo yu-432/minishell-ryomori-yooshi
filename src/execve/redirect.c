@@ -27,6 +27,7 @@ bool redirect_out(t_node *node, int i)
 {
 	int fd;
 
+	printf("redirect out %d\n", i);
 	if (node->argv[i + 1] == NULL)
 	{
 		put_error("syntax error near unexpected token `newline'");

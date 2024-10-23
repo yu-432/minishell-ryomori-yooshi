@@ -5,6 +5,7 @@
 #include "../../libft/libft.h"
 #include "../../header/lexer.h"
 
+
 t_node *new_node(char **argv)
 {
 	t_node *node;
@@ -86,7 +87,10 @@ t_node *make_node(t_token *token_list)
 		current->next = new_node(argv);
 		if (!current->next)
 			return (NULL);
-		current->next->argv = argv;
+		if (is_pipe(argv[0]))
+			current->next->kind = NODE_PIPE;
+		else
+			current->next->kind = NODE_CMD;
 	}
 	return (head.next);
 }
@@ -115,7 +119,7 @@ void set_redirect(t_node *node)
 			else if(kind == TOKEN_REDIRECT_HEREDOC)
 				is_success = redirect_heredoc(node, i);
 			if(!is_success)
-				exit(1);
+				put_error("redirect error");
 			i++;
 		}
 		node = node->next;
@@ -133,16 +137,20 @@ bool execve_command(t_condition *condition, t_token *token_list)
 	if (node == NULL)
 		return (false);
 	set_redirect(node);
-	while(node)
+
+	t_node *temp = node;
+	while(temp)
 	{
-		printf("redirect in = %d, redirect out = %d\n", node->fd_in, node->fd_out);
-		printf("heredoc_str = %s\n", node->heredoc_str);
-		for (int i = 0; node->argv[i]; i++)
-			printf("argv[%d] = %s\n", i, node->argv[i]);
-		node = node->next;
+		printf("-------------------------\n");
+		printf("redirect in = %d, redirect out = %d\n", temp->fd_in, temp->fd_out);
+		printf("heredoc_str = %s\n", temp->heredoc_str);
+		for (int i = 0; temp->argv[i]; i++)
+			printf("argv[%d] = %s\n", i, temp->argv[i]);
+		temp = temp->next;
 		printf("-------------------------\n");
 	}
-	// exec_command_pipe(condition, node);
+
+	exec_command_pipe(condition, node);
 	(void)condition;
 	return (true);
 }

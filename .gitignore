@@ -1,0 +1,5 @@
+a.out
+.vscode
+test.h.gch
+*.o
+pipe

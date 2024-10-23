@@ -26,6 +26,7 @@ bool redirect_heredoc(t_node *node, int i)
 	node->heredoc_str = ft_strdup("");
 	if (!node->heredoc_str)
 		return (false);
+	// printf("heredoc %d\n", i);
 	if (!node->argv[i + 1])
 	{
 		put_error("syntax error near unexpected token `newline'");
