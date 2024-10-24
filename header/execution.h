@@ -29,13 +29,17 @@ typedef struct s_node
 	struct s_node *next;
 } t_node;
 
-bool execve_command(t_condition *condition, t_token *token_list);
+bool execution_command(t_condition *condition, t_token *token_list);
 bool redirect_in(t_node *node, int i);
 bool redirect_out(t_node *node, int i);
 bool redirect_append(t_node *node, int i);
 bool redirect_heredoc(t_node *node, int i);
 bool exec_command_pipe(t_condition *condition, t_node *node);
 bool is_pipe(char *str);
+t_node *make_node(t_token *token_list);
+bool execute(t_condition *condition, t_node *node);
+
+
 
 
 
