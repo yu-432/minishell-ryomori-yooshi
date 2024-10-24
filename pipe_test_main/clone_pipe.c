@@ -293,11 +293,13 @@ int	redirections(t_token *token)
 	int	fd;
 
 	fd = -1;
-	fprintf(stderr, "in redirections: %d\n", token == NULL);
-	while (token)
+	while (token && token->kind != TOKEN_PIPE)
 	{
+	fprintf(stderr, "token->token-----------------%s\n", (token)->token);
+
 		if ((token)->kind == TOKEN_REDIRECT_IN)
 		{
+			fprintf(stderr, "TOKEN_REDIRECT_IN %s\n", (token)->token);
 			token = (token)->next;
 			if (!token)
 			{
@@ -320,6 +322,7 @@ int	redirections(t_token *token)
 		}
 		else if ((token)->kind == TOKEN_REDIRECT_OUT)
 		{
+			fprintf(stderr, "TOKEN_REDIRECT_OUT %s\n", (token)->token);
 			token = (token)->next;
 			if (!token)
 			{
@@ -327,6 +330,7 @@ int	redirections(t_token *token)
 				return (-1);
 			}	
 			fd = open((token)->token, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			fprintf(stderr, "fd = %d\n", fd);
 			if (fd == -1)
 			{
 				perror("open");
@@ -410,17 +414,18 @@ void	com_token_pipe(t_token *token, int num_com)
 				{
 					fd_output_child(fds);
 				}
-				
+				fprintf(stderr, "tmp->token123 %s\n", tmp_token->token);
 				if (redirections(tmp_token) == -1)
 				{
 					exit(1);
 				}
+				fprintf(stderr, "tmp->token543 %s\n", tmp_token->token);
 				
 
-				// printf("tmp->token %s\n", tmp_token->token);
 				args = decision_args(tmp_token);
 				fprintf(stderr, "find_command :%s\n", find_command(args[0]));
 				fprintf(stderr, "args[0] = %s\n args[1] = %s\n", args[0], args[1]);
+
 				execve(find_command(args[0]), args, environ);
 				perror("execve");// エラーが発生した場合のメッセージを表示
 				free(args);

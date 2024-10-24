@@ -43,7 +43,7 @@ int main()
 {
 	t_token *token1 = create_token("echo", TOKEN_WORD);
 	t_token *token2 = create_token("Hello World", TOKEN_WORD);
-	t_token *token3 = create_token(">>", TOKEN_REDIRECT_APPEND);
+	t_token *token3 = create_token(">", TOKEN_REDIRECT_OUT);
 	t_token *token4 = create_token("input.txt", TOKEN_WORD);
 	// t_token *token5 = create_token ("grep", TOKEN_WORD);
 	// t_token *token6 = create_token ("a", TOKEN_WORD);
@@ -73,7 +73,7 @@ int main()
 	// token12->next = token13;
 	// token13->next = token14;
 
-	com_token_pipe(token1, 2);
+	com_token_pipe(token1, 1);
 
 	return(0);
 }

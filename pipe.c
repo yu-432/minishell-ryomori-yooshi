@@ -150,7 +150,10 @@ char	*find_command(char *line)
 	char	*slash;
 	char	*joined;
 
+	if(!access(line, F_OK))
+		return(ft_strndup(line,strlen(line)));
 	path = ft_split(getenv("PATH"), ':');
+
 	i = 0;
 	while (path[i])
 	{
@@ -249,6 +252,8 @@ char **decision_args(t_token *token)
 		tmp_token = tmp_token->next;
 	}
 
+	fprintf(stderr, "num = %d\n", list_elem_num);
+
 	char	**args = (char**)malloc(sizeof(char*) * (list_elem_num + 1));
 	if (!args)
 	{
@@ -288,17 +293,20 @@ int	redirections(t_token *token)
 	int	fd;
 
 	fd = -1;
-	while (token)
+	while (token && token->kind != TOKEN_PIPE)
 	{
-		if (token->kind == TOKEN_REDIRECT_IN)
+	fprintf(stderr, "token->token-----------------%s\n", (token)->token);
+
+		if ((token)->kind == TOKEN_REDIRECT_IN)
 		{
-			token = token->next;
+			fprintf(stderr, "TOKEN_REDIRECT_IN %s\n", (token)->token);
+			token = (token)->next;
 			if (!token)
 			{
 				fprintf(stderr, "Error: Token redirect < IN\n");
 				return (-1);
 			}
-			fd = open(token->token, O_RDONLY);
+			fd = open((token)->token, O_RDONLY);
 			if (fd == -1)
 			{
 				perror("open");
@@ -312,15 +320,17 @@ int	redirections(t_token *token)
 			}
 			close (fd);
 		}
-		else if (token->kind == TOKEN_REDIRECT_OUT)
+		else if ((token)->kind == TOKEN_REDIRECT_OUT)
 		{
-			token = token->next;
+			fprintf(stderr, "TOKEN_REDIRECT_OUT %s\n", (token)->token);
+			token = (token)->next;
 			if (!token)
 			{
 				fprintf(stderr, "Error: Token resirect > OUT\n");
 				return (-1);
-			}
-			fd = open(token->token, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			}	
+			fd = open((token)->token, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			fprintf(stderr, "fd = %d\n", fd);
 			if (fd == -1)
 			{
 				perror("open");
@@ -334,15 +344,15 @@ int	redirections(t_token *token)
 			}
 			close(fd);
 		}
-		else if (token->kind == TOKEN_REDIRECT_APPEND)
+		else if ((token)->kind == TOKEN_REDIRECT_APPEND)
 		{
-			token = token->next;
+			token = (token)->next;
 			if (!token)
 			{
 				fprintf(stderr, "Error: Token redirect >> append\n");
 				return (-1);
 			}
-			fd = open(token->token, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			fd = open((token)->token, O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (fd == -1)
 			{
 				perror("open");
@@ -356,7 +366,11 @@ int	redirections(t_token *token)
 			}
 			close(fd);
 		}
-		token = token->next;
+		// else
+		// {
+		// 	continue;
+		// }
+		token = (token)->next;
 	}
 	return (0);
 }
@@ -381,6 +395,7 @@ void	com_token_pipe(t_token *token, int num_com)
 	{
 		if (tmp_token->kind == TOKEN_WORD)
 		{
+			fprintf(stderr, "i = %d\n", i);
 			if (i < num_com - 1 && pipe(fds) == -1)
 			{
 				perror("pipe");
@@ -399,17 +414,18 @@ void	com_token_pipe(t_token *token, int num_com)
 				{
 					fd_output_child(fds);
 				}
-				
+				fprintf(stderr, "tmp->token123 %s\n", tmp_token->token);
 				if (redirections(tmp_token) == -1)
 				{
 					exit(1);
 				}
+				fprintf(stderr, "tmp->token543 %s\n", tmp_token->token);
 				
 
-				// printf("tmp->token %s\n", tmp_token->token);
 				args = decision_args(tmp_token);
 				fprintf(stderr, "find_command :%s\n", find_command(args[0]));
 				fprintf(stderr, "args[0] = %s\n args[1] = %s\n", args[0], args[1]);
+
 				execve(find_command(args[0]), args, environ);
 				perror("execve");// エラーが発生した場合のメッセージを表示
 				free(args);
@@ -456,50 +472,6 @@ t_token *create_token(char *str, t_token_kind kind) {
 //============================================================================================================
 //cat < input.txt | grep 'a' | sort | uniq | tee > log.txt
 //リダイレクトを含んだpipe
-
-int main()
-{
-	t_token *token1 = create_token("cat", TOKEN_WORD);
-	t_token *token2 = create_token("<", TOKEN_REDIRECT_IN);
-	t_token *token3 = create_token("input.txt", TOKEN_WORD);
-	t_token *token4 = create_token("|", TOKEN_PIPE);
-	t_token *token5 = create_token ("grep", TOKEN_WORD);
-	t_token *token6 = create_token ("a", TOKEN_WORD);
-	t_token *token7 = create_token ("|", TOKEN_PIPE);
-	t_token *token8 = create_token ("sort", TOKEN_WORD);
-	t_token *token9 = create_token ("|", TOKEN_PIPE);
-	t_token *token10 = create_token ("uniq", TOKEN_WORD);
-	t_token *token11 = create_token ("|", TOKEN_PIPE);
-	t_token *token12 = create_token ("tee", TOKEN_WORD);
-	t_token *token13 = create_token(">", TOKEN_REDIRECT_OUT);
-	t_token *token14 = create_token("log.txt", TOKEN_WORD);
-
-	// 	t_token *token1 = create_token("echo", TOKEN_WORD);
-	// t_token *token2 = create_token("Hello World", TOKEN_WORD);
-	// t_token *token3 = create_token(">", TOKEN_REDIRECT_OUT);
-	// t_token *token4 = create_token("input.txt", TOKEN_WORD);
-
-
-
-
-	token1->next = token2;
-	token2->next = token3;
-	token3->next = token4;	
-	token4->next = token5;
-	token5->next = token6;
-	token6->next = token7;
-	token7->next = token8;
-	token8->next = token9;
-	token9->next = token10;
-	token10->next = token11;
-	token11->next = token12;
-	token12->next = token13;
-	token13->next = token14;
-
-	com_token_pipe(token1, 5);
-
-	return(0);
-}
 
 
 //============================================================================================================

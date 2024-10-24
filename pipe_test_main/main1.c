@@ -54,7 +54,7 @@ int main()
 	t_token *token10 = create_token ("uniq", TOKEN_WORD);
 	t_token *token11 = create_token ("|", TOKEN_PIPE);
 	t_token *token12 = create_token ("tee", TOKEN_WORD);
-	t_token *token13 = create_token(">", TOKEN_REDIRECT_OUT);
+	t_token *token13 = create_token(">", TOKEN_REDIRECT_APPEND);
 	t_token *token14 = create_token("log.txt", TOKEN_WORD);
 
 
