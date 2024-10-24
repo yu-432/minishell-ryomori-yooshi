@@ -18,7 +18,20 @@ int count_pipe(t_node *node)
 	return (count);
 }
 
-
+bool update_redirect_fd(t_node *node)
+{
+	if (node->fd_in != -2)
+	{
+		dup2(node->fd_in, STDIN_FILENO);
+		close(node->fd_in);
+	}
+	if(node->fd_out != -2)
+	{
+		dup2(node->fd_out, STDOUT_FILENO);
+		close(node->fd_out);
+	}
+	return (false);
+}
 
 bool execute_single_command(t_condition *condition, t_node *node)
 {
@@ -32,16 +45,7 @@ bool execute_single_command(t_condition *condition, t_node *node)
 	}
 	if(pid == 0)
 	{
-		if (node->fd_in != -2)
-		{
-			dup2(node->fd_in, STDIN_FILENO);
-			close(node->fd_in);
-		}
-		if (node->fd_out != -2)
-		{
-			dup2(node->fd_out, STDOUT_FILENO);
-			close(node->fd_out);
-		}
+		update_redirect_fd(node);
 		execute(condition, node);//このままだと、エラー文も出力先が変更されているので修正する必要あり
 	}
 	if(pid > 0)
@@ -78,31 +82,24 @@ bool execute_while_pipe(t_condition *condition, t_node *node)
 			{
 				if (i == 0)//first
 				{
-					if(node->fd_in != -2)
-					{
-						dup2(node->fd_in, STDIN_FILENO);
-						close(node->fd_in);
-					}
-					close(fds[READ]);
 					dup2(fds[WRITE], STDOUT_FILENO);
+					update_redirect_fd(node);
+					close(fds[READ]);
 					close(fds[WRITE]);
 				}
 				else if(i < pipe_count)//middle
 				{
 					dup2(keep_fd, STDIN_FILENO);
+					dup2(fds[WRITE], STDOUT_FILENO);
+					update_redirect_fd(node);
 					close(keep_fd);
 					close(fds[READ]);
-					dup2(fds[WRITE], STDOUT_FILENO);
 					close(fds[WRITE]);
 				}
 				else//last
 				{
-					if(node->fd_out != -2)
-					{
-						dup2(node->fd_out, STDOUT_FILENO);
-						close(node->fd_out);
-					}
 					dup2(keep_fd, STDIN_FILENO);
+					update_redirect_fd(node);
 					close(keep_fd);
 				}
 				execute(condition, node);

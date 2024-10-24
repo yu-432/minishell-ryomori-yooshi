@@ -4,10 +4,19 @@
 #include "../../header/condition.h"
 #include "../../header/execution.h"
 
+void reset_fd(int *fd)
+{
+	if (*fd != -2)
+	{
+		close(*fd);
+		*fd = -2;
+	}
+}
 bool redirect_in(t_node *node, int i)
 {
 	int fd;
 
+	reset_fd(&node->fd_in);
 	if (node->argv[i + 1] == NULL)
 	{
 		put_error("syntax error near unexpected token `newline'");
@@ -32,7 +41,7 @@ bool redirect_out(t_node *node, int i)
 {
 	int fd;
 
-	printf("redirect out %d\n", i);
+	reset_fd(&node->fd_out);
 	if (node->argv[i + 1] == NULL)
 	{
 		put_error("syntax error near unexpected token `newline'");
@@ -54,6 +63,7 @@ bool redirect_append(t_node *node, int i)
 {
 	int fd;
 
+	reset_fd(&node->fd_out);
 	if (!node->argv[i + 1])
 	{
 		put_error("syntax error near unexpected token `newline'");

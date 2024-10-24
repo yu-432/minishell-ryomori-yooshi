@@ -38,6 +38,7 @@ bool exec_command_pipe(t_condition *condition, t_node *node);
 bool is_pipe(char *str);
 t_node *make_node(t_token *token_list);
 bool execute(t_condition *condition, t_node *node);
+void reset_fd(int *fd);
 
 
 

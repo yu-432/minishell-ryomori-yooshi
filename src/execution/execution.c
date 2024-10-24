@@ -17,7 +17,6 @@ void set_redirect(t_node *node)
 		i = 0;
 		while(node->argv[i])
 		{
-			printf("get token kind %s\n", node->argv[i]);
 			kind = get_token_kind(node->argv[i]);
 			if(kind == TOKEN_REDIRECT_IN)
 				is_success = redirect_in(node, i);
