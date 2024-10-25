@@ -1,5 +1,3 @@
-
-
 #include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -303,7 +301,7 @@ char **decision_args(t_token *token)
 //==================================================================================
 //==================================================================================
 //herdoc_process
-int	herdoc_process(char *docDelimiter)
+int	herdoc_process(char *docDelimiter, int stdout_copy)
 {
 	char	*line = NULL;
 	int		fd;
@@ -314,30 +312,34 @@ int	herdoc_process(char *docDelimiter)
 		perror("open");
 		return (-1);
 	}
-	while(1)
+	if (dup2(stdout_copy, STDOUT_FILENO) == -1)
 	{
-		// while ((line = readline("heredoc> ")) != NULL)
-		// {
-			line = readline("heredoc> ");
-			if (strncmp(line, docDelimiter, strlen(docDelimiter)) == 0 && line[strlen(docDelimiter)] == '\0')
-			{
-				free(line);
-				break;
-			}
-			write(fd, line, strlen(line));
-			write(fd, "\n", 1);
-			free(line);
-		// }
+		close(fd);
+		perror("dup2");
+		return (-1);
 	}
+	while ((line = readline("heredoc> ")) != NULL)
+	{
+		if (strncmp(line, docDelimiter, strlen(docDelimiter)) == 0 && line[strlen(docDelimiter)] == '\0')
+		{
+			free(line);
+			break;
+		}
+		write(fd, line, strlen(line));
+		write(fd, "\n", 1);
+		free(line);
+	}
+
 	close(fd);
-	return (open("/tmp/heredoc_temp.txt", O_RDONLY));
+	return (open("/tmp/heredoc_tmp.txt", O_RDONLY));
+
 }
 
 //==================================================================================
 //==================================================================================
 //redirect
 
-int	redirections(t_token *token)
+int	redirections(t_token *token, int stdout_copy)
 {
 	int	fd;
 
@@ -423,7 +425,7 @@ int	redirections(t_token *token)
 				fprintf(stderr, "Error: Token resirect << HEREDOC\n");
 				return (-1);
 			}
-			fd = herdoc_process((token)->token);
+			fd = herdoc_process((token)->token, stdout_copy);
 			if (fd == -1)
 			{
 				fprintf(stderr, "Error processing heredoc\n");
@@ -459,6 +461,7 @@ void	com_token_pipe(t_token *token, int num_com)
 	pid_t	pid;
 	t_token	*tmp_token;
 	char **args;
+	int	stdout_copy = dup(STDOUT_FILENO);
 
 	tmp_token = token;
 	i = 0;
@@ -486,7 +489,7 @@ void	com_token_pipe(t_token *token, int num_com)
 					fd_output_child(fds);
 				}
 				fprintf(stderr, "tmp->token123 %s\n", tmp_token->token);
-				if (redirections(tmp_token) == -1)
+				if (redirections(tmp_token, stdout_copy) == -1)
 				{
 					exit(1);
 				}
@@ -542,26 +545,26 @@ t_token *create_token(char *str, t_token_kind kind) {
 
 
 
-// int main()
-// {
-//     t_token *token1 = create_token("cat", TOKEN_WORD);
-//     t_token *token2 = create_token("<<", TOKEN_REDIRECT_HEREDOC);
-//     t_token *token3 = create_token("EOF", TOKEN_WORD);
-//     t_token *token4 = create_token("|", TOKEN_PIPE);
-//     t_token *token5 = create_token("grep", TOKEN_WORD);
-//     t_token *token6 = create_token("hello", TOKEN_WORD);
+int main()
+{
+    t_token *token1 = create_token("cat", TOKEN_WORD);
+    t_token *token2 = create_token("<<", TOKEN_REDIRECT_HEREDOC);
+    t_token *token3 = create_token("EOF", TOKEN_WORD);
+    t_token *token4 = create_token("|", TOKEN_PIPE);
+    t_token *token5 = create_token("grep", TOKEN_WORD);
+    t_token *token6 = create_token("hello", TOKEN_WORD);
 
-//     // トークンのリンク
-//     token1->next = token2;
-//     token2->next = token3;
-//     token3->next = token4;
-//     token4->next = token5;
-//     token5->next = token6;
+    // トークンのリンク
+    token1->next = token2;
+    token2->next = token3;
+    token3->next = token4;
+    token4->next = token5;
+    token5->next = token6;
 
-//     com_token_pipe(token1, 2);
+    com_token_pipe(token1, 2);
 
-//     return (0);
-// }
+    return (0);
+}
 //============================================================================================================
 //cat < input.txt | grep 'a' | sort | uniq | tee > log.txt
 //リダイレクトを含んだpipe
@@ -602,42 +605,41 @@ t_token *create_token(char *str, t_token_kind kind) {
 // }
 
 
-int main()
-{
-	t_token *token1 = create_token("echo", TOKEN_WORD);
-	t_token *token2 = create_token("Hello World", TOKEN_WORD);
-	t_token *token3 = create_token(">>", TOKEN_REDIRECT_APPEND);
-	t_token *token4 = create_token("input.txt", TOKEN_WORD);
-	// t_token *token5 = create_token ("grep", TOKEN_WORD);
-	// t_token *token6 = create_token ("a", TOKEN_WORD);
-	// t_token *token7 = create_token ("|", TOKEN_PIPE);
-	// t_token *token8 = create_token ("sort", TOKEN_WORD);
-	// t_token *token9 = create_token ("|", TOKEN_PIPE);
-	// t_token *token10 = create_token ("uniq", TOKEN_WORD);
-	// t_token *token11 = create_token ("|", TOKEN_PIPE);
-	// t_token *token12 = create_token ("tee", TOKEN_WORD);
-	// t_token *token13 = create_token(">", TOKEN_REDIRECT_OUT);
-	// t_token *token14 = create_token("log.txt", TOKEN_WORD);
+// int main()
+// {
+// 	t_token *token1 = create_token("echo", TOKEN_WORD);
+// 	t_token *token2 = create_token("Hello World", TOKEN_WORD);
+// 	t_token *token3 = create_token(">>", TOKEN_REDIRECT_APPEND);
+// 	t_token *token4 = create_token("input.txt", TOKEN_WORD);
+// 	// t_token *token5 = create_token ("grep", TOKEN_WORD);
+// 	// t_token *token6 = create_token ("a", TOKEN_WORD);
+// 	// t_token *token7 = create_token ("|", TOKEN_PIPE);
+// 	// t_token *token8 = create_token ("sort", TOKEN_WORD);
+// 	// t_token *token9 = create_token ("|", TOKEN_PIPE);
+// 	// t_token *token10 = create_token ("uniq", TOKEN_WORD);
+// 	// t_token *token11 = create_token ("|", TOKEN_PIPE);
+// 	// t_token *token12 = create_token ("tee", TOKEN_WORD);
+// 	// t_token *token13 = create_token(">", TOKEN_REDIRECT_OUT);
+// 	// t_token *token14 = create_token("log.txt", TOKEN_WORD);
 
 
 
 
-	token1->next = token2;
-	token2->next = token3;
-	token3->next = token4;
-	// token4->next = token5;
-	// token5->next = token6;
-	// token6->next = token7;
-	// token7->next = token8;
-	// token8->next = token9;
-	// token9->next = token10;
-	// token10->next = token11;
-	// token11->next = token12;
-	// token12->next = token13;
-	// token13->next = token14;
+// 	token1->next = token2;
+// 	token2->next = token3;
+// 	token3->next = token4;
+// 	// token4->next = token5;
+// 	// token5->next = token6;
+// 	// token6->next = token7;
+// 	// token7->next = token8;
+// 	// token8->next = token9;
+// 	// token9->next = token10;
+// 	// token10->next = token11;
+// 	// token11->next = token12;
+// 	// token12->next = token13;
+// 	// token13->next = token14;
 
-	com_token_pipe(token1, 1);
+// 	com_token_pipe(token1, 1);
 
-	return(0);
-}
-
+// 	return(0);
+// }
