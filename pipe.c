@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 //==================================================================================
 //構造体
@@ -243,13 +245,20 @@ char **decision_args(t_token *token)
 
 	while (tmp_token && tmp_token->kind != TOKEN_PIPE)
 	{
-		if (tmp_token->kind != TOKEN_REDIRECT_IN &&
-			tmp_token->kind != TOKEN_REDIRECT_OUT &&
-			tmp_token->kind != TOKEN_REDIRECT_APPEND)
+		if (tmp_token->kind == TOKEN_REDIRECT_IN ||
+			tmp_token->kind == TOKEN_REDIRECT_OUT ||
+			tmp_token->kind == TOKEN_REDIRECT_APPEND ||
+			tmp_token->kind == TOKEN_REDIRECT_HEREDOC)
+		{
+			tmp_token = tmp_token->next;
+			if (tmp_token)
+				tmp_token = tmp_token->next;
+		}
+		else
 		{
 			list_elem_num++;
+			tmp_token = tmp_token->next;
 		}
-		tmp_token = tmp_token->next;
 	}
 
 	fprintf(stderr, "num = %d\n", list_elem_num);
@@ -265,13 +274,20 @@ char **decision_args(t_token *token)
 	i = 0;
 	while(tmp_token && tmp_token->kind != TOKEN_PIPE)
 	{
-		if (tmp_token->kind != TOKEN_REDIRECT_IN &&
-		tmp_token->kind != TOKEN_REDIRECT_OUT &&
-		tmp_token->kind != TOKEN_REDIRECT_APPEND)
+		if (tmp_token->kind == TOKEN_REDIRECT_IN ||
+			tmp_token->kind == TOKEN_REDIRECT_OUT ||
+			tmp_token->kind == TOKEN_REDIRECT_APPEND ||
+			tmp_token->kind == TOKEN_REDIRECT_HEREDOC)
+		{
+			tmp_token = tmp_token->next;
+			if (tmp_token)
+				tmp_token = tmp_token->next;
+		}
+		else
 		{
 			args[i++] = strdup(tmp_token->token);
+			tmp_token = tmp_token->next;
 		}
-		tmp_token = tmp_token->next;
 	}
 	args[i] = NULL;
 	// int num = 0;
@@ -282,6 +298,39 @@ char **decision_args(t_token *token)
 	// }
 
 	return(args);
+}
+
+//==================================================================================
+//==================================================================================
+//herdoc_process
+int	herdoc_process(char *docDelimiter)
+{
+	char	*line = NULL;
+	int		fd;
+
+	fd = open("/tmp/heredoc_tmp.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+	{
+		perror("open");
+		return (-1);
+	}
+	while(1)
+	{
+		// while ((line = readline("heredoc> ")) != NULL)
+		// {
+			line = readline("heredoc> ");
+			if (strncmp(line, docDelimiter, strlen(docDelimiter)) == 0 && line[strlen(docDelimiter)] == '\0')
+			{
+				free(line);
+				break;
+			}
+			write(fd, line, strlen(line));
+			write(fd, "\n", 1);
+			free(line);
+		// }
+	}
+	close(fd);
+	return (open("/tmp/heredoc_temp.txt", O_RDONLY));
 }
 
 //==================================================================================
@@ -359,6 +408,28 @@ int	redirections(t_token *token)
 				return(-1);
 			}
 			if (dup2(fd, STDOUT_FILENO) == -1)
+			{
+				close(fd);
+				perror("dup2");
+				return (-1);
+			}
+			close(fd);
+		}
+		else if ((token)->kind == TOKEN_REDIRECT_HEREDOC)
+		{
+			token = (token)->next;
+			if (!token)
+			{
+				fprintf(stderr, "Error: Token resirect << HEREDOC\n");
+				return (-1);
+			}
+			fd = herdoc_process((token)->token);
+			if (fd == -1)
+			{
+				fprintf(stderr, "Error processing heredoc\n");
+				return (-1);
+			}
+			if (dup2(fd, STDIN_FILENO) == -1)
 			{
 				close(fd);
 				perror("dup2");
@@ -469,6 +540,28 @@ t_token *create_token(char *str, t_token_kind kind) {
 }
 
 
+
+
+// int main()
+// {
+//     t_token *token1 = create_token("cat", TOKEN_WORD);
+//     t_token *token2 = create_token("<<", TOKEN_REDIRECT_HEREDOC);
+//     t_token *token3 = create_token("EOF", TOKEN_WORD);
+//     t_token *token4 = create_token("|", TOKEN_PIPE);
+//     t_token *token5 = create_token("grep", TOKEN_WORD);
+//     t_token *token6 = create_token("hello", TOKEN_WORD);
+
+//     // トークンのリンク
+//     token1->next = token2;
+//     token2->next = token3;
+//     token3->next = token4;
+//     token4->next = token5;
+//     token5->next = token6;
+
+//     com_token_pipe(token1, 2);
+
+//     return (0);
+// }
 //============================================================================================================
 //cat < input.txt | grep 'a' | sort | uniq | tee > log.txt
 //リダイレクトを含んだpipe
@@ -507,3 +600,44 @@ t_token *create_token(char *str, t_token_kind kind) {
 
 //     return (0);
 // }
+
+
+int main()
+{
+	t_token *token1 = create_token("echo", TOKEN_WORD);
+	t_token *token2 = create_token("Hello World", TOKEN_WORD);
+	t_token *token3 = create_token(">>", TOKEN_REDIRECT_APPEND);
+	t_token *token4 = create_token("input.txt", TOKEN_WORD);
+	// t_token *token5 = create_token ("grep", TOKEN_WORD);
+	// t_token *token6 = create_token ("a", TOKEN_WORD);
+	// t_token *token7 = create_token ("|", TOKEN_PIPE);
+	// t_token *token8 = create_token ("sort", TOKEN_WORD);
+	// t_token *token9 = create_token ("|", TOKEN_PIPE);
+	// t_token *token10 = create_token ("uniq", TOKEN_WORD);
+	// t_token *token11 = create_token ("|", TOKEN_PIPE);
+	// t_token *token12 = create_token ("tee", TOKEN_WORD);
+	// t_token *token13 = create_token(">", TOKEN_REDIRECT_OUT);
+	// t_token *token14 = create_token("log.txt", TOKEN_WORD);
+
+
+
+
+	token1->next = token2;
+	token2->next = token3;
+	token3->next = token4;
+	// token4->next = token5;
+	// token5->next = token6;
+	// token6->next = token7;
+	// token7->next = token8;
+	// token8->next = token9;
+	// token9->next = token10;
+	// token10->next = token11;
+	// token11->next = token12;
+	// token12->next = token13;
+	// token13->next = token14;
+
+	com_token_pipe(token1, 1);
+
+	return(0);
+}
+

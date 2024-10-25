@@ -1,7 +1,4 @@
-Hello World input.txt
-
-arakan
-kaka
-ccaifadoi 
- fa
- 
+Hello World
+Hello World
+Hello World
+Hello World

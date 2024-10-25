@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 //==================================================================================
 //構造体
@@ -241,20 +243,29 @@ char **decision_args(t_token *token)
 	tmp_token = token;
 	int list_elem_num = 0;
 
+	// コマンドの引数数を数える（リダイレクトとその後のトークンをスキップ）
 	while (tmp_token && tmp_token->kind != TOKEN_PIPE)
 	{
-		if (tmp_token->kind != TOKEN_REDIRECT_IN &&
-			tmp_token->kind != TOKEN_REDIRECT_OUT &&
-			tmp_token->kind != TOKEN_REDIRECT_APPEND)
+		if (tmp_token->kind == TOKEN_REDIRECT_IN ||
+			tmp_token->kind == TOKEN_REDIRECT_OUT ||
+			tmp_token->kind == TOKEN_REDIRECT_APPEND ||
+			tmp_token->kind == TOKEN_REDIRECT_HEREDOC)
 		{
-			list_elem_num++;
+			// リダイレクトトークンが来たら次のトークンもスキップ
+			tmp_token = tmp_token->next; // リダイレクトの後のファイル名をスキップ
+			if (tmp_token)
+				tmp_token = tmp_token->next; // 次のトークンに移動
 		}
-		tmp_token = tmp_token->next;
+		else
+		{
+			// 通常のトークンはカウント
+			list_elem_num++;
+			tmp_token = tmp_token->next;
+		}
 	}
 
-	fprintf(stderr, "num = %d\n", list_elem_num);
-
-	char	**args = (char**)malloc(sizeof(char*) * (list_elem_num + 1));
+	// 引数を格納するためのメモリを確保
+	char **args = (char**)malloc(sizeof(char*) * (list_elem_num + 1));
 	if (!args)
 	{
 		perror("malloc");
@@ -263,211 +274,274 @@ char **decision_args(t_token *token)
 	
 	tmp_token = token;
 	i = 0;
-	while(tmp_token && tmp_token->kind != TOKEN_PIPE)
+	// 引数を格納（リダイレクトとその後のトークンをスキップ）
+	while (tmp_token && tmp_token->kind != TOKEN_PIPE)
 	{
-		if (tmp_token->kind != TOKEN_REDIRECT_IN &&
-		tmp_token->kind != TOKEN_REDIRECT_OUT &&
-		tmp_token->kind != TOKEN_REDIRECT_APPEND)
+		if (tmp_token->kind == TOKEN_REDIRECT_IN ||
+			tmp_token->kind == TOKEN_REDIRECT_OUT ||
+			tmp_token->kind == TOKEN_REDIRECT_APPEND ||
+			tmp_token->kind == TOKEN_REDIRECT_HEREDOC)
 		{
-			args[i++] = strdup(tmp_token->token);
+			// リダイレクトトークンが来たら次のトークンもスキップ
+			tmp_token = tmp_token->next; // リダイレクトの後のファイル名をスキップ
+			if (tmp_token)
+				tmp_token = tmp_token->next; // 次のトークンに移動
 		}
-		tmp_token = tmp_token->next;
+		else
+		{
+			// 通常のトークンは引数として格納
+			args[i++] = strdup(tmp_token->token);
+			tmp_token = tmp_token->next;
+		}
 	}
 	args[i] = NULL;
-	// int num = 0;
-	// while(args[num])
-	// {
-	// 	printf("args[%d] : %s\n", num, args[num]);
-	// 	num++;
-	// }
 
-	return(args);
+	return args;
 }
 
-//==================================================================================
-//==================================================================================
-//redirect
 
-int	redirections(t_token *token)
+
+
+int handle_heredoc(char *delimiter)
 {
-	int	fd;
+    char    *line = NULL;
+    int     fd;
 
-	fd = -1;
-	while (token && token->kind != TOKEN_PIPE)
-	{
-	fprintf(stderr, "token->token-----------------%s\n", (token)->token);
+    // ヒアドキュメント用の一時ファイルを作成
+    fd = open("/tmp/heredoc_temp.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (fd == -1)
+    {
+        perror("open");
+        return (-1);
+    }
 
-		if ((token)->kind == TOKEN_REDIRECT_IN)
-		{
-			fprintf(stderr, "TOKEN_REDIRECT_IN %s\n", (token)->token);
-			token = (token)->next;
-			if (!token)
-			{
-				fprintf(stderr, "Error: Token redirect < IN\n");
-				return (-1);
-			}
-			fd = open((token)->token, O_RDONLY);
-			if (fd == -1)
-			{
-				perror("open");
-				return (-1);
-			}
-			if (dup2(fd, STDIN_FILENO) == -1)
-			{
-				close(fd);
-				perror("dup2");
-				return (-1);
-			}
-			close (fd);
-		}
-		else if ((token)->kind == TOKEN_REDIRECT_OUT)
-		{
-			fprintf(stderr, "TOKEN_REDIRECT_OUT %s\n", (token)->token);
-			token = (token)->next;
-			if (!token)
-			{
-				fprintf(stderr, "Error: Token resirect > OUT\n");
-				return (-1);
-			}	
-			fd = open((token)->token, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			fprintf(stderr, "fd = %d\n", fd);
-			if (fd == -1)
-			{
-				perror("open");
-				return (-1);
-			}
-			if(dup2(fd, STDOUT_FILENO) == -1)
-			{
-				close(fd);
-				perror("dup2");
-				return (-1);
-			}
-			close(fd);
-		}
-		else if ((token)->kind == TOKEN_REDIRECT_APPEND)
-		{
-			token = (token)->next;
-			if (!token)
-			{
-				fprintf(stderr, "Error: Token redirect >> append\n");
-				return (-1);
-			}
-			fd = open((token)->token, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (fd == -1)
-			{
-				perror("open");
-				return(-1);
-			}
-			if (dup2(fd, STDOUT_FILENO) == -1)
-			{
-				close(fd);
-				perror("dup2");
-				return (-1);
-			}
-			close(fd);
-		}
-		// else
-		// {
-		// 	continue;
-		// }
-		token = (token)->next;
-	}
-	return (0);
+    // readline での入力待ち
+    while ((line = readline("heredoc> ")) != NULL)  // readline を使用
+    {
+        // 終端文字列に到達したら終了
+        if (strncmp(line, delimiter, strlen(delimiter)) == 0 && line[strlen(delimiter)] == '\0')
+        {
+            free(line);  // readline が割り当てたメモリを解放
+            break;
+        }
+        // 一時ファイルに書き込む
+        write(fd, line, strlen(line));
+        write(fd, "\n", 1);  // readline には改行が含まれないので、手動で追加
+        free(line);  // readline が割り当てたメモリを解放
+    }
+
+    close(fd);
+    return open("/tmp/heredoc_temp.txt", O_RDONLY);  // 読み込み用に再オープンしてファイルディスクリプタを返す
 }
 
-//==================================================================================
-//==================================================================================
-//com_token_pipe
+//===============================================================================================
+//リダイレクト処理
 
-
-void	com_token_pipe(t_token *token, int num_com)
+int redirections(t_token *token)
 {
-	int	fds[2];
-	int	keep_fd = 0;
-	int	i;
-	pid_t	pid;
-	t_token	*tmp_token;
-	char **args;
+    int fd = -1;
 
-	tmp_token = token;
-	i = 0;
-	while (i < num_com && tmp_token)
-	{
-		if (tmp_token->kind == TOKEN_WORD)
-		{
-			fprintf(stderr, "i = %d\n", i);
-			if (i < num_com - 1 && pipe(fds) == -1)
-			{
-				perror("pipe");
-				exit(1);
-			}
-			pid = fork();
-			if (pid == -1)
-			{
-				perror("fork");
-				exit(1);
-			}
-			if (pid == 0)
-			{
-				fd_input_child(keep_fd);
-				if (i < num_com - 1)
-				{
-					fd_output_child(fds);
-				}
-				fprintf(stderr, "tmp->token123 %s\n", tmp_token->token);
-				if (redirections(tmp_token) == -1)
-				{
-					exit(1);
-				}
-				fprintf(stderr, "tmp->token543 %s\n", tmp_token->token);
-				
-
-				args = decision_args(tmp_token);
-				fprintf(stderr, "find_command :%s\n", find_command(args[0]));
-				fprintf(stderr, "args[0] = %s\n args[1] = %s\n", args[0], args[1]);
-
-				execve(find_command(args[0]), args, environ);
-				perror("execve");// エラーが発生した場合のメッセージを表示
-				free(args);
-					exit(1);
-			}
-			else if (pid > 0)
-				keep_fd_update(fds, &keep_fd, i, num_com);
-			i++;
-		}
-		// printf("after -----> tmp->token %s\n", tmp_token->token);
-
-		tmp_token = token_not_pipe_count(tmp_token);
-	}
-	i = 0;
-	while (i < num_com)
-	{
-		wait(NULL);
-		i++;
-	}
-	
-	
+    while (token && token->kind != TOKEN_PIPE)
+    {
+        if ((token)->kind == TOKEN_REDIRECT_IN)
+        {
+            token = token->next;
+            if (!token)
+            {
+                fprintf(stderr, "Error: Token redirect < IN\n");
+                return (-1);
+            }
+            fd = open(token->token, O_RDONLY);
+            if (fd == -1)
+            {
+                perror("open");
+                return (-1);
+            }
+            if (dup2(fd, STDIN_FILENO) == -1)
+            {
+                close(fd);
+                perror("dup2");
+                return (-1);
+            }
+            close(fd);
+        }
+        else if ((token)->kind == TOKEN_REDIRECT_OUT)
+        {
+            token = token->next;
+            if (!token)
+            {
+                fprintf(stderr, "Error: Token redirect > OUT\n");
+                return (-1);
+            }   
+            fd = open(token->token, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (fd == -1)
+            {
+                perror("open");
+                return (-1);
+            }
+            if (dup2(fd, STDOUT_FILENO) == -1)
+            {
+                close(fd);
+                perror("dup2");
+                return (-1);
+            }
+            close(fd);
+        }
+        else if ((token)->kind == TOKEN_REDIRECT_APPEND)
+        {
+            token = token->next;
+            if (!token)
+            {
+                fprintf(stderr, "Error: Token redirect >> append\n");
+                return (-1);
+            }
+            fd = open(token->token, O_WRONLY | O_CREAT | O_APPEND, 0644);
+            if (fd == -1)
+            {
+                perror("open");
+                return (-1);
+            }
+            if (dup2(fd, STDOUT_FILENO) == -1)
+            {
+                close(fd);
+                perror("dup2");
+                return (-1);
+            }
+            close(fd);
+        }
+        else if (token->kind == TOKEN_REDIRECT_HEREDOC)  // ヒアドキュメントの場合の処理
+        {
+            token = token->next;
+            if (!token)
+            {
+                fprintf(stderr, "Error: Missing heredoc delimiter\n");
+                return (-1);
+            }
+            // ヒアドキュメントを処理して一時ファイルを標準入力にリダイレクト
+            fd = handle_heredoc(token->token);
+            if (fd == -1)
+            {
+                fprintf(stderr, "Error processing heredoc\n");
+                return (-1);
+            }
+            if (dup2(fd, STDIN_FILENO) == -1)
+            {
+                close(fd);
+                perror("dup2");
+                return (-1);
+            }
+            close(fd);  // 一時ファイルを閉じる
+        }
+        token = token->next;
+    }
+    return (0);
 }
 
+//==================================================================================
+//コマンド実行
 
+void com_token_pipe(t_token *token, int num_com)
+{
+    int fds[2];
+    int keep_fd = 0;
+    int i;
+    pid_t pid;
+    t_token *tmp_token;
+    char **args;
 
+    tmp_token = token;
+    i = 0;
+    while (i < num_com && tmp_token)
+    {
+        if (tmp_token->kind == TOKEN_WORD)
+        {
+            if (i < num_com - 1 && pipe(fds) == -1)
+            {
+                perror("pipe");
+                exit(1);
+            }
+            pid = fork();
+            if (pid == -1)
+            {
+                perror("fork");
+                exit(1);
+            }
+            if (pid == 0)
+            {
+                fd_input_child(keep_fd);
+                if (i < num_com - 1)
+                {
+                    fd_output_child(fds);
+                }
+                if (redirections(tmp_token) == -1)
+                {
+                    exit(1);
+                }
 
+                args = decision_args(tmp_token);
+                execve(find_command(args[0]), args, environ);
+                perror("execve");
+                free(args);
+                exit(1);
+            }
+            else if (pid > 0)
+            {
+                keep_fd_update(fds, &keep_fd, i, num_com);
+            }
+            i++;
+        }
+
+        tmp_token = token_not_pipe_count(tmp_token);
+    }
+    i = 0;
+    while (i < num_com)
+    {
+        wait(NULL);
+        i++;
+    }
+}
 
 //---------------------------------------------------------------------------------------------
-//creat_token
+//トークン作成関数
 
-t_token *create_token(char *str, t_token_kind kind) {
+t_token *create_token(char *str, t_token_kind kind)
+{
     t_token *new_token = (t_token *)malloc(sizeof(t_token));
-    if (!new_token) {
+    if (!new_token)
+    {
         perror("Failed to allocate memory for token");
         exit(1);
     }
-    new_token->token = strdup(str);  // 文字列をコピー
+    new_token->token = strdup(str);
     new_token->kind = kind;
     new_token->next = NULL;
     return new_token;
 }
 
+//============================================================================================================
+// ヒアドキュメントの例: cat << EOF | grep 'hello'
+//============================================================================================================
+
+int main()
+{
+    t_token *token1 = create_token("cat", TOKEN_WORD);
+    t_token *token2 = create_token("<<", TOKEN_REDIRECT_HEREDOC);
+    t_token *token3 = create_token("EOF", TOKEN_WORD);
+    t_token *token4 = create_token("|", TOKEN_PIPE);
+    t_token *token5 = create_token("grep", TOKEN_WORD);
+    t_token *token6 = create_token("hello", TOKEN_WORD);
+
+    // トークンのリンク
+    token1->next = token2;
+    token2->next = token3;
+    token3->next = token4;
+    token4->next = token5;
+    token5->next = token6;
+
+    com_token_pipe(token1, 2);
+
+    return (0);
+}
 
 //============================================================================================================
 //cat < input.txt | grep 'a' | sort | uniq | tee > log.txt

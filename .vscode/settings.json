@@ -2,6 +2,7 @@
 	"files.associations": {
 		"stat.h": "c",
 		"fcntl.h": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"readline.h": "c"
 	}
 }
