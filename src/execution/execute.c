@@ -114,6 +114,7 @@ bool execute(t_condition *condition, t_node *node)
 	{
 		put_error(strerror(errno));
 		return (false);
+	// printf("execuve %s, %s\n", path, argv[1]);
 	}
 	free(argv);
 	return (false);

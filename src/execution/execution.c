@@ -56,7 +56,8 @@ bool execution_command(t_condition *condition, t_token *token_list)
 		temp = temp->next;
 		printf("-------------------------\n");
 	}
-	exec_command_pipe(condition, node);
+	
+	exec_command(condition, node);
 	(void)condition;
 	return (true);
 }

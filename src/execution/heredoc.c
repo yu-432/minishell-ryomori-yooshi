@@ -22,7 +22,6 @@ bool read_heredoc(t_node *node, int i)
 {
 	char *line;
 
-	printf("----------heredoc_fd = %d\n", node->fd_in);
 	while (true)
 	{
 		line = readline(HEREDOC_PROMPT);
@@ -44,7 +43,6 @@ bool heredoc(t_node *node, int i)//heredoc子プロセスを作成して、そ�
 	int fds[2];
 	pid_t pid;
 
-	printf("heloooooooooooooooo\n");
 	if (pipe(fds) == -1)
 	{
 		put_error(strerror(errno));
@@ -53,12 +51,12 @@ bool heredoc(t_node *node, int i)//heredoc子プロセスを作成して、そ�
 	pid = fork();
 	if (!pid)
 	{
+		read_heredoc(node, i);
+		close(fds[READ]);
 		dup2(fds[WRITE], STDOUT_FILENO);
 		close(fds[WRITE]);
-		close(fds[READ]);
-		printf("child heredoc_fd = %d\n", node->fd_in);
-		read_heredoc(node, i);
 		ft_putstr_fd(node->heredoc_str, STDOUT_FILENO);
+		exit(0);
 	}
 	else
 	{
@@ -82,6 +80,5 @@ bool redirect_heredoc(t_node *node, int i)
 		return (false);
 	}
 	heredoc(node, i);
-	printf("heredoc_fd2 = %d\n", node->fd_in);
 	return (true);
 }

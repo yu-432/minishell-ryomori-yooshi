@@ -15,7 +15,6 @@ t_node *new_node(char **argv)
 	node->argv = argv;
 	node->fd_in = -2;
 	node->fd_out = -2;
-	node->heredoc_str = NULL;
 	return (node);
 }
 
@@ -101,6 +100,7 @@ t_node *make_node(t_token *token_list)
 		current->next = new_node(argv);
 		if (!current->next)
 			return (NULL);
+		current->next->prev = current;
 		if (is_pipe(argv[0]))
 			current->next->kind = NODE_PIPE;
 		else

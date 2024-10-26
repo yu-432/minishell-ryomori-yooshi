@@ -7,7 +7,7 @@ SRCS		= 	src/main.c \
 				src/lexer/find_syntax_error.c\
 				src/print/put_error.c\
 				src/signal/signal.c \
-				src/execution/execution.c src/execution/redirect.c src/execution/heredoc.c src/execution/pipe.c src/execution/execute.c src/execution/node.c \
+				src/execution/execution.c src/execution/redirect.c src/execution/heredoc.c src/execution/pipe.c src/execution/execute.c src/execution/node.c src/execution/wrapper.c
 
 OBJS		= ${SRCS:.c=.o}
 
