@@ -58,13 +58,6 @@ char **make_argv(t_token **token_list)
 		i++;
 	}
 	argv[i] = NULL;
-
-	int j = 0;
-	while (argv[j])
-	{
-		printf("argv[%d] = %s\n", j, argv[j]);
-		j++;
-	}
 	return (argv);
 }
 

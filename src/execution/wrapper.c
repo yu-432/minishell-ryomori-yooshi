@@ -21,3 +21,4 @@ void wrap_dup2(int oldfd, int newfd)
 		exit(1);
 	}
 }
+
