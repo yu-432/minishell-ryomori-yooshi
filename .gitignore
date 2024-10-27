@@ -1,0 +1,17 @@
+# Config
+.vscode
+.idea
+
+# Object files
+*.o
+*.a
+
+# Executables
+*.out
+*.txt
+minishell
+
+# Tests
+
+/test
+/test_outputs
