@@ -1,4 +1,5 @@
 #include "../header/condition.h"
+#include "../header/execution.h"
 #include "../header/standard.h"
 #include "../header/lexer.h"
 #include "../header/init.h"
@@ -35,6 +36,7 @@ void update_condition(t_condition *condition)
 void shell_loop(t_condition *condition)
 {
 	char *line;
+	t_token **token_lst;
 
 	while (true)
 	{
@@ -42,8 +44,18 @@ void shell_loop(t_condition *condition)
 		line = read_command_line();
 		if (*line == '\0')
 			continue;
-		lexer(condition, line);
-		//TODO:tokenizer->parser
+		lexer(condition, line, token_lst);
+		fprintf(stderr, "[Debug]: after lexer\n");
+		// int count = 1;
+		// while((*token_lst))
+		// {
+		//     printf("token[%u] kind = %u : %s\n", count, (*token_lst)->kind, (*token_lst)->token);
+		//     count++;
+		//     (*token_lst) = (*token_lst)->next;
+	    // }
+		fprintf(stderr, "[Debug]: Before execution\n");
+		com_token_pipe((*token_lst), 1);
+	  	//TODO:tokenizer->parser
 		// if (*line == '\0')//仮にlineがNULLだった場合終了させる
 		// 	break ;
 		free(line);
