@@ -13,6 +13,7 @@ typedef struct s_item
 	char *key;
 	char *value;
 	struct s_item	*next;
+	struct s_item	*prev;
 }	t_item;
 
 typedef struct s_condition
