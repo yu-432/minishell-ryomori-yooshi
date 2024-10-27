@@ -21,4 +21,5 @@ void builtin_echo(char **argv)
 	}
 	if (is_newline)
 		ft_putstr_fd("\n", STDOUT_FILENO);
+	exit(0);
 }

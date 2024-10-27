@@ -21,6 +21,7 @@ bool insert_env(t_condition *condition, char *key, char *value)
 	}
 	tail = set_tail(condition->environ);
 	tail->next = new;
+	new->prev = tail;//prevを参照できるようにした　確認必要
 	return (true);
 }
 
