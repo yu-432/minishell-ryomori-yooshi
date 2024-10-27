@@ -39,9 +39,6 @@ t_item *touch_t_item()
 
 	item = ft_calloc(1, sizeof(t_item));
 	if (!item)
-	{
-		printf("TODO:touch environ malloc error\n");
 		return (NULL);
-	}
 	return (item);
 }

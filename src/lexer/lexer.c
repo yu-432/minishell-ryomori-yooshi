@@ -3,23 +3,27 @@
 
 
 
-bool lexer(t_condition *condition, char *line, t_token **token_lst)
+t_token *lexer(t_condition *condition, char *line)
 {
 	t_token *tokenized;
 	int count = 1;
 
 	tokenized = tokenizer(line);
-	find_syntax_error(condition, tokenized);
-	expand_token(condition, tokenized);
+	if (!tokenized)
+		return (NULL);
+	if (!find_syntax_error(condition, tokenized))
+		return (free_tokens(tokenized), NULL);
+	if (!expand_token(condition, tokenized))
+		return (free_tokens(tokenized), NULL);
 
-	(*token_lst) = tokenized;
-
+	t_token *temp = tokenized;
 	while(tokenized)
 	{
 		printf("token[%u] kind = %u : %s\n", count, tokenized->kind, tokenized->token);
 		count++;
 		tokenized = tokenized->next;
 	}
+	tokenized = temp;	
 	(void)condition;
-	return (true);
+	return (tokenized);
 }
