@@ -37,9 +37,7 @@ void set_redirect(t_node *node)
 bool execution_command(t_condition *condition, t_token *token_list)
 {
 	t_node *node;
-	t_token *head;
 	// init 必要かもしれないa
-	head = token_list;
 	node = make_node(token_list);
 	if (node == NULL)
 		return (false);

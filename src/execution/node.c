@@ -80,9 +80,7 @@ t_node *make_node(t_token *token_list)
 	t_node head;
 	t_node *current;
 	char **argv;
-	int i;
 
-	i = 0;
 	head.next = NULL;
 	while(token_list)
 	{

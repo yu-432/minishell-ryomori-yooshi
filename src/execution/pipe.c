@@ -125,8 +125,8 @@ bool execute_loop(t_condition *condition, t_node *node)
 	int pipe_count;
 	int i;
 
-	pid = ft_calloc(pipe_count, sizeof(pid_t));
 	pipe_count = count_pipe(node);
+	pid = ft_calloc(pipe_count, sizeof(pid_t));
 	i = 0;
 	while(node)
 	{
