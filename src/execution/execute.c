@@ -112,9 +112,8 @@ bool execute(t_condition *condition, t_node *node)
 	}
 	if (execve(path, argv, NULL) == -1)
 	{
-		put_error(strerror(errno));
+		perror(strerror(errno));
 		return (false);
 	}
-	free(argv);
-	return (false);
+	exit(EXIT_FAILURE);
 }

@@ -12,6 +12,7 @@ t_node *new_node(char **argv)
 	node = ft_calloc(1, sizeof(t_node));
 	if (node == NULL)
 		return (NULL);
+	node->next = NULL;
 	node->argv = argv;
 	node->fd_in = -2;
 	node->fd_out = -2;

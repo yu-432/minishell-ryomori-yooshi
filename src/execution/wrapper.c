@@ -9,6 +9,7 @@ void wrap_close(int fd)
 	if (fd != -1 && close(fd) == -1)
 	{
 		perror("close");
+		fprintf(stderr, "fd = %d\n", fd);
 		exit(1);
 	}
 }

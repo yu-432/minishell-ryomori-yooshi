@@ -26,7 +26,7 @@ typedef struct s_node
 	char *heredoc_str;
 	int fd_in;
 	int fd_out;
-	int fds[2];
+	// int fds[2];
 	struct s_node *next;
 	struct s_node *prev;
 } t_node;
@@ -36,6 +36,7 @@ typedef struct s_exec_info
 	int fds[2];
 	int keep_fd;
 	int pipe_count;
+	int executed_count;
 } t_exec_info;
 
 bool execution_command(t_condition *condition, t_token *token_list);

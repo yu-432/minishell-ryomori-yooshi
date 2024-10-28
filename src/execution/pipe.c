@@ -18,18 +18,28 @@ int count_pipe(t_node *node)
 	return (count);
 }
 
-bool set_redirect_fd(t_node *node)
+bool close_redirect_fd(t_node *node)
 {
 	if (node->fd_in != -2)
 	{
-		wrap_dup2(node->fd_in, STDIN_FILENO);
 		wrap_close(node->fd_in);
+		node->fd_in = -2;
 	}
-	if(node->fd_out != -2)
+	if (node->fd_out != -2)
 	{
-		wrap_dup2(node->fd_out, STDOUT_FILENO);
 		wrap_close(node->fd_out);
+		node->fd_out = -2;
 	}
+	return (true);
+}
+
+bool set_redirect_fd(t_node *node)
+{
+	if (node->fd_in != -2)
+		wrap_dup2(node->fd_in, STDIN_FILENO);
+	if(node->fd_out != -2)
+		wrap_dup2(node->fd_out, STDOUT_FILENO);
+	close_redirect_fd(node);
 	return (false);
 }
 
@@ -47,6 +57,8 @@ bool execute_single_command(t_condition *condition, t_node *node)
 	{
 		set_redirect_fd(node);
 		execute(condition, node);//このままだと、エラー文も出力先が変更されているので修正する必要あり
+	fprintf(stderr, "command not found\n");
+
 	}
 	if(pid > 0)
 	{
@@ -62,100 +74,107 @@ void init_exec_info(t_exec_info *info, t_node *node)
 	info->pipe_count = count_pipe(node);
 }
 
-bool make_pipe(t_node *node)
+bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2])
 {
-	while (node)
-	{
-		if (node->kind == NODE_PIPE)
-		{
-			if (pipe(node->fds) == -1)
-			{
-				put_error(strerror(errno));
-				return (false);
-			}
-		}
-		node = node->next;
-	}
+	wrap_close(fds[WRITE]);
+	if (info->keep_fd != -2)
+		wrap_close(info->keep_fd);
+	info->keep_fd = fds[READ];
+	// wrap_close(fds[READ]);
+	(void)condition;
+	(void)node;
+	(void)info;
 	return (true);
 }
 
-bool child_process(t_condition *condition, t_node *node, int i, int pipe_count)
+bool child_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2])
 {
-	if (i > 0) //handle input fd
+	if (info->executed_count < info->pipe_count)
 	{
-		wrap_dup2(node->prev->fds[READ], STDIN_FILENO);
-		wrap_close(node->prev->fds[READ]);
-		wrap_close(node->prev->fds[WRITE]);
+		wrap_dup2(fds[WRITE], STDOUT_FILENO);
+		wrap_close(fds[WRITE]);
+		wrap_close(fds[READ]);
 	}
-	if (i < pipe_count) //handle output fd
+	if (info->executed_count > 0)
 	{
-		wrap_dup2(node->next->fds[WRITE], STDOUT_FILENO);
-		wrap_close(node->next->fds[READ]);
-		wrap_close(node->next->fds[WRITE]);
+		wrap_dup2(info->keep_fd, STDIN_FILENO);
+		wrap_close(info->keep_fd);
+		// wrap_close(info->fds[READ]);
 	}
 	set_redirect_fd(node);
 	execute(condition, node);
-	return (true);
+	fprintf(stderr, "command not found\n");
+	exit(EXIT_FAILURE);
 }
 
-bool parent_process(t_condition *condition, t_node *node)
+pid_t execute_last_command(t_condition *condition, t_node *node, t_exec_info *info)
 {
-	if (node->fd_in != -2)
+	pid_t pid;
+
+	pid = fork();
+	if (pid == -1)
+		return (put_error(strerror(errno)), false);
+	if (pid == 0)
 	{
-		wrap_close(node->fd_in);
-		node->fd_in = -2;
+		wrap_close(STDIN_FILENO);
+		wrap_dup2(info->keep_fd, STDIN_FILENO);
+		wrap_close(info->keep_fd);
+		set_redirect_fd(node);
+		execute(condition, node);
+		exit(EXIT_FAILURE);
 	}
-	if (node->fd_out != -2)
+	if (pid > 0)
 	{
-		wrap_close(node->fd_out);
-		node->fd_out = -2;
+		wrap_close(info->keep_fd);
+		return (pid);
 	}
-	if(node->prev->kind == NODE_PIPE)
-	{
-		wrap_close(node->prev->fds[READ]);
-		wrap_close(node->prev->fds[WRITE]);
-	}
-	(void)condition;
-	return (true);
+	return (0);
 }
 
 bool execute_loop(t_condition *condition, t_node *node)
 {
 	pid_t *pid;
-	int pipe_count;
-	int i;
+	t_exec_info info;
+	int fds[2];
 
-	pipe_count = count_pipe(node);
-	pid = ft_calloc(pipe_count, sizeof(pid_t));
-	i = 0;
-	while(node)
+	init_exec_info(&info, node);
+	pid = ft_calloc(info.pipe_count + 1, sizeof(pid_t));
+	if (!pid)
+		return (put_error(strerror(errno)), false);
+	while(node->next)
 	{
 		if (node->kind == NODE_CMD)
 		{
-			if((pid[i] = fork()) ==  -1)
+			pipe(fds);
+			if((pid[info.executed_count] = fork()) ==  -1)
 				return (put_error(strerror(errno)), false);
-			if (pid[i] == 0)
-				child_process(condition, node, i, pipe_count);
+			if (pid[info.executed_count] == 0)
+				child_process(condition, node, &info, fds);
 			else
-				parent_process(condition, node);
-			i++;
+			{
+				parent_process(condition, node, &info, fds);
+			}
+			close_redirect_fd(node);
+			info.executed_count++;
 		}
 		node = node->next;
 	}
-	while (i >= 0)
-		waitpid(pid[i--], NULL, 0);
+	pid[info.executed_count] = execute_last_command(condition, node, &info);
+	waitpid(pid[info.executed_count], NULL, 0);
+	while(--info.executed_count >= 0)
+		wait(NULL);
 	return (true);
 }
 
 bool exec_command(t_condition *condition, t_node *node)
 {
 	printf("-----result-----\n");
-	if (!node->next)
+	if (node->next == NULL)
 		execute_single_command(condition, node);
 	else
-	{
-		make_pipe(node);
 		execute_loop(condition, node);
-	}
 	return (true);
 }
+
+//出力先がpipeの場合、waitしない
+//パイプで連結されたコマンドの場合、最後のコマンドのexit statusを返す
