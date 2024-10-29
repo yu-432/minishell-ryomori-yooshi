@@ -67,11 +67,12 @@ bool execute_single_command(t_condition *condition, t_node *node)
 	return (true);
 }
 
-void init_exec_info(t_exec_info *info, t_node *node)
+bool init_exec_info(t_exec_info *info, t_node *node)
 {
 	ft_memset(info, 0, sizeof(t_exec_info));
 	info->keep_fd = -2;
 	info->pipe_count = count_pipe(node);
+	return (true);
 }
 
 bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2])
@@ -80,7 +81,6 @@ bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int
 	if (info->keep_fd != -2)
 		wrap_close(info->keep_fd);
 	info->keep_fd = fds[READ];
-	// wrap_close(fds[READ]);
 	(void)condition;
 	(void)node;
 	(void)info;
@@ -99,7 +99,6 @@ bool child_process(t_condition *condition, t_node *node, t_exec_info *info, int 
 	{
 		wrap_dup2(info->keep_fd, STDIN_FILENO);
 		wrap_close(info->keep_fd);
-		// wrap_close(info->fds[READ]);
 	}
 	set_redirect_fd(node);
 	execute(condition, node);
@@ -107,7 +106,7 @@ bool child_process(t_condition *condition, t_node *node, t_exec_info *info, int 
 	exit(EXIT_FAILURE);
 }
 
-pid_t execute_last_command(t_condition *condition, t_node *node, t_exec_info *info)
+pid_t execute_last_command_wait(t_condition *condition, t_node *node, t_exec_info *info)
 {
 	pid_t pid;
 
@@ -116,7 +115,6 @@ pid_t execute_last_command(t_condition *condition, t_node *node, t_exec_info *in
 		return (put_error(strerror(errno)), false);
 	if (pid == 0)
 	{
-		wrap_close(STDIN_FILENO);
 		wrap_dup2(info->keep_fd, STDIN_FILENO);
 		wrap_close(info->keep_fd);
 		set_redirect_fd(node);
@@ -126,43 +124,38 @@ pid_t execute_last_command(t_condition *condition, t_node *node, t_exec_info *in
 	if (pid > 0)
 	{
 		wrap_close(info->keep_fd);
-		return (pid);
+		waitpid(pid, NULL, 0);
 	}
+	while(--info->executed_count >= 0)
+		wait(NULL);
 	return (0);
 }
 
 bool execute_loop(t_condition *condition, t_node *node)
 {
-	pid_t *pid;
+	pid_t pid;
 	t_exec_info info;
 	int fds[2];
 
-	init_exec_info(&info, node);
-	pid = ft_calloc(info.pipe_count + 1, sizeof(pid_t));
-	if (!pid)
-		return (put_error(strerror(errno)), false);
+	if (!init_exec_info(&info, node))
+		return (false);
 	while(node->next)
 	{
 		if (node->kind == NODE_CMD)
 		{
 			pipe(fds);
-			if((pid[info.executed_count] = fork()) ==  -1)
+			if((pid = fork()) ==  -1)
 				return (put_error(strerror(errno)), false);
-			if (pid[info.executed_count] == 0)
+			if (pid == 0)
 				child_process(condition, node, &info, fds);
 			else
-			{
 				parent_process(condition, node, &info, fds);
-			}
 			close_redirect_fd(node);
 			info.executed_count++;
 		}
 		node = node->next;
 	}
-	pid[info.executed_count] = execute_last_command(condition, node, &info);
-	waitpid(pid[info.executed_count], NULL, 0);
-	while(--info.executed_count >= 0)
-		wait(NULL);
+	execute_last_command_wait(condition, node, &info);
 	return (true);
 }
 
