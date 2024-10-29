@@ -104,6 +104,8 @@ bool execute(t_condition *condition, t_node *node)
 	argv = molding_argv(node);
 	if (!argv)
 		return (false);
+	// if (is_builtin(argv[0]))
+	// 	execute_builtin(condition, argv);
 	path = find_command_path(condition, argv[0]);
 	if (!path)
 	{

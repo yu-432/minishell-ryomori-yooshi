@@ -29,4 +29,5 @@ void builtin_unset(t_condition *condition, char **argv)
 		free_t_item(&delete_key);
 		i++;
 	}
+	exit(0);
 }

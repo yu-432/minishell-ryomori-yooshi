@@ -15,4 +15,5 @@ void builtin_env(t_condition *condition)
 		ft_putstr_fd(current->value, STDOUT_FILENO);
 		current = current->next;
 	}
+	exit(0);
 }

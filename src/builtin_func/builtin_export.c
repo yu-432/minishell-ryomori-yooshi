@@ -57,4 +57,5 @@ void builtin_export(char **argv, t_condition *condition)
 				perror("export");
 		argv++;
 	}
+	exit(0);
 }
