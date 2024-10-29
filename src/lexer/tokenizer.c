@@ -5,23 +5,15 @@
 
 int get_token_kind(char *token)
 {
-	if (ft_strncmp(token, ">>\0", 3) == 0)
+	if (ft_strncmp(token, ">>", 2) == 0)
 		return (TOKEN_REDIRECT_APPEND);
-	else if (ft_strncmp(token, ">\0", 2) == 0)
-		return(TOKEN_REDIRECT_IN);
-	else if (ft_strncmp(token, "<<\0", 3) == 0)
+	else if (ft_strncmp(token, ">", 1) == 0)
+		return(TOKEN_REDIRECT_OUT);
+	else if (ft_strncmp(token, "<<", 2) == 0)
 		return (TOKEN_REDIRECT_HEREDOC);
-	else if (ft_strncmp(token, "<\0", 2) == 0)
-		return (TOKEN_REDIRECT_OUT);
-	// else if (ft_strncmp(token, "&&\0", 3) == 0)
-	// 	return (TOKEN_AND);
-	// else if (ft_strncmp(token, "||\0", 3) == 0)
-	// 	return (TOKEN_OR);
-	// else if (ft_strncmp(token, "(\0", 2) == 0)
-	// 	return (TOKEN_LPARENT);
-	// else if (ft_strncmp(token, ")\0", 2) == 0)
-	// 	return (TOKEN_RPARENT);
-	else if (ft_strncmp(token, "|\0", 2) == 0)
+	else if (ft_strncmp(token, "<", 1) == 0)
+		return (TOKEN_REDIRECT_IN);
+	else if (ft_strncmp(token, "|", 1) == 0)
 		return (TOKEN_PIPE);
 	else
 		return (TOKEN_UNKNOWN);
@@ -36,8 +28,6 @@ int count_same_char(char *line, char c)
 		count++;
 	return (count);
 }
-
-
 
 bool take_meta_token(char **line, t_token *tail_token)
 {
