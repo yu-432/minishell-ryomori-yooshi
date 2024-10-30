@@ -5,7 +5,7 @@
 
 void builtin_echo(char **argv);
 void builtin_env(t_condition *condition);
-void builtin_export(char **argv, t_condition *condition);
+void builtin_export(t_condition *condition, char **argv);
 void builtin_unset(t_condition *condition, char **argv);
 
 # endif

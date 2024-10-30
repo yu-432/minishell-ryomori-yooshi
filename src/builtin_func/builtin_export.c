@@ -33,7 +33,7 @@ t_item *search_key(t_condition *condition, char *key)
 	return (current);
 }
 //2つの変数をexportする場合、１つ目で失敗しても最後まで動作を続ける
-void builtin_export(char **argv, t_condition *condition)
+void builtin_export(t_condition *condition, char **argv)
 {
 	char *key_value[2];
 	t_item *searched_key;
@@ -57,5 +57,5 @@ void builtin_export(char **argv, t_condition *condition)
 				perror("export");
 		argv++;
 	}
-	exit(0);
+
 }
