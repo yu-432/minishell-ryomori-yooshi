@@ -1,5 +1,8 @@
 
-
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <limits.h>
 #include "condition.h"
 
 //=============================================================================
@@ -114,12 +117,12 @@ int builitin_cd(char **args, t_condition *cond)
 		judge = chdir(args[1]);
 		if(judge < 0)
 		{
-			put_error("cd");
+			perror("cd");
 		}
 		if (judge != 0)
 		{
 			perror("cd");
 		}
 	}
-	return (judge);
+	return (judge);//success or fail
 }
