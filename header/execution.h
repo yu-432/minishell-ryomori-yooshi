@@ -34,6 +34,7 @@ typedef struct s_node
 typedef struct s_exec_info
 {
 	int fds[2];
+	int prev_fds[2];
 	int keep_fd;
 	int pipe_count;
 	int executed_count;
@@ -51,6 +52,9 @@ bool execute(t_condition *condition, t_node *node);
 void reset_fd(int *fd);
 void wrap_close(int fd);
 void wrap_dup2(int oldfd, int newfd);
+void execute_builtin(t_condition *condition, t_node *node);
+bool is_builtin(char *cmd);
+bool set_redirect_fd(t_node *node);
 
 
 

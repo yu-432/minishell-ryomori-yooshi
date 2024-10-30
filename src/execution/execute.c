@@ -101,6 +101,12 @@ bool execute(t_condition *condition, t_node *node)
 	char **argv;
 	char *path;
 
+	if (is_builtin(node->argv[0]))
+	{
+		fprintf(stderr, "builtin command\n");
+		execute_builtin(condition, node);
+		return (true);
+	}
 	argv = molding_argv(node);
 	if (!argv)
 		return (false);

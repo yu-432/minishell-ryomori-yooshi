@@ -18,8 +18,8 @@ void builtin_echo(char **argv)
 		ft_putstr_fd(argv[i], STDOUT_FILENO);
 		if (argv[i + 1])
 			ft_putstr_fd(" ", STDOUT_FILENO);
+		i++;
 	}
 	if (is_newline)
 		ft_putstr_fd("\n", STDOUT_FILENO);
-	exit(0);
 }

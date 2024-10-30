@@ -47,6 +47,12 @@ bool execute_single_command(t_condition *condition, t_node *node)
 {
 	pid_t pid;
 
+	if (is_builtin(node->argv[0]))
+	{
+		fprintf(stderr, "builtin command\n");
+		execute_builtin(condition, node);
+		return (true);
+	}
 	pid = fork();
 	if (pid == -1)
 	{
@@ -57,8 +63,7 @@ bool execute_single_command(t_condition *condition, t_node *node)
 	{
 		set_redirect_fd(node);
 		execute(condition, node);//このままだと、エラー文も出力先が変更されているので修正する必要あり
-	fprintf(stderr, "command not found\n");
-
+		fprintf(stderr, "command not found\n");
 	}
 	if(pid > 0)
 	{
