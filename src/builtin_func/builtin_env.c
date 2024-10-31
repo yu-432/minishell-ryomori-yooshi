@@ -13,6 +13,8 @@ void builtin_env(t_condition *condition)
 		ft_putstr_fd(current->key, STDOUT_FILENO);
 		ft_putstr_fd("=", STDOUT_FILENO);
 		ft_putstr_fd(current->value, STDOUT_FILENO);
+		ft_putstr_fd("\n", STDOUT_FILENO);
 		current = current->next;
 	}
+
 }

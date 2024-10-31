@@ -1,4 +1,3 @@
-.vscode
 *.o
 *.json
 test.c
