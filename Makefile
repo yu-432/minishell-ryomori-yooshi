@@ -37,18 +37,3 @@ fclean:		clean
 re:			fclean all
 
 .PHONY:		all clean fclean re bonus
-
-##############################################
-# Debugging :make debug
-##############################################
-
-
-debug:
-			gcc src/builtin_func/builtin_pwd.c -o builtin_pwd && ./builtin_pwd
-
-
-debug2:
-			gcc src/builtin_func/builtin_pwd.c -o builtin_pwd && ./builtin_pwd 2> /dev/null
-
-test:
-			gcc test.c -o test && ./test

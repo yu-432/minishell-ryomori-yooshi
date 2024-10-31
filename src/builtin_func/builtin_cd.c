@@ -1,9 +1,7 @@
+#include "../../header/condition.h"
+#include "../../header/standard.h"
 
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-#include <limits.h>
-#include "condition.h"
+
 
 //=============================================================================
 //==========================        UPDATE_OLD_PWD        =======================

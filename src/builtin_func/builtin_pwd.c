@@ -55,7 +55,7 @@ int builtin_pwd(char *line)
 	return(0);
 }
 
-
+//一回のcheck : getcwd
 
 // int builtin_pwd(char *line)
 // {
@@ -77,8 +77,8 @@ int builtin_pwd(char *line)
 // }
 
 
-int main()
-{
-	builtin_pwd("pwd");
-	return(0);
-}
+// int main()
+// {
+// 	builtin_pwd("pwd");
+// 	return(0);
+// }
