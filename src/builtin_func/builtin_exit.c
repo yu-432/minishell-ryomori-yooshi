@@ -72,22 +72,6 @@ long over_256(long num)
 	long_num_over = num;
 	return (long_num_over);
 }
-
-//=============================================================================
-//==========================        EXIT_STATUS_NUM        =====================
-//=============================================================================
-long exit_status_num(long num)//builtin_exitで使用
-{
-	long result;
-
-	if (num >= 256)
-		return (result = over_256(num));
-	else if (num < 0)
-		return (result = negative_num(num));//作成していない
-	else
-		return (num);
-}
-
 //=============================================================================
 //==========================        NEGATIVE_NUM        ========================
 //=============================================================================
@@ -107,6 +91,21 @@ long negative_num(long num)//exit_status_numで使用
 	else
 		result = 0;
 	return (result);
+}
+
+//=============================================================================
+//==========================        EXIT_STATUS_NUM        =====================
+//=============================================================================
+long exit_status_num(long num)//builtin_exitで使用
+{
+	long result;
+
+	if (num >= 256)
+		return (result = over_256(num));
+	else if (num < 0)
+		return (result = negative_num(num));//作成していない
+	else
+		return (num);
 }
 
 //=============================================================================
@@ -154,6 +153,36 @@ long atoll(const char *str)
 	}
 	return ((long)num * sign);
 }
+//=============================================================================
+//==========================        LONG_OVER_CHECK        =====================
+//=============================================================================
+
+int long_over_check(char *argment)
+{
+	const char *LONG_MAX_STR = "9223372036854775807";
+	const char *LONG_MIN_STR = "-9223372036854775808";
+	int i;
+	
+	int sign = 1;
+
+	sign = get_sign_skip0(&argment);
+	i = ft_strlen(argment);
+	if (i > 19)
+		return (1);
+	if (i < 19)
+		return (0);
+	if (sign == 1)
+	{
+		if (ft_strncmp(argment, LONG_MAX_STR, 19) > 0)
+			return (1);
+	}
+	else
+	{
+		if (ft_strncmp(argment, LONG_MIN_STR, 19) > 0)
+			return (1);
+	}
+
+}
 
 //=============================================================================
 //==========================        BUILTIN_EXIT        =========================
@@ -186,35 +215,4 @@ int	builtin_exit(char **args, t_condition *condition)
 			exit(result);
 	}
 	return (0);
-}
-
-//=============================================================================
-//==========================        LONG_OVER_CHECK        =====================
-//=============================================================================
-
-int long_over_check(char *argment)
-{
-	const char *LONG_MAX_STR = "9223372036854775807";
-	const char *LONG_MIN_STR = "-9223372036854775808";
-	int i;
-	
-	int sign = 1;
-
-	sign = get_sign_skip0(&argment);
-	i = ft_strlen(argment);
-	if (i > 19)
-		return (1);
-	if (i < 19)
-		return (0);
-	if (sign == 1)
-	{
-		if (ft_strncmp(argment, LONG_MAX_STR, 19) > 0)
-			return (1);
-	}
-	else
-	{
-		if (ft_strncmp(argment, LONG_MIN_STR, 19) > 0)
-			return (1);
-	}
-
 }
