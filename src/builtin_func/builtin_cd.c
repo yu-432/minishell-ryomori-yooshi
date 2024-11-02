@@ -79,13 +79,16 @@ static int move_path(int option, t_condition cond)
 		env_path = get_item_value(cond.environ, "HOME");
 	}
 	else if(option == MOVE_TO_OLDPWD)
+	{
 		env_path = get_item_value(cond.environ, "OLDPWD");
+		update_old_pwd(&cond);
+	}
 	if(!env_path)
 	{
-		perror("get_item_value");
+		perror("cd");
 		return (1);
 	}
-	judge = chdir(getenv(env_path));
+	judge = chdir(env_path));
 	return (judge);
 }
 
@@ -98,15 +101,15 @@ int builitin_cd(char **args, t_condition *cond)
 	int	judge;
 
 	if(!args[1] || args[1] == '~')
-		return(move_path(MOVE_TO_HOME, *cond));
+		judge = (move_path(MOVE_TO_HOME, *cond));
 	if (ft_strcmp(args[1] == '-') == 0)
 		judge = move_path(MOVE_TO_OLDPWD, *cond);
 	else
 	{
 		update_old_pwd(cond);
 		judge = chdir(args[1]);
-		if(judge < 0)
-			perror("cd");
 	}
-	return (judge);//success or fail
+	if(judge < 0)
+		perror("cd");
+	return (0);//success or fail
 }

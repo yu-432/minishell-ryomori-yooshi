@@ -11,17 +11,11 @@ void numeric_argument_error(char *argment)
 	exit(255);//bashの仕様に合わせると出力は2
 }
 
-void too_many_arguments_error(void)
-{
-	printf("exit: too many arguments\n");
-	exit(1);
-}
-
 int tma_error_check(char **args)
 {
 	if(args[2] != NULL)
 	{
-		too_many_arguments_error();
+		printf("exit: too many arguments\n");
 		return (1);
 	}
 	return (0);
@@ -82,7 +76,7 @@ long negative_num(long num)//exit_status_numで使用
 
 	digit = 0;
 	result = 0;
-	if (num ==	LONG_MIN)
+	if (num == LONG_MIN)
 		digit = (unsigned long)LONG_MIN % 256;
 	else
 		digit = (-num) % 256;
@@ -103,7 +97,7 @@ long exit_status_num(long num)//builtin_exitで使用
 	if (num >= 256)
 		return (result = over_256(num));
 	else if (num < 0)
-		return (result = negative_num(num));//作成していない
+		return (result = negative_num(num));
 	else
 		return (num);
 }
@@ -135,8 +129,8 @@ bool is_check_num(char *str)//strが数字かどうかを判定(-.+)がある場
 
 long atoll(const char *str)
 {
-	long long num;
-	long long sign;
+	long num;
+	long sign;
 
 	num = 0;
 	sign = 1;
@@ -155,16 +149,18 @@ long atoll(const char *str)
 }
 //=============================================================================
 //==========================        LONG_OVER_CHECK        =====================
-//=============================================================================
+//=============================================================================//修正必要
 
 int long_over_check(char *argment)
 {
-	const char *LONG_MAX_STR = "9223372036854775807";
-	const char *LONG_MIN_STR = "-9223372036854775808";
+	const char *LONG_MAX_STR;
+	const char *LONG_MIN_STR;
 	int i;
 	
 	int sign = 1;
-
+	i= 0;
+	LONG_MAX_STR = "9223372036854775807";
+	LONG_MIN_STR = "9223372036854775808";
 	sign = get_sign_skip0(&argment);
 	i = ft_strlen(argment);
 	if (i > 19)
@@ -181,7 +177,7 @@ int long_over_check(char *argment)
 		if (ft_strncmp(argment, LONG_MIN_STR, 19) > 0)
 			return (1);
 	}
-
+	return (0);
 }
 
 //=============================================================================
@@ -201,11 +197,11 @@ int	builtin_exit(char **args, t_condition *condition)
 		exit(condition->exit_status);//execveの返り値を返す
 	argment = (skip_space(args[1]));
 	num = 0;
-	if (!is_check_num(argment))
+	if (!is_check_num(argment))//strが数字かどうかを判定(-.+)がある場合も考慮(一つだけ)
 		numeric_argument_error(argment);
 	else
 	{
-		if(tma_check(args))
+		if(tma_error_check(args))
 			return (1);
 		judge = long_over_check(argment);
 		if (judge == 1)
