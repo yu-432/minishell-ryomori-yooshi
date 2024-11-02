@@ -6,7 +6,7 @@
 t_token *lexer(t_condition *condition, char *line)
 {
 	t_token *tokenized;
-	int count = 1;
+	// int count = 1;
 
 	tokenized = tokenizer(line);
 	if (!tokenized)
@@ -17,12 +17,12 @@ t_token *lexer(t_condition *condition, char *line)
 		return (free_tokens(tokenized), NULL);
 
 	t_token *temp = tokenized;
-	while(tokenized)
-	{
-		printf("token[%u] kind = %u : %s\n", count, tokenized->kind, tokenized->token);
-		count++;
-		tokenized = tokenized->next;
-	}
+	// while(tokenized)
+	// {
+	// 	printf("token[%u] kind = %u : %s\n", count, tokenized->kind, tokenized->token);
+	// 	count++;
+	// 	tokenized = tokenized->next;
+	// }
 	tokenized = temp;	
 	(void)condition;
 	return (tokenized);
