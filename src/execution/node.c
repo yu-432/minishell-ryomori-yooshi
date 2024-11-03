@@ -16,10 +16,14 @@ t_node *new_node(char **argv)
 	node->argv = argv;
 	node->fd_in = -2;
 	node->fd_out = -2;
+	if (is_pipe(argv[0]))
+		node->kind = NODE_PIPE;
+	else
+		node->kind = NODE_CMD;
 	return (node);
 }
 
-int count_until_pipe(t_token *token_list)
+int count_tokens_until_pipe(t_token *token_list)
 {
 	int count;
 	t_token *current;
@@ -45,7 +49,7 @@ char **make_argv(t_token **token_list)
 	int arg_count;
 	int i;
 
-	arg_count = count_until_pipe(*token_list);
+	arg_count = count_tokens_until_pipe(*token_list);
 	argv = ft_calloc(arg_count + 1, sizeof(char *));
 	if(!argv)
 		return(NULL);
@@ -60,20 +64,6 @@ char **make_argv(t_token **token_list)
 	}
 	argv[i] = NULL;
 	return (argv);
-}
-
-t_node *find_last_node(t_node *head)
-{
-	while(head->next)
-		head = head->next;
-	return (head);
-}
-
-bool is_pipe(char *str)
-{
-	if (!ft_strncmp(str, "|\0", 2))
-		return (true);
-	return (false);
 }
 
 t_node *make_node(t_token *token_list)
@@ -93,10 +83,10 @@ t_node *make_node(t_token *token_list)
 		if (!current->next)
 			return (NULL);
 		current->next->prev = current;
-		if (is_pipe(argv[0]))
-			current->next->kind = NODE_PIPE;
-		else
-			current->next->kind = NODE_CMD;
+		// if (is_pipe(argv[0]))
+		// 	current->next->kind = NODE_PIPE;
+		// else
+		// 	current->next->kind = NODE_CMD;
 	}
 	return (head.next);
 }

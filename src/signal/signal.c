@@ -3,25 +3,51 @@
 #include "../../header/standard.h"
 #include "../../header/condition.h"
 #include "../../libft/libft.h"
+#include <sys/ioctl.h>
 
-void set_global_sig(int sig, siginfo_t *sig_info, void *v)
+void handler(int signum)
 {
-	g_sig = sig;
-	write(STDOUT_FILENO, "\n", 1);
-	if (isatty(STDIN_FILENO))
-		write(STDOUT_FILENO, PROMPT, ft_strlen(PROMPT));
-	(void)sig_info;
-	(void)v;
+	if(signum == SIGINT)
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		g_sig = signum;
+	}
 }
 
-void set_shell_input_sig_handler(void)
+void init_signal(void)
+{
+	signal(SIGINT, handler);
+	signal(SIGQUIT, SIG_IGN);
+	ioctl(STDIN_FILENO, TIOCSTI, "\0");
+}
+
+void setup_ignore_signal(void)
 {
 	struct sigaction sa;
 
 	ft_memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = SIG_IGN;
+	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_sigaction = set_global_sig;
-	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &sa, NULL);
+}
+
+void setup_parent_signal(void)
+{
+	struct sigaction sa;
+
+	ft_memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = handler;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+}
+
+void setup_child_signal(void)
+{
+	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 }

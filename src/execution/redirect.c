@@ -4,14 +4,6 @@
 #include "../../header/condition.h"
 #include "../../header/execution.h"
 
-void reset_fd(int *fd)
-{
-	if (*fd != -2)
-	{
-		close(*fd);
-		*fd = -2;
-	}
-}
 bool redirect_in(t_node *node, int i)
 {
 	int fd;
