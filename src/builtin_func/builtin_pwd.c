@@ -1,14 +1,13 @@
 #include "../../header/standard.h"
 #include "../../libft/libft.h"
 #include "../../header/condition.h"
+#include "../../header/builtin_func.h"
 #include "../../header/environ.h"
-#include <sys/stat.h>//add(ryomori):builtin_pwd
 
-int builtin_pwd(char *line, t_condition *cond)
+int builtin_pwd(t_condition *cond, char **argv)
 {
-	char pwd_path[PATH_MAX];
+	char *pwd_path;
 
-	(void)line;
 	pwd_path = get_item_value(cond->environ, "PWD");
 	if (pwd_path == NULL)
 	{
@@ -21,4 +20,5 @@ int builtin_pwd(char *line, t_condition *cond)
 		write(STDOUT_FILENO, "\n", 1);
 		return(0);
 	}
+	(void)argv;
 }
