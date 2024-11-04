@@ -5,7 +5,7 @@
 #include "../../libft/libft.h"
 #include "../../header/lexer.h"
 
-void set_redirect(t_node *node)
+int set_redirect(t_node *node)
 {
 	int i;
 	bool is_success;
@@ -27,11 +27,12 @@ void set_redirect(t_node *node)
 			else if(kind == TOKEN_REDIRECT_HEREDOC)
 				is_success = redirect_heredoc(node, i);
 			if(!is_success)
-				put_error("redirect error");
+				return(1);
 			i++;
 		}
 		node = node->next;
 	}
+	return (0);
 }
 
 
@@ -91,8 +92,8 @@ bool exec_command(t_condition *condition, t_node *node)
 	t_exec_info info;
 
 	argv = molding_argv(node);
-	if (!argv)
-		exit (EXIT_FAILURE);
+	if (!argv[0])
+		return (EXIT_FAILURE);
 	free(node->argv);
 	node->argv = argv;
 	if (node->next == NULL && node->argv[0] != NULL)
@@ -117,7 +118,8 @@ bool run_command(t_condition *condition, t_token *token_list)
 	node = make_node(token_list);
 	if (node == NULL)
 		return (false);
-	set_redirect(node);
+	if(set_redirect(node))
+		return (false);
 	exec_command(condition, node);
 	(void)condition;
 	return (true);

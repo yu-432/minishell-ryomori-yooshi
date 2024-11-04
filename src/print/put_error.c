@@ -9,7 +9,7 @@ void put_error(char *str)
 
 void put_syntax_error(char *str)
 {
-	ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
+	ft_putstr_fd("minishell: syntax error near unexpected token ", STDERR_FILENO);
 	ft_putstr_fd(str, 2);
 	ft_putchar_fd('\n', 2);
 }
