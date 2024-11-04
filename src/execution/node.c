@@ -83,10 +83,6 @@ t_node *make_node(t_token *token_list)
 		if (!current->next)
 			return (NULL);
 		current->next->prev = current;
-		// if (is_pipe(argv[0]))
-		// 	current->next->kind = NODE_PIPE;
-		// else
-		// 	current->next->kind = NODE_CMD;
 	}
 	return (head.next);
 }

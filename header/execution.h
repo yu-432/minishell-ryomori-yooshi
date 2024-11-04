@@ -65,6 +65,7 @@ pid_t execute_last_pipeline_cmd(t_condition *condition, t_node *node, t_exec_inf
 bool execute_pipeline_cmd(t_condition *condition, t_node *node, t_exec_info *info);
 bool child_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2]);
 bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2]);
+void wrap_double_close(int fd1, int fd2);
 
 
 

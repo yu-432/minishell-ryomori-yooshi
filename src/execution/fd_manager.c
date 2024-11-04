@@ -28,6 +28,12 @@ bool close_redirect_fd(t_node *node)
 	return (true);
 }
 
+void wrap_double_close(int fd1, int fd2)
+{
+	wrap_close(fd1);
+	wrap_close(fd2);
+}
+
 bool set_redirect_fd(t_node *node)
 {
 	if (node->fd_in != -2)
