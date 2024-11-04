@@ -39,16 +39,16 @@ char *skip_space(char *str)
 //=============================================================================
 //==========================        GET_SIGN        ============================
 //=============================================================================
-int get_sign_skip0(char *str)//long_over_checkで使用
+int get_sign_skip0(char **str)//long_over_checkで使用
 {
 	int sign;
 
 	sign = 1;
-	if (*str == '-')
+	if (**str == '-')
 		sign = -1;
-	if (*str == '-' || *str == '+')
+	if (**str == '-' || **str == '+')
 		str++;
-	while (*str == '0')
+	while (**str == '0')
 		str++;
 	return (sign);
 }
@@ -127,7 +127,7 @@ bool is_check_num(char *str)//strが数字かどうかを判定(-.+)がある場
 //==========================        atolonglong        =========================
 //=============================================================================
 
-long atoll(const char *str)
+long ft_atoll(const char *str)
 {
 	long num;
 	long sign;
@@ -184,11 +184,10 @@ int long_over_check(char *argment)
 //==========================        BUILTIN_EXIT        =========================
 //=============================================================================
 
-int	builtin_exit(char **args, t_condition *condition)
+int	builtin_exit(t_condition *condition, char **args)
 {
 	char *argment;
 	long num;
-	long long_num_over;
 	int judge;
 	long result;
 
@@ -206,7 +205,7 @@ int	builtin_exit(char **args, t_condition *condition)
 		judge = long_over_check(argment);
 		if (judge == 1)
 			numeric_argument_error(argment);
-		num = atoll(argment);
+		num = ft_atoll(argment);
 		result = exit_status_num(num);
 			exit(result);
 	}

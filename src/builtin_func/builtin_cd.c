@@ -1,9 +1,6 @@
 #include "../../header/condition.h"
 #include "../../header/standard.h"
-
-//=============================================================================
-//==========================        PROTOTYPE        ===========================
-//=============================================================================
+#include "../../libft/libft.h"
 
 typedef enum e_move_position
 {
@@ -12,20 +9,41 @@ typedef enum e_move_position
 }	t_move_position;
 
 //=============================================================================
+//==========================        GET_ITEM_VALUE        =======================
+//=============================================================================
+
+char *get_item_value(t_item *item, char *key)
+{
+	char *value;
+
+	while(item)
+	{
+		if(ft_strncmp(item->key, key, ft_strlen(key) + 1) == 0)
+		{
+			value = item->value;
+			return (value);
+		}
+		item = item->next;
+	}
+	return (NULL);
+}
+
+//=============================================================================
 //==========================        UPDATE_OLD_PWD        =======================
 //=============================================================================
 
 static int update_old_pwd(t_condition *cond)
 {
-	char cwd[PATH_MAX];
+	char *cwd;//pathmaxとは？
 	t_item *item;
 	t_item *old_item;
 
 	item = cond->environ;
 	cwd = get_item_value(cond->environ, "PWD");
-	while(item)
+	old_item = NULL;
+	while(item->next)
 	{
-		if(ft_strcmp(item->key, "OLDPWD") == 0)
+		if(ft_strncmp(item->key, "OLDPWD", 7) == 0)
 		{
 			old_item = item;
 			break;
@@ -42,25 +60,7 @@ static int update_old_pwd(t_condition *cond)
 			return (1);
 		}
 	}
-}
-//=============================================================================
-//==========================        GET_ITEM_VALUE        =======================
-//=============================================================================
-
-static char *get_item_value(t_item *item, char *key)
-{
-	char *value;
-
-	while(item)
-	{
-		if(ft_strcmp(item->key, key) == 0)
-		{
-			value = item->value;
-			return (value);
-		}
-		item = item->next;
-	}
-	return (NULL);
+	return (0);
 }
 
 //=============================================================================
@@ -73,6 +73,7 @@ static int move_path(int option, t_condition cond)
 	int judge;
 	char *env_path;
 
+	env_path = NULL;
 	if(option == MOVE_TO_HOME)
 	{
 		update_old_pwd(&cond);
@@ -88,7 +89,7 @@ static int move_path(int option, t_condition cond)
 		perror("cd");
 		return (1);
 	}
-	judge = chdir(env_path));
+	judge = chdir(env_path);
 	return (judge);
 }
 
@@ -96,13 +97,13 @@ static int move_path(int option, t_condition cond)
 //==========================        BUILTIN_CD        ==========================
 //=============================================================================
 
-int builitin_cd(char **args, t_condition *cond)
+int builtin_cd(t_condition *cond, char **args)
 {
 	int	judge;
 
-	if(!args[1] || args[1] == '~')
+	if(!args[1] || !ft_strncmp(args[1], "~", 2))
 		judge = (move_path(MOVE_TO_HOME, *cond));
-	if (ft_strcmp(args[1] == '-') == 0)
+	if (ft_strncmp(args[1], "-", 2) == 0)
 		judge = move_path(MOVE_TO_OLDPWD, *cond);
 	else
 	{
