@@ -44,9 +44,6 @@ bool first_init_condition(t_condition *condition, char **argv, char **envp)
 	errno = 0;
 	if (!init_environ(condition, envp))
 		return(false);
-	//TODO:exportは自作関数のため、独自に作成したenvironに保存する
-	//unsetも同様
-	// condition->cwd = getenv("PWD");//必要？
 	(void)argv;
 	return(true);
 }
@@ -55,5 +52,6 @@ bool	init_shell(t_condition *condition, char **argv, char **envp)
 {
 	if (!first_init_condition(condition, argv, envp))
 		return(false);
+	rl_event_hook = NULL;
 	return(true);
 }

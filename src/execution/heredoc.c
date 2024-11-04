@@ -1,6 +1,7 @@
 #include "../../header/node.h"
 #include "../../header/standard.h"
 #include "../../libft/libft.h"
+#include "../../header/signal.h"
 #include "../../header/execution.h"
 
 bool heredoc_strjoin(char **heredoc_str, char *line)
@@ -38,7 +39,7 @@ bool read_heredoc(t_node *node, int i)
 	return (true);
 }
 
-bool heredoc(t_node *node, int i)//heredoc子プロセスを作成して、そこでheredocを読み込む
+bool heredoc(t_node *node, int i)
 {
 	int fds[2];
 	pid_t pid;
@@ -51,10 +52,10 @@ bool heredoc(t_node *node, int i)//heredoc子プロセスを作成して、そ�
 	pid = fork();
 	if (!pid)
 	{
+		setup_child_signal();
 		read_heredoc(node, i);
-		close(fds[READ]);
 		dup2(fds[WRITE], STDOUT_FILENO);
-		close(fds[WRITE]);
+		wrap_double_close(fds[READ], fds[WRITE]);
 		ft_putstr_fd(node->heredoc_str, STDOUT_FILENO);
 		exit(0);
 	}

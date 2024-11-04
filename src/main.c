@@ -10,7 +10,6 @@
 #include <unistd.h>
 
 sig_atomic_t g_sig = 0;
-pid_t g_foreground_pid = 0;
 
 
 void free_tokens(t_token *token)
@@ -42,7 +41,7 @@ char *read_command_line()
 void init_condition(t_condition *condition)
 {
 	errno = 0;
-	set_shell_input_sig_handler();
+	setup_parent_signal();
 	if (g_sig != 0)
 	{
 		condition->exit_status = g_sig + 128;
@@ -61,20 +60,15 @@ void shell_loop(t_condition *condition)
 		init_condition(condition);
 		line = read_command_line();
 		if(!line)
-		{
-			printf("exit\n");//exit関数を作成しfreeする必要がある
-			break;//minishell_exit的な関数を作成しfreeする必要がある
-		}
+			break;
 		if (*line == '\0')
 		{
 			free(line);
 			continue;
 		}
 		tokenized = lexer(condition, line);
+		run_command(condition, tokenized);//TOKEN_UNKNOWNが含まれている場合止めておいたほうがいい
 		free(line);
-		// if (!tokenized)
-		// 	free_tokens(tokenized);？？？？？？
-		execution_command(condition, tokenized);//TOKEN_UNKNOWNが含まれている場合止めておいたほうがいい
 	}
 	return ;
 }
@@ -96,5 +90,6 @@ int main(int argc, char **argv, char **envp)
 		free(condition.environ);
 		condition.environ = temp;
 	}
+	rl_clear_history();
 	(void)argc;
 }
