@@ -31,7 +31,7 @@ void put_heredoc_warning(int line_count, char *delimiter)
 	ft_putstr_fd("')\n", STDERR_FILENO);
 }
 
-bool read_heredoc(t_node *node, int i)
+bool read_heredoc(t_node *node, char *delimiter)
 {
 	char *line;
 	int line_count;
@@ -41,8 +41,8 @@ bool read_heredoc(t_node *node, int i)
 	{
 		line = readline(HEREDOC_PROMPT);
 		if (!line)
-			return (put_heredoc_warning(line_count, node->argv[i + 1]), true);
-		if (!ft_strncmp(line, node->argv[i + 1], ft_strlen(node->argv[i + 1])))
+			return (put_heredoc_warning(line_count, delimiter), true);
+		if (!ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1))
 		{
 			free(line);
 			break;
@@ -54,10 +54,10 @@ bool read_heredoc(t_node *node, int i)
 	return (true);
 }
 
-void heredoc_child_process(t_node *node, int i, int fds[2])
+void heredoc_child_process(t_node *node, char *delimiter, int fds[2])
 {
 	setup_child_signal();
-	read_heredoc(node, i);
+	read_heredoc(node, delimiter);
 	dup2(fds[WRITE], STDOUT_FILENO);
 	wrap_double_close(fds[READ], fds[WRITE]);
 	ft_putstr_fd(node->heredoc_str, STDOUT_FILENO);
@@ -77,7 +77,7 @@ bool heredoc_parent_process(t_node *node, int fds[2], int pid)
 	return (true);
 }
 
-bool heredoc(t_node *node, int i)
+bool heredoc(t_node *node, char *delimiter)
 {
 	int fds[2];
 	pid_t pid;
@@ -92,26 +92,26 @@ bool heredoc(t_node *node, int i)
 	if (pid == -1)
 		return (put_error(strerror(errno)), false);
 	else if (!pid)
-		heredoc_child_process(node, i, fds);
+		heredoc_child_process(node, delimiter, fds);
 	else
 		if(!heredoc_parent_process(node, fds, pid))
 			return (false);
 	return (true);
 }
 
-bool redirect_heredoc(t_node *node, int i)
+bool redirect_heredoc(t_node *node, t_token *token_list)
 {
 	reset_fd(&node->fd_in);
 	free(node->heredoc_str);
 	node->heredoc_str = ft_strdup("");
 	if (!node->heredoc_str)
 		return (false);
-	if (!node->argv[i + 1])
+	if (!token_list->next)
 	{
 		put_error("syntax error near unexpected token `newline'");
 		return (false);
 	}
-	if (!heredoc(node, i))
+	if (!heredoc(node, token_list->next->token))
 		return (false);
 	return (true);
 }

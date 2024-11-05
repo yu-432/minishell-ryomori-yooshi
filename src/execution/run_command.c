@@ -5,37 +5,6 @@
 #include "../../libft/libft.h"
 #include "../../header/lexer.h"
 
-int set_redirect(t_node *node)
-{
-	int i;
-	bool is_success;
-	t_token_kind kind;
-
-	is_success = true;
-	while(node)
-	{
-		i = 0;
-		while(node->argv[i])
-		{
-			kind = get_token_kind(node->argv[i]);
-			if(kind == TOKEN_REDIRECT_IN)
-				is_success = redirect_in(node, i);
-			else if(kind == TOKEN_REDIRECT_OUT)
-				is_success = redirect_out(node, i);
-			else if(kind == TOKEN_REDIRECT_APPEND)
-				is_success = redirect_append(node, i);
-			else if(kind == TOKEN_REDIRECT_HEREDOC)
-				is_success = redirect_heredoc(node, i);
-			if(!is_success)
-				return(1);
-			i++;
-		}
-		node = node->next;
-	}
-	return (0);
-}
-
-
 char **molding_argv(t_node *node)
 {
 	char **res;
@@ -87,15 +56,9 @@ bool init_exec_info(t_exec_info *info, t_node *node)
 
 bool exec_command(t_condition *condition, t_node *node)
 {
-	char **argv;
 	t_node *current;
 	t_exec_info info;
 
-	argv = molding_argv(node);
-	if (!argv[0])
-		return (EXIT_FAILURE);
-	free(node->argv);
-	node->argv = argv;
 	if (node->next == NULL && node->argv[0] != NULL)
 		return(execute_single_command(condition, node), true);
 	current = node;
@@ -115,15 +78,9 @@ bool run_command(t_condition *condition, t_token *token_list)
 {
 	t_node *node;
 
-	node = make_node(token_list);
+	node = make_node(token_list);//TOEKN_WORDのみでargvを作成
 	if (node == NULL)
 		return (false);
-	if(set_redirect(node))
-		return (false);
-	exec_command(condition, node);
-	(void)condition;
-	return (true);
-}
 
 	// t_node *temp = node;//////////////////////////確認用
 	// while(temp)
@@ -136,3 +93,7 @@ bool run_command(t_condition *condition, t_token *token_list)
 	// 	temp = temp->next;
 	// 	printf("-------------------------\n");
 	// }
+	exec_command(condition, node);
+	(void)condition;//free token_list
+	return (true);
+}

@@ -39,10 +39,10 @@ typedef struct s_exec_info
 } t_exec_info;
 
 bool run_command(t_condition *condition, t_token *token_list);
-bool redirect_in(t_node *node, int i);
-bool redirect_out(t_node *node, int i);
-bool redirect_append(t_node *node, int i);
-bool redirect_heredoc(t_node *node, int i);
+bool redirect_in(t_node *node, t_token *token_list);
+bool redirect_out(t_node *node, t_token *token_list);
+bool redirect_append(t_node *node, t_token *token_list);
+bool redirect_heredoc(t_node *node, t_token *token_list);
 bool exec_command(t_condition *condition, t_node *node);
 bool is_pipe(char *str);
 t_node *make_node(t_token *token_list);
@@ -66,6 +66,8 @@ bool execute_pipeline_cmd(t_condition *condition, t_node *node, t_exec_info *inf
 bool child_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2]);
 bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2]);
 void wrap_double_close(int fd1, int fd2);
+bool is_redirect(t_token_kind kind);
+
 
 
 

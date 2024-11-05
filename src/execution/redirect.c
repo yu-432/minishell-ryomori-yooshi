@@ -4,17 +4,17 @@
 #include "../../header/condition.h"
 #include "../../header/execution.h"
 
-bool redirect_in(t_node *node, int i)
+bool redirect_in(t_node *node, t_token *token_list)
 {
 	int fd;
 
 	reset_fd(&node->fd_in);
-	if (node->argv[i + 1] == NULL)
+	if (token_list->next== NULL)
 	{
 		put_error("syntax error near unexpected token `newline'");
 		return (false);
 	}
-	fd = open(node->argv[i + 1], O_RDONLY);
+	fd = open(token_list->next->token, O_RDONLY);
 	if (fd == -1)
 	{
 		put_error(strerror(errno));
@@ -29,17 +29,17 @@ bool redirect_in(t_node *node, int i)
 	return (true);
 }
 
-bool redirect_out(t_node *node, int i)
+bool redirect_out(t_node *node, t_token *token_list)
 {
 	int fd;
 
 	reset_fd(&node->fd_out);
-	if (node->argv[i + 1] == NULL)
+	if (token_list->next == NULL)
 	{
 		put_error("syntax error near unexpected token `newline'");
 		return (false);
 	}
-	fd = open(node->argv[i + 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	fd = open(token_list->next->token, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (fd == -1)
 	{
 		put_error(strerror(errno));
@@ -51,17 +51,17 @@ bool redirect_out(t_node *node, int i)
 	return (true);
 }
 
-bool redirect_append(t_node *node, int i)
+bool redirect_append(t_node *node, t_token *token_list)
 {
 	int fd;
 
 	reset_fd(&node->fd_out);
-	if (!node->argv[i + 1])
+	if (!token_list->token)
 	{
 		put_error("syntax error near unexpected token `newline'");
 		return (false);
 	}
-	fd = open(node->argv[i + 1], O_WRONLY | O_APPEND | O_CREAT, 0644);
+	fd = open(token_list->next->token, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (fd == -1)
 	{
 		put_error(strerror(errno));
