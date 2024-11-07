@@ -2,11 +2,6 @@
 #include "../../header/standard.h"
 #include "../../libft/libft.h"
 
-typedef enum e_move_position
-{
-	MOVE_TO_HOME,
-	MOVE_TO_OLDPWD
-}	t_move_position;
 
 char	*get_item_value(t_item *item, char *key)
 {
@@ -68,10 +63,7 @@ static int	move_path (int option, t_condition cond)
 
 	env_path = NULL;
 	if (option == MOVE_TO_HOME)
-	{
-		update_old_pwd(&cond);
 		env_path = get_item_value(cond.environ, "HOME");
-	}
 	else if (option == MOVE_TO_OLDPWD)
 		env_path = get_item_value(cond.environ, "OLDPWD");
 	if (!env_path)
@@ -80,8 +72,6 @@ static int	move_path (int option, t_condition cond)
 		return (1);
 	}
 	judge = chdir(env_path);
-	if (option == MOVE_TO_OLDPWD)
-		update_old_pwd(&cond);
 	return (judge);
 }
 
@@ -250,20 +240,18 @@ int	builtin_cd(t_condition *cond, char **args)
 	else if (ft_strncmp(args[1], "-", 2) == 0)
 		judge = move_path(MOVE_TO_OLDPWD, *cond);
 	else
-	{
-		update_old_pwd(cond);
 		judge = chdir(args[1]);
-	}
-	if (judge < 0)
+	if (judge != 0)
 	{
 		perror ("cd");
-		return 1;
+		return (1);
 	}
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
 		perror("getcwd");
-		return 1;
+		return (1);
 	}
+	update_old_pwd(cond);
 	update_cwd(cond, cwd);
-	return 0;
+	return (0);
 }
