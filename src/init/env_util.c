@@ -3,7 +3,7 @@
 #include "../../header/init.h"
 #include "../../libft/libft.h"
 
-t_item *search_dup_key(t_condition *condition, char *key)
+t_item *search_dup_item(t_condition *condition, char *key)
 {
 	t_item *cur;
 
@@ -12,7 +12,7 @@ t_item *search_dup_key(t_condition *condition, char *key)
 	cur = condition->environ;
 	while (cur)
 	{
-		if (cur->key == key)
+		if (!ft_strncmp(cur->key, key, ft_strlen(key) + 1))
 			return (cur);
 		cur = cur->next;
 	}
