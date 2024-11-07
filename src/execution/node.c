@@ -5,7 +5,7 @@
 #include "../../header/execution.h"
 #include "../../libft/libft.h"
 
-int set_redirect(t_node *node, t_token **token_list)
+int set_redirect(t_condition *condition, t_node *node, t_token **token_list)
 {
 	bool is_success;
 	t_token_kind kind;
@@ -13,13 +13,13 @@ int set_redirect(t_node *node, t_token **token_list)
 	is_success = true;
 	kind = (*token_list)->kind;
 	if(kind == TOKEN_REDIRECT_IN)
-		is_success = redirect_in(node, *token_list);
+		is_success = redirect_in(condition, node, *token_list);
 	else if(kind == TOKEN_REDIRECT_OUT)
-		is_success = redirect_out(node, *token_list);
+		is_success = redirect_out(condition, node, *token_list);
 	else if(kind == TOKEN_REDIRECT_APPEND)
-		is_success = redirect_append(node, *token_list);
+		is_success = redirect_append(condition, node, *token_list);
 	else if(kind == TOKEN_REDIRECT_HEREDOC)
-		is_success = redirect_heredoc(node, *token_list);
+		is_success = redirect_heredoc(condition, node, *token_list);
 	if(!is_success)
 		return(1);
 	*token_list = (*token_list)->next;
@@ -73,7 +73,7 @@ int count_word_until_pipe(t_token *token_list)
 	return (count);
 }
 
-char **make_node_argv(t_token **token_list, t_node *current_node)
+bool make_node_argv(t_condition *condition, t_token **token_list, t_node *current_node)
 {
 	int word_count;
 	int i;
@@ -81,15 +81,15 @@ char **make_node_argv(t_token **token_list, t_node *current_node)
 	word_count = count_word_until_pipe(*token_list);//TOKEN_WORDの数を数える
 	current_node->argv = ft_calloc(word_count + 1, sizeof(char *));
 	if(!current_node->argv)
-		return(NULL);
+		return(false);
 	i = 0;
 	if ((*token_list)->kind == TOKEN_PIPE)
 	{
 		current_node->argv[i] = ft_strdup((*token_list)->token);
 		if (!current_node->argv[i])
-			return (NULL);
+			return (false);
 		*token_list = (*token_list)->next;
-		return (NULL);
+		return (true);
 	}
 
 	while (i < word_count || (*token_list && (*token_list)->kind != TOKEN_PIPE))
@@ -98,18 +98,19 @@ char **make_node_argv(t_token **token_list, t_node *current_node)
 		{
 			current_node->argv[i] = ft_strdup((*token_list)->token);
 			if (!current_node->argv[i])
-				return (NULL);
+				return (false);
 			i++;
 			*token_list = (*token_list)->next;
 		}
 		else if(is_redirect((*token_list)->kind))
-			set_redirect(current_node, token_list);
+			if(set_redirect(condition, current_node, token_list) != 0)
+				return (false);
 	}
 	current_node->argv[i] = NULL;
-	return (NULL);////////////////////////
+	return (true);////////////////////////
 }
 
-t_node *make_node(t_token *token_list)
+t_node *make_node(t_condition *condition, t_token *token_list)
 {
 	t_node head;
 	t_node *current;
@@ -121,7 +122,8 @@ t_node *make_node(t_token *token_list)
 		current->next = new_node();
 		if (!current->next)
 			return (NULL);
-		make_node_argv(&token_list, current->next);//PIPE区切りでargvを作成
+		if(!make_node_argv(condition, &token_list, current->next))//PIPE区切りでargvを作成
+			return (NULL);
 		if (current->next->argv[0] == NULL)
 			return (NULL);
 		if(ft_strncmp(current->next->argv[0], "|\0", 2) == 0)

@@ -23,7 +23,6 @@ t_token *tokenizer(char *line);
 t_token *new_token(char *token, t_token_kind kind);
 bool expand_token(t_condition *condition, t_token *tokenized);
 bool get_env_name(t_condition *condition, t_token *tokenized, t_lexer *info, int *i);
-bool replace_env(t_token *token, char *env_value, int env_len);
 char *find_env(t_condition *condition, char *env_key);
 bool append_char(char **str, char c);
 bool find_syntax_error(t_condition *condition, t_token *tokenized);

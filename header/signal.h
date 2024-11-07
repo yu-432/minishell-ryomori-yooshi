@@ -12,6 +12,8 @@ void ignore_sig(int signum);
 void handle_sigint(int signum);
 void setup_ignore_signal(void);
 void child_signal_handler(int signum);
+void setup_heredoc_signal(void);
+
 
 
 

@@ -7,7 +7,7 @@
 
 bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2])
 {
-	// setup_parent_signal();
+	// setup_parent_signal();//
 	wrap_close(fds[WRITE]);
 	if (info->keep_fd != -2)
 		wrap_close(info->keep_fd);

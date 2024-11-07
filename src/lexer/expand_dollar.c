@@ -16,6 +16,37 @@ bool ft_strjoin_free(char **s1, char *s2)
 	return (true);
 }
 
+static bool replace_env(t_token *token, char *env_value, int env_len)
+{
+	char *new;
+	int i;
+
+	if (!env_value)
+		env_value = "";//環境変数が存在しない場合要確認
+	i = 0;
+	new = ft_strdup("");
+	if (!new)
+		return (false);
+	while(token->token[i])
+	{
+		if (token->token[i] == '$')
+		{
+			if (!ft_strjoin_free(&new, env_value))
+				return (false);
+			i += env_len;
+			if (!ft_strjoin_free(&new, token->token + i + 1))
+				return (free(new), false);
+			break ;
+		}
+		else
+			if (!append_char(&new, token->token[i++]))
+				return (free(new), false);
+	}
+	free(token->token);
+	token->token = new;
+	return (true);
+}
+
 bool append_char(char **str, char c)
 {
 	char *new;
@@ -72,34 +103,4 @@ char *find_env(t_condition *condition, char *env_key)
 	return (NULL);
 }
 
-bool replace_env(t_token *token, char *env_value, int env_len)
-{
-	char *new;
-	int i;
-
-	if (!env_value)
-		env_value = "";//環境変数が存在しない場合要確認
-	i = 0;
-	new = ft_strdup("");
-	if (!new)
-		return (false);
-	while(token->token[i])
-	{
-		if (token->token[i] == '$')
-		{
-			if (!ft_strjoin_free(&new, env_value))
-				return (false);
-			i += env_len;
-			if (!ft_strjoin_free(&new, token->token + i + 1))
-				return (free(new), false);
-			break ;
-		}
-		else
-			if (!append_char(&new, token->token[i++]))
-				return (free(new), false);
-	}
-	free(token->token);
-	token->token = new;
-	return (true);
-}
 

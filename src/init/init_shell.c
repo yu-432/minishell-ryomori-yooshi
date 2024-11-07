@@ -1,6 +1,5 @@
 #include "../../header/condition.h"
 #include "../../header/standard.h"
-#include "../../header/environ.h"
 #include "../../header/init.h"
 #include "../../libft/libft.h"
 
@@ -21,7 +20,7 @@ void free_environ(t_item *environ)
 	}
 }
 
-bool init_environ(t_condition *condition, char **envp)
+bool get_environ(t_condition *condition, char **envp)
 {
 	int	i;
 
@@ -38,20 +37,12 @@ bool init_environ(t_condition *condition, char **envp)
 	return(true);
 }
 
-bool first_init_condition(t_condition *condition, char **argv, char **envp)
+bool	init_shell(t_condition *condition, char **envp)
 {
 	ft_memset(condition, 0, sizeof(t_condition));
 	errno = 0;
-	if (!init_environ(condition, envp))
+	if (!get_environ(condition, envp))
 		return(false);
-	(void)argv;
-	return(true);
-}
-
-bool	init_shell(t_condition *condition, char **argv, char **envp)
-{
-	if (!first_init_condition(condition, argv, envp))
-		return(false);
-	rl_event_hook = NULL;
+	// rl_event_hook = NULL;
 	return(true);
 }

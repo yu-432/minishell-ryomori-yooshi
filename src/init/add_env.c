@@ -1,13 +1,11 @@
 #include "../../header/condition.h"
 #include "../../header/standard.h"
-#include "../../header/environ.h"
 #include "../../header/init.h"
 #include "../../libft/libft.h"
 
 bool insert_env(t_condition *condition, char *key, char *value)
 {
 	t_item *new;
-	t_item *tail;
 
 	new = touch_t_item();
 	if (!new)
@@ -19,10 +17,15 @@ bool insert_env(t_condition *condition, char *key, char *value)
 		condition->environ = new;
 		return (true);
 	}
-	tail = set_tail(condition->environ);
-	tail->next = new;
-	new->prev = tail;
+	find_tail(condition->environ)->next = new;
 	return (true);
+}
+
+static void replace_env(t_item *dup_key_node, char *value, char *key)
+{
+	free(dup_key_node->value);
+	dup_key_node->value = value;
+	free(key);
 }
 
 bool add_env(t_condition *condition, char *env_str)
@@ -30,7 +33,7 @@ bool add_env(t_condition *condition, char *env_str)
 	char *equal;
 	char *key;
 	char *value;
-	t_item *dup_key;
+	t_item *dup_key_node;
 
 	equal = ft_strchr(env_str, '=');
 	if (!equal)
@@ -39,13 +42,9 @@ bool add_env(t_condition *condition, char *env_str)
 	value = ft_strdup(equal + 1);
 	if (!key || !value)
 		return (false);
-	dup_key = search_dup_key(condition, key);
-	if (dup_key)
-	{
-		free(dup_key->value);
-		dup_key->value = value;
-		free(key);
-	}
+	dup_key_node = search_dup_key(condition, key);
+	if (dup_key_node)
+		replace_env(dup_key_node, value, key);
 	else
 		if (!insert_env(condition, key, value))
 			return (false);

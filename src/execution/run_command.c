@@ -59,6 +59,7 @@ bool exec_command(t_condition *condition, t_node *node)
 	t_node *current;
 	t_exec_info info;
 
+	condition->exit_status = 0;
 	if (node->next == NULL && node->argv[0] != NULL)
 		return(execute_single_command(condition, node), true);
 	current = node;
@@ -78,9 +79,13 @@ bool run_command(t_condition *condition, t_token *token_list)
 {
 	t_node *node;
 
-	node = make_node(token_list);//TOEKN_WORDのみでargvを作成
+	node = make_node(condition, token_list);//TOEKN_WORDのみでargvを作成
 	if (node == NULL)
 		return (false);
+	exec_command(condition, node);
+	(void)condition;//free token_list
+	return (true);
+}
 
 	// t_node *temp = node;//////////////////////////確認用
 	// while(temp)
@@ -93,7 +98,3 @@ bool run_command(t_condition *condition, t_token *token_list)
 	// 	temp = temp->next;
 	// 	printf("-------------------------\n");
 	// }
-	exec_command(condition, node);
-	(void)condition;//free token_list
-	return (true);
-}

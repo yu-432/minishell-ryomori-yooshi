@@ -56,7 +56,7 @@ bool read_heredoc(t_node *node, char *delimiter)
 
 void heredoc_child_process(t_node *node, char *delimiter, int fds[2])
 {
-	setup_child_signal();
+	setup_heredoc_signal();
 	read_heredoc(node, delimiter);
 	dup2(fds[WRITE], STDOUT_FILENO);
 	wrap_double_close(fds[READ], fds[WRITE]);
@@ -70,9 +70,9 @@ bool heredoc_parent_process(t_node *node, int fds[2], int pid)
 
 	waitpid(pid, &status, 0);
 	setup_parent_signal();
+	if (WIFEXITED(status) && WEXITSTATUS(status) == SIGINT)
+		g_sig = SIGINT;
 	close(fds[WRITE]);
-	if (WTERMSIG(status) == SIGINT)
-		return (write(STDERR_FILENO, "\n", 1), false);
 	node->fd_in = fds[READ];
 	return (true);
 }
@@ -99,7 +99,7 @@ bool heredoc(t_node *node, char *delimiter)
 	return (true);
 }
 
-bool redirect_heredoc(t_node *node, t_token *token_list)
+bool redirect_heredoc(t_condition *condition, t_node *node, t_token *token_list)
 {
 	reset_fd(&node->fd_in);
 	free(node->heredoc_str);
@@ -113,5 +113,6 @@ bool redirect_heredoc(t_node *node, t_token *token_list)
 	}
 	if (!heredoc(node, token_list->next->token))
 		return (false);
+	(void)condition;
 	return (true);
 }
