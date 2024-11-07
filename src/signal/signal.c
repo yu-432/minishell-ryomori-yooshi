@@ -17,6 +17,16 @@ void handler(int signum)
 	}
 }
 
+void heredoc_handler(int signum)
+{
+	if(signum == SIGINT)
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		g_sig = signum;
+		exit(SIGINT);
+	}
+}
+
 void init_signal(void)
 {
 	signal(SIGINT, handler);
@@ -30,6 +40,17 @@ void setup_ignore_signal(void)
 
 	ft_memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_handler = SIG_IGN;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+}
+
+void setup_heredoc_signal(void)
+{
+	struct sigaction sa;
+
+	ft_memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = heredoc_handler;
 	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);

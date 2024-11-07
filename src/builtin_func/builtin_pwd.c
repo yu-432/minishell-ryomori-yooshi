@@ -2,7 +2,7 @@
 #include "../../libft/libft.h"
 #include "../../header/condition.h"
 #include "../../header/builtin_func.h"
-#include "../../header/environ.h"
+#include "../../header/init.h"
 
 int builtin_pwd(t_condition *cond, char **argv)
 {

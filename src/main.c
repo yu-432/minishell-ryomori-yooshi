@@ -60,7 +60,7 @@ void shell_loop(t_condition *condition)
 		init_condition(condition);
 		line = read_command_line();
 		if(!line)
-			break;
+			line = ft_strdup("exit");
 		if (*line == '\0')
 		{
 			free(line);
@@ -76,20 +76,12 @@ void shell_loop(t_condition *condition)
 int main(int argc, char **argv, char **envp)
 {
 	t_condition condition;
-	t_item *temp;
 
-	if (!init_shell(&condition, argv, envp))
+	if (!init_shell(&condition, envp))
 		return (put_error(strerror(errno)), 1);
 	shell_loop(&condition);
-	/////////仮///////////
-	while(condition.environ)
-	{
-		temp = condition.environ->next;
-		free(condition.environ->key);
-		free(condition.environ->value);
-		free(condition.environ);
-		condition.environ = temp;
-	}
 	rl_clear_history();
 	(void)argc;
+	(void)argv;
+	exit(condition.exit_status);
 }

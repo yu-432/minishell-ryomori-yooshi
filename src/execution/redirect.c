@@ -4,7 +4,7 @@
 #include "../../header/condition.h"
 #include "../../header/execution.h"
 
-bool redirect_in(t_node *node, t_token *token_list)
+bool redirect_in(t_condition *condition, t_node *node, t_token *token_list)
 {
 	int fd;
 
@@ -18,6 +18,7 @@ bool redirect_in(t_node *node, t_token *token_list)
 	if (fd == -1)
 	{
 		put_error(strerror(errno));
+		condition->exit_status = 1;
 		return(false);
 	}
 	node->fd_in = fd;
@@ -29,7 +30,7 @@ bool redirect_in(t_node *node, t_token *token_list)
 	return (true);
 }
 
-bool redirect_out(t_node *node, t_token *token_list)
+bool redirect_out(t_condition *condition, t_node *node, t_token *token_list)
 {
 	int fd;
 
@@ -43,6 +44,7 @@ bool redirect_out(t_node *node, t_token *token_list)
 	if (fd == -1)
 	{
 		put_error(strerror(errno));
+		condition->exit_status = 1;
 		return (false);
 	}
 	if(node->fd_out != -2)
@@ -51,7 +53,7 @@ bool redirect_out(t_node *node, t_token *token_list)
 	return (true);
 }
 
-bool redirect_append(t_node *node, t_token *token_list)
+bool redirect_append(t_condition *condition, t_node *node, t_token *token_list)
 {
 	int fd;
 
@@ -65,6 +67,7 @@ bool redirect_append(t_node *node, t_token *token_list)
 	if (fd == -1)
 	{
 		put_error(strerror(errno));
+		condition->exit_status = 1;
 		return (false);
 	}
 	if(node->fd_out != -2)

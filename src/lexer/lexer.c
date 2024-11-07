@@ -6,7 +6,6 @@
 t_token *lexer(t_condition *condition, char *line)
 {
 	t_token *tokenized;
-	// int count = 1;
 
 	tokenized = tokenizer(line);
 	if (!tokenized)

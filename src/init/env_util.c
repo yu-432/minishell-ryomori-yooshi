@@ -1,6 +1,6 @@
 #include "../../header/condition.h"
 #include "../../header/standard.h"
-#include "../../header/environ.h"
+#include "../../header/init.h"
 #include "../../libft/libft.h"
 
 t_item *search_dup_key(t_condition *condition, char *key)
@@ -19,7 +19,7 @@ t_item *search_dup_key(t_condition *condition, char *key)
 	return (NULL);
 }
 
-t_item *set_tail(t_item *head)
+t_item *find_tail(t_item *head)
 {
 	t_item *tail;
 

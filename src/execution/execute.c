@@ -5,6 +5,7 @@
 #include "../../libft/libft.h"
 #include "../../header/execution.h"
 #include "../../header/builtin_func.h"
+#include "../../header/signal.h"
 
 void execute_builtin(t_condition *condition, t_node *node)
 {
@@ -12,8 +13,8 @@ void execute_builtin(t_condition *condition, t_node *node)
 		builtin_echo(condition, node->argv);
 	else if (ft_strncmp(node->argv[0], "export", 7) == 0)
 		builtin_export(condition, node->argv);
-	else if (ft_strncmp(node->argv[0], "unset", 6) == 0)
-		builtin_unset(condition, node->argv);
+	// else if (ft_strncmp(node->argv[0], "unset", 6) == 0)
+	// 	builtin_unset(condition, node->argv);
 	else if (ft_strncmp(node->argv[0], "env", 4) == 0)
 		builtin_env(condition);
 	else if (ft_strncmp(node->argv[0], "cd", 3) == 0)
@@ -33,14 +34,14 @@ int execute(t_condition *condition, t_node *node)
 	set_redirect_fd(node);
 	if (is_builtin(node->argv[0]))
 	{
-		fprintf(stderr, "builtin command\n");
 		execute_builtin(condition, node);
 		return (true);
 	}
 	path = find_command_path(condition, node->argv[0]);
 	if (!path)
 	{
-		put_error("command not found");
+		ft_putstr_fd(node->argv[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit (127);
 	}
 	execve(path, node->argv, NULL);

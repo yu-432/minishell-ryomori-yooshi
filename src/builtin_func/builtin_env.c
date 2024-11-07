@@ -1,7 +1,7 @@
 #include "../../header/standard.h"
 #include "../../libft/libft.h"
 #include "../../header/condition.h"
-#include "../../header/environ.h"
+#include "../../header/init.h"
 
 void builtin_env(t_condition *condition)
 {

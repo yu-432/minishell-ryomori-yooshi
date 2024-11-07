@@ -24,22 +24,32 @@ int execute_single_command(t_condition *condition, t_node *node)
 	}
 	waitpid(pid, &status, 0);
 	if(WTERMSIG(status) == SIGINT)
+	{
 		write(STDERR_FILENO, "\n", 1);
+		g_sig = SIGINT;
+	}
+	if(WIFEXITED(status))
+		condition->exit_status = WEXITSTATUS(status);
 	setup_parent_signal();
 	return (EXIT_SUCCESS);
 }
 
-void wait_signal(t_exec_info *info)
+void wait_signal(t_condition *condition, t_exec_info *info)
 {
 	int status;
 
+	waitpid(info->pid[info->executed_count--], &status, 0);
+	condition->exit_status = WEXITSTATUS(status);
+	g_sig = WTERMSIG(status);
 	while(info->executed_count >= 0)
 	{
 		waitpid(info->pid[info->executed_count], &status, 0);
 		info->executed_count--;
 	}
-	if(WTERMSIG(status) == SIGINT)
+	if(WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
 		write(STDERR_FILENO, "\n", 1);
+	}
 }
 
 pid_t execute_last_pipeline_cmd(t_condition *condition, t_node *node, t_exec_info *info)
@@ -57,7 +67,7 @@ pid_t execute_last_pipeline_cmd(t_condition *condition, t_node *node, t_exec_inf
 		exit(EXIT_FAILURE);
 	}
 	wrap_close(info->keep_fd);
-	wait_signal(info);
+	wait_signal(condition, info);
 	setup_parent_signal();
 	return (0);
 }
