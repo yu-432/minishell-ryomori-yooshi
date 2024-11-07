@@ -80,44 +80,16 @@ static int move_path(int option, t_condition cond)
 		env_path = get_item_value(cond.environ, "HOME");
 	}
 	else if(option == MOVE_TO_OLDPWD)
-	{
 		env_path = get_item_value(cond.environ, "OLDPWD");
-		update_old_pwd(&cond);
-	}
 	if(!env_path)
 	{
 		perror("cd");
 		return (1);
 	}
 	judge = chdir(env_path);
+	if(option == MOVE_TO_HOME)
+		update_old_pwd(&cond);
 	return (judge);
-}
-
-//=============================================================================
-//==========================        BUILTIN_CD        ==========================
-//=============================================================================
-
-int builtin_cd(t_condition *cond, char **args)
-{
-	int	judge;
-	char newcwd[PATH_MAX];
-	char *pwd;
-
-	pwd = lst_getenv(cond, "PWD");
-	if(!args[1] || !ft_strncmp(args[1], "~", 2))
-		judge = (move_path(MOVE_TO_HOME, *cond));
-	if (ft_strncmp(args[1], "-", 2) == 0)
-		judge = move_path(MOVE_TO_OLDPWD, *cond);
-	else
-	{
-		update_old_pwd(cond);
-		judge = chdir(args[1]);
-	}
-	if(judge < 0)
-		perror("cd");
-	newcwd = recreate_cwd(pwd, args[1]);//作成中
-	set_newcwd(cond, newcwd);//作成中
-	return (0);//success or fail
 }
 
 //=============================================================================
@@ -140,31 +112,7 @@ char *lst_getenv(t_item *item, char *key)
 	return (NULL);
 }
 
-//=============================================================================
-//==========================        recreate_cwd       ==========================
-//=============================================================================
-
-char *recreate_cwd(char *pwd, char *args)
-{
-	char newcwd[PATH_MAX];
-	char *tmp;
-
-	if(*args == '/' || pwd == NULL)
-		ft_strlcpy(newcwd, "/", PATH_MAX);
-	else
-		ft_strlcpy(newcwd, pwd, PATH_MAX);
-
-	while(*args)
-	{
-		if(*args == '/')
-			args++;
-		else if(ft_strncmp(args, ".", 3) == 0)
-	}
-	
-	return (newcwd);
-}
-
-bool character_elimination(char ***newcwd, char *args, char *element)
+bool character_elimination(char **newcwd, char *args, char *element)// (/../or/./)の処理
 {
 	size_t len;
 
@@ -174,8 +122,172 @@ bool character_elimination(char ***newcwd, char *args, char *element)
 		if(args[len] == '\0' || args[len] == '/')
 		{
 			*newcwd = args + len;
-			return
+			return(true);
 		}
 	}
 	return (false);
+}
+
+
+void default_previous_path(char *newcwd)
+{
+	char *start;
+	char *previous_history;
+
+	start = newcwd;
+	previous_history = NULL;
+
+	while(newcwd)
+	{
+		if(*newcwd == '/')
+		{
+			previous_history = newcwd;
+			newcwd++;
+		}
+		if (previous_history != NULL)
+			*previous_history = '\0';
+	}
+}
+
+
+size_t	strlncpy(char *dst, char *src, size_t n, size_t dstsize)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < dstsize - 1 && n > 0 && *src)
+	{
+		dst[i] = *src;
+		src++;
+		i++;
+		n--;
+	}
+	dst[i] = '\0';
+	while (n > 0 && *src)
+	{
+		i++;
+		n--;
+		src++;
+	}
+	return (i);
+}
+
+void append_path(char *dest, size_t destsize, char **newcwd, char *args)
+{
+	size_t len;
+	char buf[PATH_MAX];
+
+	len = 0;
+	while(args[len] && args[len] != '/')
+		len++;
+	if(ft_strlcpy(buf, args, len + 1) >= destsize)
+	{
+		perror("cd");
+		exit(1);
+	}
+	if (dest[ft_strlen(dest) - 1] != '/')
+		if(ft_strlcat(dest, "/", destsize) >= destsize)
+		{
+			perror("cd");
+			exit(1);
+		}
+	if(ft_strlcat(dest, buf, destsize) >= destsize)
+	{
+		perror("cd");
+		exit(1);
+	}
+	*newcwd = args + len;
+	
+}
+
+//=============================================================================
+//==========================        recreate_cwd       ==========================
+//=============================================================================
+
+char *recreate_cwd(char *pwd, char *args)
+{
+	char *newcwd;
+
+	newcwd = (char *)malloc(PATH_MAX);
+	if(newcwd == NULL)
+	{
+		perror("malloc");
+		exit(1);
+	}
+	if(*args == '/' || pwd == NULL)//*args == '/'※
+		ft_strlcpy(newcwd, "/", PATH_MAX);
+	else
+		ft_strlcpy(newcwd, pwd, PATH_MAX);
+
+	while(*args)
+	{
+		if(*args == '/')//※ここは対応済み
+			args++;
+		else if(character_elimination(&args, newcwd, "."))
+			;
+		else if(character_elimination(&args, newcwd, ".."))
+			default_previous_path(newcwd);
+		else
+			append_path(newcwd, PATH_MAX, &args, args);
+	}
+	
+	return (newcwd);
+}
+void update_cwd(t_condition *cond, char *newcwd)
+{
+	t_item *item;
+	t_item *old_item;
+
+	item = cond->environ;
+	old_item = NULL;
+	while(item->next)
+	{
+		if(ft_strncmp(item->key, "PWD", 4) == 0)
+		{
+			old_item = item;
+			break;
+		}
+		item = item->next;
+	}
+	if(old_item)
+	{
+		free(old_item->value);
+		old_item->value = ft_strdup(newcwd);
+		if(old_item->value == NULL)
+		{
+			perror("strdup");
+			exit(1);
+		}
+	}
+}
+//=============================================================================
+//==========================        BUILTIN_CD        ==========================
+//=============================================================================
+#include <unistd.h> // getcwdのため
+
+int builtin_cd(t_condition *cond, char **args)
+{
+	int judge;
+	char cwd[PATH_MAX];
+
+	if (!args[1] || !ft_strncmp(args[1], "~", 2)) {
+		judge = move_path(MOVE_TO_HOME, *cond);
+	} else if (ft_strncmp(args[1], "-", 2) == 0) {
+		judge = move_path(MOVE_TO_OLDPWD, *cond);
+	} else {
+		update_old_pwd(cond);
+		judge = chdir(args[1]);
+	}
+	if (judge < 0) {
+		perror("cd");
+		return 1;
+	}
+	// `getcwd`で絶対パスを取得して`PWD`に設定する
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
+		perror("getcwd");
+		return 1;
+	}
+	update_cwd(cond, cwd);
+		return 0;
 }
