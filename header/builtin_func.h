@@ -5,6 +5,12 @@
 #include <limits.h>
 #include <sys/stat.h>
 
+typedef enum e_move_position
+{
+	MOVE_TO_HOME,
+	MOVE_TO_OLDPWD
+}	t_move_position;
+
 void builtin_echo(t_condition *condition, char **argv);
 void builtin_env(t_condition *condition);
 void builtin_export(t_condition *condition, char **argv);
