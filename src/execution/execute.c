@@ -24,18 +24,20 @@ void execute_builtin(t_condition *condition, t_node *node)
 	else if (ft_strncmp(node->argv[0], "exit", 5) == 0)
 		builtin_exit(condition, node->argv);
 	else
-		fprintf(stderr, "error: builtin command not found\n");
+		ft_putstr_fd("error: builtin command not found\n", STDERR_FILENO);
 }
 
 int execute(t_condition *condition, t_node *node)
 {
 	char *path;
 
-	set_redirect_fd(node);
+	if(!interpret_redirect(condition, node))
+		exit(EXIT_FAILURE);
+	set_redirect_fd(node);//redirect接続
 	if (is_builtin(node->argv[0]))
 	{
 		execute_builtin(condition, node);
-		return (EXIT_SUCCESS);
+		exit (EXIT_SUCCESS);
 	}
 	path = find_command_path(condition, node->argv[0]);
 	if (!path)

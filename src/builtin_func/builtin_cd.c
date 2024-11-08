@@ -1,5 +1,6 @@
 #include "../../header/condition.h"
 #include "../../header/standard.h"
+#include "../../header/builtin_func.h"
 #include "../../libft/libft.h"
 
 
