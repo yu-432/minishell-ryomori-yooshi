@@ -58,8 +58,8 @@ void heredoc_child_process(t_node *node, char *delimiter, int fds[2])
 {
 	setup_heredoc_signal();
 	read_heredoc(node, delimiter);
-	dup2(fds[WRITE], STDOUT_FILENO);
-	wrap_double_close(fds[READ], fds[WRITE]);
+	dup2(fds[OUT], STDOUT_FILENO);
+	wrap_double_close(fds[IN], fds[OUT]);
 	ft_putstr_fd(node->heredoc_str, STDOUT_FILENO);
 	exit(0);
 }
@@ -72,8 +72,8 @@ bool heredoc_parent_process(t_node *node, int fds[2], int pid)
 	setup_parent_signal();
 	if (WIFEXITED(status) && WEXITSTATUS(status) == SIGINT)
 		g_sig = SIGINT;
-	close(fds[WRITE]);
-	node->fd_in = fds[READ];
+	close(fds[OUT]);
+	node->fd_in = fds[IN];
 	return (true);
 }
 
@@ -99,19 +99,19 @@ bool heredoc(t_node *node, char *delimiter)
 	return (true);
 }
 
-bool redirect_heredoc(t_condition *condition, t_node *node, t_token *token_list)
+bool redirect_heredoc(t_condition *condition, t_node *node, int i)
 {
 	reset_fd(&node->fd_in);
 	free(node->heredoc_str);
 	node->heredoc_str = ft_strdup("");
 	if (!node->heredoc_str)
 		return (false);
-	if (!token_list->next)
+	if (!node->argv[i + 1])
 	{
 		put_error("syntax error near unexpected token `newline'");
 		return (false);
 	}
-	if (!heredoc(node, token_list->next->token))
+	if (!heredoc(node, node->argv[i + 1]))
 		return (false);
 	(void)condition;
 	return (true);

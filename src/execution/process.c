@@ -7,11 +7,10 @@
 
 bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2])
 {
-	// setup_parent_signal();//
-	wrap_close(fds[WRITE]);
+	wrap_close(fds[OUT]);
 	if (info->keep_fd != -2)
 		wrap_close(info->keep_fd);
-	info->keep_fd = fds[READ];
+	info->keep_fd = fds[IN];
 	(void)condition;
 	(void)node;
 	(void)info;
@@ -21,11 +20,11 @@ bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int
 bool child_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2])
 {
 	setup_child_signal();
-	if (info->executed_count < info->pipe_count)
+	if (info->executed_count < info->pipe_count)//pipe接続
 	{
-		wrap_dup2(fds[WRITE], STDOUT_FILENO);
-		wrap_close(fds[WRITE]);
-		wrap_close(fds[READ]);
+		wrap_dup2(fds[OUT], STDOUT_FILENO);
+		wrap_close(fds[OUT]);
+		wrap_close(fds[IN]);
 	}
 	if (info->executed_count > 0)
 	{

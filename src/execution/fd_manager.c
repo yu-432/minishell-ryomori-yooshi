@@ -37,9 +37,13 @@ void wrap_double_close(int fd1, int fd2)
 bool set_redirect_fd(t_node *node)
 {
 	if (node->fd_in != -2)
+	{
 		wrap_dup2(node->fd_in, STDIN_FILENO);
+	}
 	if(node->fd_out != -2)
+	{
 		wrap_dup2(node->fd_out, STDOUT_FILENO);
+	}
 	close_redirect_fd(node);
 	return (false);
 }

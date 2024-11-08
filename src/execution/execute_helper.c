@@ -19,15 +19,14 @@ bool is_builtin(char *cmd)
 	return (false);
 }
 
-bool is_not_redirect(char *str)
+bool is_kind_redirect(t_token_kind kind)
 {
-	int kind;
-
-	kind = get_token_kind(str);
-	if (kind == TOKEN_REDIRECT_IN || kind == TOKEN_REDIRECT_OUT ||\
-		kind == TOKEN_REDIRECT_APPEND || kind == TOKEN_REDIRECT_HEREDOC)
-		return (false);
-	return (true);
+	if (kind == TOKEN_REDIRECT_IN || \
+		kind == TOKEN_REDIRECT_OUT || \
+		kind == TOKEN_REDIRECT_APPEND || \
+		kind == TOKEN_REDIRECT_HEREDOC)
+		return (true);
+	return (false);
 }
 
 int count_cmd_arg(t_node *node)
@@ -39,7 +38,7 @@ int count_cmd_arg(t_node *node)
 	i = 0;
 	while (node->argv[i])
 	{
-		if (is_not_redirect(node->argv[i]))
+		if (!is_redirect(node->argv[i]))
 			count++;
 		else
 			count--;

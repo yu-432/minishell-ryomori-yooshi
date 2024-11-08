@@ -5,6 +5,16 @@
 #include "../../libft/libft.h"
 #include "../../header/lexer.h"
 
+bool is_redirect(char *str)
+{
+	if (ft_strncmp(str, "<", 2) == 0 || \
+		ft_strncmp(str, ">", 2) == 0 || \
+		ft_strncmp(str, ">>", 3) == 0 || \
+		ft_strncmp(str, "<<", 3) == 0)
+		return (true);
+	return (false);
+}
+
 char **molding_argv(t_node *node)
 {
 	char **res;
@@ -20,7 +30,7 @@ char **molding_argv(t_node *node)
 	j = 0;
 	while (i < count)
 	{
-		if (is_not_redirect(node->argv[j]))
+		if (!is_redirect(node->argv[j]))
 			res[i++] = node->argv[j];
 		else
 			j++;

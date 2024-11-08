@@ -14,19 +14,19 @@ void put_redirect_error(t_condition *condition, char *str)
 	condition->exit_status = 1;
 }
 
-bool redirect_in(t_condition *condition, t_node *node, t_token *token_list)
+bool redirect_in(t_condition *condition, t_node *node, int i)
 {
 	int fd;
 
 	reset_fd(&node->fd_in);
-	if (token_list->next== NULL)
+	if (!node->argv[i + 1])
 	{
 		put_error("syntax error near unexpected token `newline'");
 		return (false);
 	}
-	fd = open(token_list->next->token, O_RDONLY);
+	fd = open(node->argv[i + 1], O_RDONLY);
 	if (fd == -1)
-		return (put_redirect_error(condition, token_list->next->token), false);
+		return (put_redirect_error(condition, node->argv[i + 1]), false);
 	node->fd_in = fd;
 	if(node->heredoc_str)
 	{
@@ -36,38 +36,41 @@ bool redirect_in(t_condition *condition, t_node *node, t_token *token_list)
 	return (true);
 }
 
-bool redirect_out(t_condition *condition, t_node *node, t_token *token_list)
+bool redirect_out(t_condition *condition, t_node *node, int i)
 {
 	int fd;
 
 	reset_fd(&node->fd_out);
-	if (token_list->next == NULL)
+	if (!node->argv[i + 1])
 	{
 		put_error("syntax error near unexpected token `newline'");
 		return (false);
 	}
-	fd = open(token_list->next->token, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	fd = open(node->argv[i + 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (fd == -1)
-		return (put_redirect_error(condition, token_list->next->token), false);
+	{
+		put_redirect_error(condition, node->argv[i + 1]);
+		return (false);
+	}
 	if(node->fd_out != -2)
 		close(node->fd_out);
 	node->fd_out = fd;
 	return (true);
 }
 
-bool redirect_append(t_condition *condition, t_node *node, t_token *token_list)
+bool redirect_append(t_condition *condition, t_node *node, int i)
 {
 	int fd;
 
 	reset_fd(&node->fd_out);
-	if (!token_list->token)
+	if (!node->argv[i + 1])
 	{
 		put_error("syntax error near unexpected token `newline'");
 		return (false);
 	}
-	fd = open(token_list->next->token, O_WRONLY | O_APPEND | O_CREAT, 0644);
+	fd = open(node->argv[i + 1], O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (fd == -1)
-		return (put_redirect_error(condition, token_list->next->token), false);
+		return (put_redirect_error(condition, node->argv[i + 1]), false);
 	if(node->fd_out != -2)
 		close(node->fd_out);
 	node->fd_out = fd;
