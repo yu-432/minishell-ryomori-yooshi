@@ -35,7 +35,7 @@ int execute(t_condition *condition, t_node *node)
 	if (is_builtin(node->argv[0]))
 	{
 		execute_builtin(condition, node);
-		return (true);
+		return (EXIT_SUCCESS);
 	}
 	path = find_command_path(condition, node->argv[0]);
 	if (!path)

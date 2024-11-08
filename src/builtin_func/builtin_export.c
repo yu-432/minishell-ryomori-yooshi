@@ -2,6 +2,7 @@
 #include "../../libft/libft.h"
 #include "../../header/condition.h"
 #include "../../header/init.h"
+#include "../../header/builtin_func.h"
 
 bool is_envname(char c)
 {
@@ -65,6 +66,8 @@ void builtin_export(t_condition *condition, char **argv)
 	t_item *dup_item;
 
 	argv++;
+	if (!*argv)
+		return (builtin_env(condition));
 	while(*argv)
 	{
 		if(!split_argv(condition, *argv, key_value))
@@ -75,7 +78,6 @@ void builtin_export(t_condition *condition, char **argv)
 		dup_item = search_dup_item(condition, key_value[0]);
 		if (dup_item)
 		{
-			printf("dup\n");
 			free(key_value[0]);
 			free(dup_item->value);
 			dup_item->value = key_value[1];

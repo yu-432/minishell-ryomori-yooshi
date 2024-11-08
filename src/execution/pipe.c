@@ -63,7 +63,8 @@ pid_t execute_last_pipeline_cmd(t_condition *condition, t_node *node, t_exec_inf
 		setup_child_signal();
 		wrap_dup2(info->keep_fd, STDIN_FILENO);
 		wrap_close(info->keep_fd);
-		execute(condition, node);
+		if(!execute(condition, node))
+			exit(EXIT_SUCCESS);
 		exit(EXIT_FAILURE);
 	}
 	wrap_close(info->keep_fd);
