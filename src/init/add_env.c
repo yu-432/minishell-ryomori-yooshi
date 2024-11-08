@@ -42,7 +42,7 @@ bool add_env(t_condition *condition, char *env_str)
 	value = ft_strdup(equal + 1);
 	if (!key || !value)
 		return (false);
-	dup_key_node = search_dup_key(condition, key);
+	dup_key_node = search_dup_item(condition, key);
 	if (dup_key_node)
 		replace_env(dup_key_node, value, key);
 	else

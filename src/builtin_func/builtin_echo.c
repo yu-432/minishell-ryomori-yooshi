@@ -9,7 +9,7 @@ void builtin_echo(t_condition *condition, char **argv)
 
 	i = 1;
 	is_newline = true;
-	if (argv[1] && !ft_strncmp(argv[1], "-n\0", 3))
+	if (argv[1] && !ft_strncmp(argv[1], "-n", 2))
 	{
 		is_newline = false;
 		i++;

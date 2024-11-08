@@ -7,15 +7,19 @@
 //=============================================================================
 void numeric_argument_error(char *argment)
 {
-	printf("exit: %s: numeric argument required\n", argment);
-	exit(255);//bashの仕様に合わせると出力は2
+	ft_putstr_fd("exit\n", STDERR_FILENO);
+	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+	ft_putstr_fd(argment, STDERR_FILENO);
+	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+	exit(2);
 }
 
-int tma_error_check(char **args)
+int tma_error_check(t_condition *condition, char **args)
 {
 	if(args[2] != NULL)
 	{
-		printf("exit: too many arguments\n");
+		put_error("exit: too many arguments");
+		condition->exit_status = 1;
 		return (1);
 	}
 	return (0);
@@ -62,7 +66,7 @@ long over_256(long num)
 
 	long_num_over = 0;
 	while(num >= 256)
-		num /= 256;
+		num %= 256;
 	long_num_over = num;
 	return (long_num_over);
 }
@@ -193,21 +197,25 @@ int	builtin_exit(t_condition *condition, char **args)
 
 	result = 0;
 	if(args[1] == NULL)
+	{
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
 		exit(condition->exit_status);//execveの返り値を返す
+	}
 	argment = (skip_space(args[1]));
 	num = 0;
 	if (!is_check_num(argment))//strが数字かどうかを判定(-.+)がある場合も考慮(一つだけ)
 		numeric_argument_error(argment);
 	else
 	{
-		if(tma_error_check(args))
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		if(tma_error_check(condition, args))
 			return (1);
 		judge = long_over_check(argment);
 		if (judge == 1)
 			numeric_argument_error(argment);
 		num = ft_atoll(argment);
 		result = exit_status_num(num);
-			exit(result);
+		exit(result);
 	}
 	return (0);
 }

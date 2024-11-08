@@ -10,23 +10,43 @@ void free_t_item(t_item **item)
 	free(*item);
 }
 
-// void builtin_unset(t_condition *condition, char **argv)
-// {
-// 	int i;
-// 	t_item *delete_key;
+t_item *search_prev_item(t_condition *condition, t_item *dup_item)
+{
+	t_item *current;
 
-// 	i = 1;
-// 	while(argv[i])
-// 	{
-// 		delete_key = search_dup_key(condition, argv[i]);
-// 		if (!delete_key)
-// 		{
-// 			i++;
-// 			continue;
-// 		}
-// 		delete_key->prev->next = delete_key->next;
-// 		delete_key->next->prev = delete_key->prev;
-// 		free_t_item(&delete_key);
-// 		i++;
-// 	}
-// }
+	current = condition->environ;
+	if (current == dup_item)
+		return (NULL);
+	while (current->next)
+	{
+		if (current->next == dup_item)
+			return (current);
+		current = current->next;
+	}
+	return (NULL);
+}
+
+void builtin_unset(t_condition *condition, char **argv)
+{
+	int i;
+	t_item *delete_item;
+	t_item *prev_item;
+
+	i = 1;
+	while(argv[i])
+	{
+		delete_item = search_dup_item(condition, argv[i]);
+		if (!delete_item)
+		{
+			i++;
+			continue;
+		}
+		prev_item = search_prev_item(condition, delete_item);
+		if(!prev_item)
+			condition->environ = delete_item->next;
+		else
+			prev_item->next = delete_item->next;
+		free_t_item(&delete_item);
+		i++;
+	}
+}
