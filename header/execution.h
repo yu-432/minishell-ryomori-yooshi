@@ -72,6 +72,8 @@ bool is_redirect(char *str);
 
 bool interpret_redirect(t_condition *condition, t_node *node);
 
+void storage_fd(int *keep_fds);
+bool restore_fd(int *keep_fds);
 
 
 

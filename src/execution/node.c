@@ -45,25 +45,25 @@ bool make_node_argv(t_condition *condition, t_token **token_list, t_node *curren
 	if(!current_node->argv)
 		return(false);
 	i = 0;
-	if ((*token_list)->kind == TOKEN_PIPE)
-	{
-		current_node->argv[i] = ft_strdup((*token_list)->token);
-		if (!current_node->argv[i])
-			return (false);
-		*token_list = (*token_list)->next;
-		return (true);
-	}
 	while (i < word_count)
 	{
 		current_node->argv[i] = ft_strdup((*token_list)->token);
 		if(!current_node->argv[i])
 			return (false);
 		i++;
-		(*token_list) = (*token_list)->next;
+		*token_list = (*token_list)->next;
 	}
 	current_node->argv[i] = NULL;
 	(void)condition;
 	return (true);
+}
+
+void add_kind_info(t_node *node)
+{
+	if(ft_strncmp(node->argv[0], "|\0", 2) == 0)
+		node->kind = NODE_PIPE;
+	else
+		node->kind = NODE_CMD;
 }
 
 t_node *make_node(t_condition *condition, t_token *token_list)
@@ -79,13 +79,8 @@ t_node *make_node(t_condition *condition, t_token *token_list)
 		if (!current->next)
 			return (NULL);
 		if(!make_node_argv(condition, &token_list, current->next))//PIPE区切りでargvを作成//redirect未処理
-			return (NULL);
-		if (current->next->argv[0] == NULL)
-			return (NULL);
-		if(ft_strncmp(current->next->argv[0], "|\0", 2) == 0)
-			current->next->kind = NODE_PIPE;
-		else
-			current->next->kind = NODE_CMD;
+			return (NULL);//free?
+		add_kind_info(current->next);
 		current->next->prev = current;
 	}
 	current = head.next;
