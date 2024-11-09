@@ -33,7 +33,7 @@ int execute(t_condition *condition, t_node *node)
 
 	if(!interpret_redirect(condition, node))
 		exit(EXIT_FAILURE);
-	set_redirect_fd(node);//redirect接続
+	set_redirect_fd(node);
 	if (is_builtin(node->argv[0]))
 	{
 		execute_builtin(condition, node);

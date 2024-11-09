@@ -40,9 +40,7 @@ bool get_environ(t_condition *condition, char **envp)
 bool	init_shell(t_condition *condition, char **envp)
 {
 	ft_memset(condition, 0, sizeof(t_condition));
-	errno = 0;
 	if (!get_environ(condition, envp))
 		return(false);
-	// rl_event_hook = NULL;
 	return(true);
 }
