@@ -20,16 +20,25 @@ char	*get_item_value(t_item *item, char *key)
 	return (NULL);
 }
 
-int	update_item_value(t_item *item, const char *cwd)
+void put_cd_error(t_condition *cond, char *str, char *perr)
+{
+	cond->exit_status = 1;
+	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+	if (perr)
+		perror(NULL);
+	else
+	{
+		ft_putstr_fd(str, STDERR_FILENO);
+		ft_putchar_fd('\n', STDERR_FILENO);
+	}
+}
+
+int	update_item_value(t_condition *cond, t_item *item, const char *cwd)
 {
 	free(item->value);
 	item->value = ft_strdup(cwd);
 	if (item->value == NULL)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		perror("malloc");
-		return (1);
-	}
+		return(put_cd_error(cond, NULL, "malloc"), 1);
 	return (0);
 }
 
@@ -55,7 +64,7 @@ static int	update_old_pwd(t_condition *cond)
 	}
 	if (old_item)
 	{
-		return (update_item_value(old_item, cwd));
+		return (update_item_value(cond, old_item, cwd));
 	}
 	return (0);
 }
@@ -112,11 +121,7 @@ int	update_cwd(t_condition *cond, char *newcwd)
 		free(old_item->value);
 		old_item->value = ft_strdup(newcwd);
 		if (old_item->value == NULL)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			perror("malloc");
-			return (1);
-		}
+			return(put_cd_error(cond, NULL, "malloc"), 1);
 	}
 	return (0);
 }
@@ -126,6 +131,8 @@ int	builtin_cd(t_condition *cond, char **args)
 	int		judge;
 	char	cwd[PATH_MAX];
 
+	if(args[2])
+		return (put_cd_error(cond, "too many arguments", NULL), 1);
 	if (!args[1] || !ft_strncmp(args[1], "~", 2))
 		judge = move_path(MOVE_TO_HOME, *cond);
 	else if (ft_strncmp(args[1], "-", 2) == 0)
@@ -135,20 +142,12 @@ int	builtin_cd(t_condition *cond, char **args)
 	if (judge != 0)
 	{ 
 		if(!args[1] || ft_strncmp(args[1], "-", 2) == 0)
-			ft_putstr_fd("minishell: cd: OLDPWD not set\n", STDERR_FILENO);
+			return (put_cd_error(cond, "OLDPWD not found", NULL), 1);
 		else
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			perror("cd");
-		}
-		return (1);
+			return (put_cd_error(cond, NULL, "chdir"), 1);
 	}
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		perror("getcwd");
-		return (1);
-	}
+		return (put_cd_error(cond, NULL, "getcwd"), 1);
 	update_old_pwd(cond);
 	update_cwd(cond, cwd);
 	return (0);
