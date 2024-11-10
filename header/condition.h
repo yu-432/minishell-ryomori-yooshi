@@ -15,6 +15,7 @@ typedef struct s_item
 typedef struct s_condition
 {
 	t_item	*environ;
+	char **envp;
 	int		exit_status;
 }	t_condition;
 

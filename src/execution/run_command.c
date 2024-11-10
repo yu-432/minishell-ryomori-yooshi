@@ -92,10 +92,14 @@ bool exec_command(t_condition *condition, t_node *node)
 	return (execute_last_pipeline_cmd(condition, current, &info));
 }
 
+
+
 bool run_command(t_condition *condition, t_token *token_list)
 {
 	t_node *node;
+	char **ft_envp;
 
+	ft_envp = NULL;
 	node = make_node(condition, token_list);//TOEKN_WORDのみでargvを作成
 	if (node == NULL)
 		return (false);
