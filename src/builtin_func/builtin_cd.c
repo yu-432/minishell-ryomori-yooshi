@@ -26,7 +26,8 @@ int	update_item_value(t_item *item, const char *cwd)
 	item->value = ft_strdup(cwd);
 	if (item->value == NULL)
 	{
-		ft_putstr_fd("Eminishell:ft_strdup:error\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		perror("malloc");
 		return (1);
 	}
 	return (0);
@@ -112,7 +113,8 @@ int	update_cwd(t_condition *cond, char *newcwd)
 		old_item->value = ft_strdup(newcwd);
 		if (old_item->value == NULL)
 		{
-			ft_putstr_fd("minishell:ft_strdup:error\n", STDERR_FILENO);
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			perror("malloc");
 			return (1);
 		}
 	}
@@ -135,12 +137,16 @@ int	builtin_cd(t_condition *cond, char **args)
 		if(!args[1] || ft_strncmp(args[1], "-", 2) == 0)
 			ft_putstr_fd("minishell: cd: OLDPWD not set\n", STDERR_FILENO);
 		else
-			ft_putstr_fd("minishell: cd: error\n", STDERR_FILENO);
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			perror("cd");
+		}
 		return (1);
 	}
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		ft_putstr_fd("minishell: getcwd: error\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		perror("getcwd");
 		return (1);
 	}
 	update_old_pwd(cond);
