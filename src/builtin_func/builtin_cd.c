@@ -61,7 +61,6 @@ static int	update_old_pwd(t_condition *cond)
 
 static int	move_path (int option, t_condition cond)
 {
-	int		judge;
 	char	*env_path;
 
 	env_path = NULL;
@@ -71,13 +70,9 @@ static int	move_path (int option, t_condition cond)
 	{
 		env_path = get_item_value(cond.environ, "OLDPWD");
 		if(!env_path)
-		{
-			printf("bash: cd: OLDPWD not set\n");
 			return(1);
-		}
 	}
-	judge = chdir(env_path);
-	return (judge);
+	return (chdir(env_path));
 }
 
 char	*lst_getenv(t_item *item, char *key)
@@ -248,7 +243,10 @@ int	builtin_cd(t_condition *cond, char **args)
 		judge = chdir(args[1]);
 	if (judge != 0)
 	{ 
-		perror ("cd");
+		if(!args[1] || ft_strncmp(args[1], "-", 2) == 0)
+			ft_putstr_fd("minishell: cd: OLDPWD not set\n", STDERR_FILENO);
+		else
+			ft_putstr_fd("minishell: cd: error\n", STDERR_FILENO);
 		return (1);
 	}
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
