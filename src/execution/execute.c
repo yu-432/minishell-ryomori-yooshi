@@ -27,6 +27,27 @@ void execute_builtin(t_condition *condition, t_node *node)
 		ft_putstr_fd("error: builtin command not found\n", STDERR_FILENO);
 }
 
+bool is_executable(char *path)
+{
+	struct stat st;
+
+	if (stat(path, &st))
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(path, STDERR_FILENO);
+		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+		return (false);
+	}
+	if (S_ISDIR(st.st_mode))
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(path, STDERR_FILENO);
+		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
+		return (false);
+	}
+	return (true);
+}
+
 int execute(t_condition *condition, t_node *node)
 {
 	char *path;
@@ -39,14 +60,34 @@ int execute(t_condition *condition, t_node *node)
 		execute_builtin(condition, node);
 		exit (EXIT_SUCCESS);
 	}
-	path = find_command_path(condition, node->argv[0]);
+
+	if (node->argv[0][0] == '/' || ft_strncmp(node->argv[0], "./", 2) == 0)
+		path = ft_strdup(node->argv[0]);
+	else
+		path = find_command_path(condition, node->argv[0]);//対象の存在を確認する
 	if (!path)
 	{
 		ft_putstr_fd(node->argv[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit (127);
 	}
+
+	if (access(path, F_OK) != 0)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(node->argv[0], STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		exit (127);
+	}
+
+	if(!is_executable(path))
+		exit (126);
+	if (path[0] == '\0')
+		exit(EXIT_SUCCESS);
+
 	execve(path, node->argv, NULL);
-	perror(strerror(errno));
-	exit(EXIT_FAILURE);
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(node->argv[0], STDERR_FILENO);
+	perror(": ");//permission denied
+	exit(126);
 }
