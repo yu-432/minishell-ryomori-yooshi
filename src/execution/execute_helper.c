@@ -68,6 +68,8 @@ char	*find_command_path(t_condition *condition, char *command)
 	char	*slash;
 	char	*joined;
 
+	if (command[0] == '\0')
+		return (ft_strdup(""));
 	path = ft_split(take_env_value(condition, "PATH"), ':');
 	i = 0;
 	while (path[i])

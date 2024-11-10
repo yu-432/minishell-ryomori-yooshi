@@ -21,6 +21,7 @@ char **molding_argv(t_node *node)
 	int count;
 	int i;
 	int j;
+	bool is_argv_head;
 
 	count = count_cmd_arg(node);
 	res = ft_calloc(count + 1, sizeof(char *));
@@ -28,8 +29,14 @@ char **molding_argv(t_node *node)
 		return (NULL);
 	i = 0;
 	j = 0;
+	is_argv_head = true;
 	while (i < count)
 	{
+		while (node->argv[j] && node->argv[j][0] == '\0')
+			j++;
+		is_argv_head = false;
+		if (!node->argv[j])
+			break;
 		if (!is_redirect(node->argv[j]))
 			res[i++] = node->argv[j];
 		else

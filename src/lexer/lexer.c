@@ -1,8 +1,6 @@
 #include "../../header/lexer.h"
 #include "../../header/standard.h"
 
-
-
 t_token *lexer(t_condition *condition, char *line)
 {
 	t_token *tokenized;
