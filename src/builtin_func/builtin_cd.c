@@ -26,7 +26,8 @@ int	update_item_value(t_item *item, const char *cwd)
 	item->value = ft_strdup(cwd);
 	if (item->value == NULL)
 	{
-		perror("strdup");
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		perror("malloc");
 		return (1);
 	}
 	return (0);
@@ -40,6 +41,8 @@ static int	update_old_pwd(t_condition *cond)
 
 	item = cond->environ;
 	cwd = get_item_value(cond->environ, "PWD");
+	if(cwd == NULL)
+		return (0);
 	old_item = NULL;
 	while (item->next)
 	{
@@ -59,21 +62,18 @@ static int	update_old_pwd(t_condition *cond)
 
 static int	move_path (int option, t_condition cond)
 {
-	int		judge;
 	char	*env_path;
 
 	env_path = NULL;
 	if (option == MOVE_TO_HOME)
-		env_path = get_item_value(cond.environ, "HOME");
+		env_path = getenv("HOME");
 	else if (option == MOVE_TO_OLDPWD)
-		env_path = get_item_value(cond.environ, "OLDPWD");
-	if (!env_path)
 	{
-		perror("cd");
-		return (1);
+		env_path = get_item_value(cond.environ, "OLDPWD");
+		if(!env_path)
+			return(1);
 	}
-	judge = chdir(env_path);
-	return (judge);
+	return (chdir(env_path));
 }
 
 char	*lst_getenv(t_item *item, char *key)
@@ -90,117 +90,6 @@ char	*lst_getenv(t_item *item, char *key)
 		item = item->next;
 	}
 	return (NULL);
-}
-bool	character_elimination(char **newcwd, char *args, char *element)
-{
-	size_t	len;
-
-	len = ft_strlen(element);
-	if (ft_strncmp(args, element, len) == 0)
-	{
-		if (args[len] == '\0' || args[len] == '/')
-		{
-			*newcwd = args + len;
-			return (true);
-		}
-	}
-	return (false);
-}
-
-void	default_previous_path(char *newcwd)
-{
-	char	*start;
-	char	*previous_history;
-
-	start = newcwd;
-	previous_history = NULL;
-	while (newcwd)
-	{
-		if (*newcwd == '/')
-		{
-			previous_history = newcwd;
-			newcwd++;
-		}
-		if (previous_history != NULL)
-			*previous_history = '\0';
-	}
-}
-
-size_t	strlncpy(char *dst, char *src, size_t n, size_t dstsize)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < dstsize - 1 && n > 0 && *src)
-	{
-		dst[i] = *src;
-		src++;
-		i++;
-		n--;
-	}
-	dst[i] = '\0';
-	while (n > 0 && *src)
-	{
-		i++;
-		n--;
-		src++;
-	}
-	return (i);
-}
-int	append_path(char *dest, size_t destsize, char **newcwd, char *args)
-{
-	size_t	len;
-	char	buf[PATH_MAX];
-
-	len = 0;
-	while (args[len] && args[len] != '/')
-		len++;
-	if (ft_strlcpy (buf, args, len + 1) >= destsize)
-	{
-		perror("cd");
-		return(1);
-	}
-	if (dest[ft_strlen (dest) - 1] != '/')
-		if (ft_strlcat (dest, "/", destsize) >= destsize)
-		{
-			perror("cd");
-			return(1);
-		}
-	if (ft_strlcat (dest, buf, destsize) >= destsize)
-	{
-		perror("cd");
-		return(1);
-	}
-	*newcwd = args + len;
-	return (0);
-}
-
-char	*recreate_cwd(char *pwd, char *args)
-{
-	char	*newcwd;
-
-	newcwd = (char *)malloc(PATH_MAX);
-	if (newcwd == NULL)
-	{
-		perror("malloc");
-		exit(1);
-	}
-	if (*args == '/' || pwd == NULL)
-		ft_strlcpy(newcwd, "/", PATH_MAX);
-	else
-		ft_strlcpy(newcwd, pwd, PATH_MAX);
-	while (*args)
-	{
-		if (*args == '/')
-			args++;
-		else if (character_elimination (&args, newcwd, "."))
-			;
-		else if (character_elimination (&args, newcwd, ".."))
-			default_previous_path(newcwd);
-		else
-			append_path(newcwd, PATH_MAX, &args, args);
-	}
-	return (newcwd);
 }
 int	update_cwd(t_condition *cond, char *newcwd)
 {
@@ -224,7 +113,8 @@ int	update_cwd(t_condition *cond, char *newcwd)
 		old_item->value = ft_strdup(newcwd);
 		if (old_item->value == NULL)
 		{
-			perror("strdup");
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			perror("malloc");
 			return (1);
 		}
 	}
@@ -243,12 +133,19 @@ int	builtin_cd(t_condition *cond, char **args)
 	else
 		judge = chdir(args[1]);
 	if (judge != 0)
-	{
-		perror ("cd");
+	{ 
+		if(!args[1] || ft_strncmp(args[1], "-", 2) == 0)
+			ft_putstr_fd("minishell: cd: OLDPWD not set\n", STDERR_FILENO);
+		else
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			perror("cd");
+		}
 		return (1);
 	}
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		perror("getcwd");
 		return (1);
 	}
