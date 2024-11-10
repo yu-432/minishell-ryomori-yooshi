@@ -40,6 +40,8 @@ static int	update_old_pwd(t_condition *cond)
 
 	item = cond->environ;
 	cwd = get_item_value(cond->environ, "PWD");
+	if(cwd == NULL)
+		return (0);
 	old_item = NULL;
 	while (item->next)
 	{
@@ -64,13 +66,15 @@ static int	move_path (int option, t_condition cond)
 
 	env_path = NULL;
 	if (option == MOVE_TO_HOME)
-		env_path = get_item_value(cond.environ, "HOME");
+		env_path = getenv("HOME");
 	else if (option == MOVE_TO_OLDPWD)
-		env_path = get_item_value(cond.environ, "OLDPWD");
-	if (!env_path)
 	{
-		perror("cd");
-		return (1);
+		env_path = get_item_value(cond.environ, "OLDPWD");
+		if(!env_path)
+		{
+			printf("bash: cd: OLDPWD not set\n");
+			return(1);
+		}
 	}
 	judge = chdir(env_path);
 	return (judge);
@@ -243,7 +247,7 @@ int	builtin_cd(t_condition *cond, char **args)
 	else
 		judge = chdir(args[1]);
 	if (judge != 0)
-	{
+	{ 
 		perror ("cd");
 		return (1);
 	}
