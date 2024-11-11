@@ -3,12 +3,12 @@
 #include "../../header/condition.h"
 #include "../../header/init.h"
 
-void builtin_env(t_condition *condition)
+void	builtin_env(t_condition *condition)
 {
-	t_item *current;
+	t_item	*current;
 
 	current = condition->environ;
-	while(current)
+	while (current)
 	{
 		ft_putstr_fd(current->key, STDOUT_FILENO);
 		ft_putstr_fd("=", STDOUT_FILENO);
@@ -16,5 +16,4 @@ void builtin_env(t_condition *condition)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		current = current->next;
 	}
-
 }

@@ -3,16 +3,16 @@
 #include "../../header/condition.h"
 #include "../../header/init.h"
 
-void free_t_item(t_item **item)
+void	free_t_item(t_item **item)
 {
 	free((*item)->key);
 	free((*item)->value);
 	free(*item);
 }
 
-t_item *search_prev_item(t_condition *condition, t_item *dup_item)
+t_item	*search_prev_item(t_condition *condition, t_item *dup_item)
 {
-	t_item *current;
+	t_item	*current;
 
 	current = condition->environ;
 	if (current == dup_item)
@@ -26,23 +26,23 @@ t_item *search_prev_item(t_condition *condition, t_item *dup_item)
 	return (NULL);
 }
 
-void builtin_unset(t_condition *condition, char **argv)
+void	builtin_unset(t_condition *condition, char **argv)
 {
-	int i;
-	t_item *delete_item;
-	t_item *prev_item;
+	int		i;
+	t_item	*delete_item;
+	t_item	*prev_item;
 
 	i = 1;
-	while(argv[i])
+	while (argv[i])
 	{
 		delete_item = search_dup_item(condition, argv[i]);
 		if (!delete_item)
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		prev_item = search_prev_item(condition, delete_item);
-		if(!prev_item)
+		if (!prev_item)
 			condition->environ = delete_item->next;
 		else
 			prev_item->next = delete_item->next;

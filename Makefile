@@ -7,7 +7,7 @@ SRCS		= 	src/main.c \
 				src/print/put_error.c\
 				src/signal/signal.c \
 				src/execution/multi_command.c src/execution/single_command.c src/execution/run_command.c src/execution/execute_helper.c src/execution/process.c src/execution/redirect.c src/execution/execute.c src/execution/fd_manager.c src/execution/heredoc.c src/execution/node_helper.c src/execution/node.c src/execution/wrapper.c src/execution/pipe.c \
-				src/builtin_func/builtin_echo.c src/builtin_func/builtin_env.c src/builtin_func/builtin_export.c src/builtin_func/builtin_unset.c src/builtin_func/builtin_cd.c src/builtin_func/builtin_exit.c src/builtin_func/builtin_pwd.c
+				src/builtin_func/builtin_echo.c src/builtin_func/builtin_env.c src/builtin_func/builtin_export.c src/builtin_func/builtin_unset.c src/builtin_func/builtin_cd.c src/builtin_func/builtin_exit.c src/builtin_func/builtin_pwd.c src/builtin_func/builtin_cd_until.c src/builtin_func/builtin_exit_until1.c src/builtin_func/builtin_exit_until2.c src/builtin_func/builtin_export_until.c \
 
 OBJS		= ${SRCS:.c=.o}
 
