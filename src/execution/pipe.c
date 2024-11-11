@@ -18,8 +18,8 @@ bool set_redirect(t_condition *condition, t_node *node, int i)
 		is_success = redirect_out(condition, node, i);
 	else if(kind == TOKEN_REDIRECT_APPEND)
 		is_success = redirect_append(condition, node, i);
-	else if(kind == TOKEN_REDIRECT_HEREDOC)
-		is_success = redirect_heredoc(condition, node, i);
+	// else if(kind == TOKEN_REDIRECT_HEREDOC)
+	// 	is_success = redirect_heredoc(condition, node, i);
 	if(!is_success)
 		return(false);
 	return (true);
@@ -58,6 +58,7 @@ bool interpret_redirect(t_condition *condition, t_node *node)
 		return (false);
 	free(node->argv);
 	node->argv = new_argv;
+	(void)condition;
 	return (true);
 }
 

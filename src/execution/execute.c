@@ -48,19 +48,66 @@ bool is_executable(char *path)
 	return (true);
 }
 
+int count_environ(t_item *environ)
+{
+	int count;
+
+	count = 0;
+	while (environ)
+	{
+		count++;
+		environ = environ->next;
+	}
+	return (count);
+}
+
+bool convert_list_to_array(t_item *environ, char **ft_envp)
+{
+	int i;
+
+	i = 0;
+	while (environ)
+	{
+		ft_envp[i] = ft_strjoin(environ->key, "=");
+		if (!ft_envp[i])
+			return (false);
+		ft_envp[i] = ft_strjoin(ft_envp[i], environ->value);
+		if (!ft_envp[i])
+			return (false);
+		environ = environ->next;
+		i++;
+	}
+	ft_envp[i] = NULL;
+	return (true);
+}
+
+bool make_envp(t_condition *condition)
+{
+	int item_count;
+
+	item_count = count_environ(condition->environ);
+	condition->envp = ft_calloc(item_count + 1, sizeof(char *));
+	if (!condition->envp)
+		return (false);
+	if(!convert_list_to_array(condition->environ, condition->envp))
+		return (false);
+	return (true);
+}
+
 int execute(t_condition *condition, t_node *node)
 {
 	char *path;
 
 	if(!interpret_redirect(condition, node))
 		exit(EXIT_FAILURE);
+	// setup_child_signal();
 	set_redirect_fd(node);
+	make_envp(condition);
 	if (is_builtin(node->argv[0]))
 	{
 		execute_builtin(condition, node);
 		exit (EXIT_SUCCESS);
 	}
-
 	if (node->argv[0][0] == '/' || ft_strncmp(node->argv[0], "./", 2) == 0)
 		path = ft_strdup(node->argv[0]);
 	else
@@ -84,8 +131,7 @@ int execute(t_condition *condition, t_node *node)
 		exit (126);
 	if (path[0] == '\0')
 		exit(EXIT_SUCCESS);
-
-	execve(path, node->argv, NULL);
+	execve(path, node->argv, condition->envp);
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(node->argv[0], STDERR_FILENO);
 	perror(": ");//permission denied

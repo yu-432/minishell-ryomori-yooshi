@@ -71,6 +71,33 @@ bool init_exec_info(t_exec_info *info, t_node *node)
 	return (true);
 }
 
+bool is_heredoc(char *str)
+{
+	if (ft_strncmp(str, "<<", 3) == 0)
+		return (true);
+	return (false);
+}
+
+bool exec_heredoc(t_condition *condition, t_node *node)
+{
+	int i;
+
+	i = 0;
+	while(node->argv[i])
+	{
+		if (is_pipe(node->argv[0]))
+			break;
+		if (is_heredoc(node->argv[i]))
+		{
+			if(!redirect_heredoc(condition, node, i))
+				return (false);
+			i++;
+		}
+		i++;
+	}
+	return (true);
+}
+
 bool exec_command(t_condition *condition, t_node *node)
 {
 	t_node *current;
@@ -85,17 +112,24 @@ bool exec_command(t_condition *condition, t_node *node)
 	while (current->next)
 	{
 		if(current->kind == NODE_CMD)
+		{//ここでヒアドキュメントの処理
+			exec_heredoc(condition, node);
 			if(!execute_pipeline_cmd(condition, current, &info))
 				return (false);
+		}
 		current = current->next;
 	}
 	return (execute_last_pipeline_cmd(condition, current, &info));
 }
 
+
+
 bool run_command(t_condition *condition, t_token *token_list)
 {
 	t_node *node;
+	char **ft_envp;
 
+	ft_envp = NULL;
 	node = make_node(condition, token_list);//TOEKN_WORDのみでargvを作成
 	if (node == NULL)
 		return (false);
