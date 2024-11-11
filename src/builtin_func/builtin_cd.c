@@ -19,19 +19,6 @@ char	*get_item_value(t_item *item, char *key)
 	return (NULL);
 }
 
-void	put_cd_error(t_condition *cond, char *str, char *perr)
-{
-	cond->exit_status = 1;
-	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-	if (perr)
-		perror(NULL);
-	else
-	{
-		ft_putstr_fd(str, STDERR_FILENO);
-		ft_putchar_fd('\n', STDERR_FILENO);
-	}
-}
-
 int	update_item_value(t_condition *cond, t_item *item, const char *cwd)
 {
 	free(item->value);
@@ -41,7 +28,7 @@ int	update_item_value(t_condition *cond, t_item *item, const char *cwd)
 	return (0);
 }
 
-static int	update_old_pwd(t_condition *cond)
+int	update_old_pwd(t_condition *cond)
 {
 	char	*cwd;
 	t_item	*item;
@@ -68,7 +55,7 @@ static int	update_old_pwd(t_condition *cond)
 	return (0);
 }
 
-static int	move_path(int option, t_condition cond)
+int	move_path(int option, t_condition cond)
 {
 	char	*env_path;
 
@@ -82,47 +69,6 @@ static int	move_path(int option, t_condition cond)
 			return (1);
 	}
 	return (chdir(env_path));
-}
-
-char	*lst_getenv(t_item *item, char *key)
-{
-	char	*value;
-
-	while (item)
-	{
-		if (ft_strncmp (item->key, key, ft_strlen(key) + 1) == 0)
-		{
-			value = item->value;
-			return (value);
-		}
-		item = item->next;
-	}
-	return (NULL);
-}
-int	update_cwd(t_condition *cond, char *newcwd)
-{
-	t_item	*item;
-	t_item	*old_item;
-
-	item = cond->environ;
-	old_item = NULL;
-	while (item->next)
-	{
-		if (ft_strncmp (item->key, "PWD", 4) == 0)
-		{
-			old_item = item;
-			break ;
-		}
-		item = item->next;
-	}
-	if (old_item)
-	{
-		free(old_item->value);
-		old_item->value = ft_strdup(newcwd);
-		if (old_item->value == NULL)
-			return (put_cd_error(cond, NULL, "malloc"), 1);
-	}
-	return (0);
 }
 
 int	builtin_cd(t_condition *cond, char **args)

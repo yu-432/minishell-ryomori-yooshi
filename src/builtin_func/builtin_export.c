@@ -4,25 +4,10 @@
 #include "../../header/init.h"
 #include "../../header/builtin_func.h"
 
-bool	is_envname(char c)
+char	*split_key(t_condition *condition, char *argv)
 {
-	if (ft_isalnum(c) || c == '_')
-		return (true);
-	return (false);
-}
-
-void put_export_error(t_condition *condition, char *argv)
-{
-	ft_putstr_fd("export: `", STDERR_FILENO);
-	ft_putstr_fd(argv, STDERR_FILENO);
-	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-	condition->exit_status = 1;
-}
-
-char *split_key(t_condition *condition, char *argv)
-{
-	int i;
-	char *key;
+	int		i;
+	char	*key;
 
 	i = 0;
 	while (argv[i] && argv[i] != '=')
@@ -39,9 +24,9 @@ char *split_key(t_condition *condition, char *argv)
 	return (key);
 }
 
-char *split_value(char *argv)
+char	*split_value(char *argv)
 {
-	char *equal;
+	char	*equal;
 
 	equal = ft_strchr(argv, '=');
 	if (!equal)
@@ -87,5 +72,4 @@ void	builtin_export(t_condition *condition, char **argv)
 				perror("export");
 		argv++;
 	}
-
 }
