@@ -100,6 +100,7 @@ int execute(t_condition *condition, t_node *node)
 
 	if(!interpret_redirect(condition, node))
 		exit(EXIT_FAILURE);
+	// setup_child_signal();
 	set_redirect_fd(node);
 	make_envp(condition);
 	if (is_builtin(node->argv[0]))
@@ -107,7 +108,6 @@ int execute(t_condition *condition, t_node *node)
 		execute_builtin(condition, node);
 		exit (EXIT_SUCCESS);
 	}
-
 	if (node->argv[0][0] == '/' || ft_strncmp(node->argv[0], "./", 2) == 0)
 		path = ft_strdup(node->argv[0]);
 	else

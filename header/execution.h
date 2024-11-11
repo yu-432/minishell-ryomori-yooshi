@@ -74,6 +74,9 @@ bool interpret_redirect(t_condition *condition, t_node *node);
 
 void storage_fd(int *keep_fds);
 bool restore_fd(int *keep_fds);
+bool find_set_redirect(t_condition *condition, t_node *node);
+bool exec_heredoc(t_condition *condition, t_node *node);
+
 
 
 

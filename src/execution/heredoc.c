@@ -31,7 +31,7 @@ void put_heredoc_warning(int line_count, char *delimiter)
 	ft_putstr_fd("')\n", STDERR_FILENO);
 }
 
-bool read_heredoc(t_node *node, char *delimiter)
+void read_heredoc(t_node *node, char *delimiter)
 {
 	char *line;
 	int line_count;
@@ -41,7 +41,7 @@ bool read_heredoc(t_node *node, char *delimiter)
 	{
 		line = readline(HEREDOC_PROMPT);
 		if (!line)
-			return (put_heredoc_warning(line_count, delimiter), true);
+			return (put_heredoc_warning(line_count, delimiter));
 		if (!ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1))
 		{
 			free(line);
@@ -51,7 +51,6 @@ bool read_heredoc(t_node *node, char *delimiter)
 		free(line);
 		line_count++;
 	}
-	return (true);
 }
 
 void heredoc_child_process(t_node *node, char *delimiter, int fds[2])
@@ -64,20 +63,24 @@ void heredoc_child_process(t_node *node, char *delimiter, int fds[2])
 	exit(0);
 }
 
-bool heredoc_parent_process(t_node *node, int fds[2], int pid)
+bool heredoc_parent_process(t_condition *condition, t_node *node, int fds[2], int pid)
 {
 	int status;
 
 	waitpid(pid, &status, 0);
-	setup_parent_signal();
-	if (WIFEXITED(status) && WEXITSTATUS(status) == SIGINT)
-		g_sig = SIGINT;
 	close(fds[OUT]);
 	node->fd_in = fds[IN];
+	setup_parent_signal();
+	if(WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		write(STDERR_FILENO, "\n", 1);
+		g_sig = SIGINT;
+		return (false);//condition設定
+	}
+	(void)condition;
 	return (true);
 }
-
-bool heredoc(t_node *node, char *delimiter)
+bool heredoc(t_condition *condition, t_node *node, char *delimiter)
 {
 	int fds[2];
 	pid_t pid;
@@ -94,7 +97,7 @@ bool heredoc(t_node *node, char *delimiter)
 	else if (!pid)
 		heredoc_child_process(node, delimiter, fds);
 	else
-		if(!heredoc_parent_process(node, fds, pid))
+		if(!heredoc_parent_process(condition, node, fds, pid))
 			return (false);
 	return (true);
 }
@@ -111,7 +114,7 @@ bool redirect_heredoc(t_condition *condition, t_node *node, int i)
 		put_error("syntax error near unexpected token `newline'");
 		return (false);
 	}
-	if (!heredoc(node, node->argv[i + 1]))
+	if (!heredoc(condition, node, node->argv[i + 1]))
 		return (false);
 	(void)condition;
 	return (true);
