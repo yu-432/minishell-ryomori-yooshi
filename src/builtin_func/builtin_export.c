@@ -4,9 +4,9 @@
 #include "../../header/init.h"
 #include "../../header/builtin_func.h"
 
-bool is_envname(char c)
+bool	is_envname(char c)
 {
-	if(ft_isalnum(c) || c == '_')
+	if (ft_isalnum(c) || c == '_')
 		return (true);
 	return (false);
 }
@@ -25,9 +25,9 @@ char *split_key(t_condition *condition, char *argv)
 	char *key;
 
 	i = 0;
-	while(argv[i] && argv[i] != '=')
+	while (argv[i] && argv[i] != '=')
 	{
-		if(!is_envname(argv[i]) || (i == 0 && ft_isdigit(argv[i])))
+		if (!is_envname(argv[i]) || (i == 0 && ft_isdigit(argv[i])))
 			return (put_export_error(condition, argv), NULL);
 		i++;
 	}
@@ -49,31 +49,31 @@ char *split_value(char *argv)
 	return (ft_substr(equal, 1, ft_strlen(argv) - (equal - argv)));
 }
 
-bool split_argv(t_condition *condition, char *argv, char **key_value)
+bool	split_argv(t_condition *condition, char *argv, char **key_value)
 {
 	key_value[0] = split_key(condition, argv);
-	if(!key_value[0])
-		return(false);
+	if (!key_value[0])
+		return (false);
 	key_value[1] = split_value(argv);
-	if(!key_value[1])
+	if (!key_value[1])
 		return (free(key_value[0]), perror("export"), false);
 	return (true);
 }
 
-void builtin_export(t_condition *condition, char **argv)
+void	builtin_export(t_condition *condition, char **argv)
 {
-	char *key_value[2];
-	t_item *dup_item;
+	char	*key_value[2];
+	t_item	*dup_item;
 
 	argv++;
 	if (!*argv)
 		return (builtin_env(condition));
-	while(*argv)
+	while (*argv)
 	{
-		if(!split_argv(condition, *argv, key_value))
+		if (!split_argv(condition, *argv, key_value))
 		{
 			argv++;
-			continue;
+			continue ;
 		}
 		dup_item = search_dup_item(condition, key_value[0]);
 		if (dup_item)
@@ -83,7 +83,7 @@ void builtin_export(t_condition *condition, char **argv)
 			dup_item->value = key_value[1];
 		}
 		else
-			if(!insert_env(condition, key_value[0], key_value[1]))
+			if (!insert_env(condition, key_value[0], key_value[1]))
 				perror("export");
 		argv++;
 	}

@@ -5,7 +5,7 @@
 //=============================================================================
 //==========================        ERROR        ===========================
 //=============================================================================
-void numeric_argument_error(char *argment)
+void	numeric_argument_error(char *argment)
 {
 	ft_putstr_fd("exit\n", STDERR_FILENO);
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
@@ -14,9 +14,9 @@ void numeric_argument_error(char *argment)
 	exit(2);
 }
 
-int tma_error_check(t_condition *condition, char **args)
+int	tma_error_check(t_condition *condition, char **args)
 {
-	if(args[2] != NULL)
+	if (args[2] != NULL)
 	{
 		put_error("exit: too many arguments");
 		condition->exit_status = 1;
@@ -30,7 +30,8 @@ int tma_error_check(t_condition *condition, char **args)
 
 bool	is_spase(char c)
 {
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
+	return (c == ' ' || c == '\t' || c == '\n'
+		|| c == '\v' || c == '\f' || c == '\r');
 }
 
 char *skip_space(char *str)
@@ -43,9 +44,9 @@ char *skip_space(char *str)
 //=============================================================================
 //==========================        GET_SIGN        ============================
 //=============================================================================
-int get_sign_skip0(char **str)//long_over_checkで使用
+int	get_sign_skip0(char **str)//long_over_checkで使用
 {
-	int sign;
+	int	sign;
 
 	sign = 1;
 	if (**str == '-')
@@ -60,12 +61,12 @@ int get_sign_skip0(char **str)//long_over_checkで使用
 //=============================================================================
 //==========================        OVER_256        ============================
 //=============================================================================
-long over_256(long num)
+long	over_256(long num)
 {
 	long long_num_over;
 
 	long_num_over = 0;
-	while(num >= 256)
+	while (num >= 256)
 		num %= 256;
 	long_num_over = num;
 	return (long_num_over);
@@ -73,10 +74,10 @@ long over_256(long num)
 //=============================================================================
 //==========================        NEGATIVE_NUM        ========================
 //=============================================================================
-long negative_num(long num)//exit_status_numで使用
+long	negative_num(long num)//exit_status_numで使用
 {
-	long digit;
-	long result;
+	long	digit;
+	long	result;
 
 	digit = 0;
 	result = 0;
@@ -84,7 +85,7 @@ long negative_num(long num)//exit_status_numで使用
 		digit = (unsigned long)LONG_MIN % 256;
 	else
 		digit = (-num) % 256;
-	if(digit != 0)
+	if (digit != 0)
 		result = 256 - digit;
 	else
 		result = 0;
@@ -94,9 +95,9 @@ long negative_num(long num)//exit_status_numで使用
 //=============================================================================
 //==========================        EXIT_STATUS_NUM        =====================
 //=============================================================================
-long exit_status_num(long num)//builtin_exitで使用
+long	exit_status_num(long num)//builtin_exitで使用
 {
-	long result;
+	long	result;
 
 	if (num >= 256)
 		return (result = over_256(num));
@@ -110,12 +111,12 @@ long exit_status_num(long num)//builtin_exitで使用
 //==========================        BUILTIN_EXIT        =========================
 //=============================================================================
 
-bool is_check_num(char *str)//strが数字かどうかを判定(-.+)がある場合も考慮(一つだけ)
+bool	is_check_num(char *str)//strが数字かどうかを判定(-.+)がある場合も考慮(一つだけ)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if(str[i] == '-' || str[i] == '+')//exit -+-300などの場合errorにできる
+	if (str[i] == '-' || str[i] == '+')
 		i++;
 	while (str[i])
 	{
@@ -131,10 +132,10 @@ bool is_check_num(char *str)//strが数字かどうかを判定(-.+)がある場
 //==========================        atolonglong        =========================
 //=============================================================================
 
-long ft_atoll(const char *str)
+long	ft_atoll(const char *str)
 {
-	long num;
-	long sign;
+	long	num;
+	long	sign;
 
 	num = 0;
 	sign = 1;
@@ -155,16 +156,17 @@ long ft_atoll(const char *str)
 //==========================        LONG_OVER_CHECK        =====================
 //=============================================================================//修正必要
 
-int long_over_check(char *argment)
+int	long_over_check(char *argment)
 {
-	const char *LONG_MAX_STR;
-	const char *LONG_MIN_STR;
-	int i;
-	
-	int sign = 1;
-	i= 0;
-	LONG_MAX_STR = "9223372036854775807";
-	LONG_MIN_STR = "9223372036854775808";
+	const char	*long_max_str;
+	const char	*long_min_str;
+	int			i;
+	int			sign;
+
+	sign = 1;
+	i = 0;
+	long_max_str = "9223372036854775807";
+	long_min_str = "9223372036854775808";
 	sign = get_sign_skip0(&argment);
 	i = ft_strlen(argment);
 	if (i > 19)
@@ -173,12 +175,12 @@ int long_over_check(char *argment)
 		return (0);
 	if (sign == 1)
 	{
-		if (ft_strncmp(argment, LONG_MAX_STR, 19) > 0)
+		if (ft_strncmp(argment, long_max_str, 19) > 0)
 			return (1);
 	}
 	else
 	{
-		if (ft_strncmp(argment, LONG_MIN_STR, 19) > 0)
+		if (ft_strncmp(argment, long_min_str, 19) > 0)
 			return (1);
 	}
 	return (0);
@@ -190,25 +192,25 @@ int long_over_check(char *argment)
 
 int	builtin_exit(t_condition *condition, char **args)
 {
-	char *argment;
-	long num;
-	int judge;
-	long result;
+	char	*argment;
+	long	num;
+	int		judge;
+	long	result;
 
 	result = 0;
-	if(args[1] == NULL)
+	if (args[1] == NULL)
 	{
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
-		exit(condition->exit_status);//execveの返り値を返す
+		exit(condition->exit_status);
 	}
 	argment = (skip_space(args[1]));
 	num = 0;
-	if (!is_check_num(argment))//strが数字かどうかを判定(-.+)がある場合も考慮(一つだけ)
+	if (!is_check_num(argment))
 		numeric_argument_error(argment);
 	else
 	{
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
-		if(tma_error_check(condition, args))
+		if (tma_error_check(condition, args))
 			return (1);
 		judge = long_over_check(argment);
 		if (judge == 1)
