@@ -5,6 +5,13 @@
 #include "../../header/builtin_func.h"
 #include "../../header/print.h"
 
+bool	is_envname(char c)
+{
+	if (ft_isalnum(c) || c == '_')
+		return (true);
+	return (false);
+}
+
 char	*split_key(t_condition *condition, char *argv)
 {
 	int		i;
