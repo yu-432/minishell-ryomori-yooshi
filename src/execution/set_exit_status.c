@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:54 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:56:56 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:52:26 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "../../header/signal.h"
 #include "../../header/print.h"
 
-void set_exit_status_by_signal(int status)
+void	set_exit_status_by_signal(int status)
 {
 	if (WTERMSIG(status) == SIGQUIT)
 	{
@@ -29,7 +29,7 @@ void set_exit_status_by_signal(int status)
 	write(STDERR_FILENO, "\n", 1);
 }
 
-void set_exit_status_by_status(t_condition *condition, int status)
+void	set_exit_status_by_status(t_condition *condition, int status)
 {
 	g_sig = 0;
 	condition->exit_status = WEXITSTATUS(status);

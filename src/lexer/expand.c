@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:26 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:27 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:02:22 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,22 @@
 #include "../../header/lexer.h"
 #include "../../libft/libft.h"
 
-bool append_char(char **str, char c)
+bool	append_char(char **str, char c)
 {
-	char *new;
-	char join[2];
+	char	*new;
+	char	join[2];
 
 	join[0] = c;
 	join[1] = '\0';
 	new = ft_strjoin(*str, join);
-	if(!new)
+	if (!new)
 		return (false);
 	free(*str);
 	*str = new;
 	return (true);
 }
 
-bool expand_token(t_condition *condition, t_token *tokenized)
+bool	expand_token(t_condition *condition, t_token *tokenized)
 {
 	while (tokenized)
 	{

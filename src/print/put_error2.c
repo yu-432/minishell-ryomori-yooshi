@@ -6,20 +6,21 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:55 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:57 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:13:08 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../libft/libft.h"
+#include "../../header/condition.h"
 
-void put_tokenizer_error(char *str)
+void	put_tokenizer_error(char *str)
 {
 	ft_putstr_fd("minishell: tokenizer: ", STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
 }
 
-void put_unexpected_token_error(char *token)
+void	put_unexpected_token_error(char *token)
 {
 	ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 	if (ft_strlen(token) <= 3)
@@ -32,19 +33,27 @@ void put_unexpected_token_error(char *token)
 	ft_putstr_fd("'\n", 2);
 }
 
-
-void put_unclosed_quote_error(char quote)
+void	put_unclosed_quote_error(char quote)
 {
 	ft_putstr_fd("minishell: syntax error unclosed quote `", 2);
 	ft_putchar_fd(quote, 2);
 	ft_putstr_fd("'\n", 2);
 }
 
-void put_heredoc_warning(int line_count, char *delimiter)
+void	put_heredoc_warning(int line_count, char *delimiter)
 {
 	ft_putstr_fd("warning: here-document at line ", STDERR_FILENO);
 	ft_putnbr_fd(line_count, STDERR_FILENO);
 	ft_putstr_fd(" delimited by end-of-file (wanted `", STDERR_FILENO);
 	ft_putstr_fd(delimiter, STDERR_FILENO);
 	ft_putstr_fd("')\n", STDERR_FILENO);
+}
+
+void	put_redirect_error(t_condition *condition, char *str)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	perror("");
+	condition->exit_status = 1;
 }

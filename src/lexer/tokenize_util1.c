@@ -6,24 +6,24 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:39 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:40 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:09:35 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/standard.h"
 
-bool is_space(char c)
+bool	is_space(char c)
 {
-	return(c == ' ' || c == '\t' || c == '\n');
+	return (c == ' ' || c == '\t' || c == '\n');
 }
 
-bool is_metacharacter(char c)
+bool	is_metacharacter(char c)
 {
 	return (c == '|' || c == '&' || c == ';' || c == '(' || c == ')' \
-			|| c == '<' || c =='>' || c == ' ' || c == '\t' || c == '\n');
+			|| c == '<' || c == '>' || c == ' ' || c == '\t' || c == '\n');
 }
 
-bool is_quote(char c)
+bool	is_quote(char c)
 {
 	return (c == '\'' || c == '\"');
 }

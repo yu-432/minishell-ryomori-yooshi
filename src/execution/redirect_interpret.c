@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:34 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:56:35 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:43:59 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,32 +16,18 @@
 #include "../../header/lexer.h"
 #include "../../header/signal.h"
 
-bool set_redirect(t_condition *condition, t_node *node, int i)
+static bool	find_set_redirect(t_condition *condition, t_node *node)
 {
-	t_token_kind kind;
-
-	kind = get_token_kind(node->argv[i]);
-	if(kind == TOKEN_REDIRECT_IN)
-		return (redirect_in(condition, node, i));
-	else if(kind == TOKEN_REDIRECT_OUT)
-		return (redirect_out(condition, node, i));
-	else if(kind == TOKEN_REDIRECT_APPEND)
-		return (redirect_append(condition, node, i));
-	return (false);
-}
-
-bool find_set_redirect(t_condition *condition, t_node *node)
-{
-	int i;
+	int	i;
 
 	i = 0;
-	while(node->argv[i])
+	while (node->argv[i])
 	{
 		if (is_pipe(node->argv[0]))
-			break;
+			break ;
 		if (is_redirect(node->argv[i]))
 		{
-			if(!set_redirect(condition, node, i))
+			if (!set_redirect(condition, node, i))
 				return (false);
 			i++;
 		}
@@ -50,12 +36,12 @@ bool find_set_redirect(t_condition *condition, t_node *node)
 	return (true);
 }
 
-void free_node_argv(t_node *node)
+static void	free_node_argv(t_node *node)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(node->argv[i])
+	while (node->argv[i])
 	{
 		free(node->argv[i]);
 		i++;
@@ -63,12 +49,12 @@ void free_node_argv(t_node *node)
 	free(node->argv);
 }
 
-char **molding_argv(t_node *node)
+static char	**molding_argv(t_node *node)
 {
-	char **res;
-	int count;
-	int i;
-	int j;
+	char	**res;
+	int		count;
+	int		i;
+	int		j;
 
 	count = count_cmd_arg(node);
 	res = ft_calloc(count + 1, sizeof(char *));
@@ -81,7 +67,7 @@ char **molding_argv(t_node *node)
 		while (node->argv[j] && node->argv[j][0] == '\0')
 			j++;
 		if (!node->argv[j])
-			break;
+			break ;
 		if (!is_redirect(node->argv[j]))
 			res[i++] = ft_strdup(node->argv[j]);
 		else
@@ -91,13 +77,13 @@ char **molding_argv(t_node *node)
 	return (res);
 }
 
-bool interpret_redirect(t_condition *condition, t_node *node)
+bool	interpret_redirect(t_condition *condition, t_node *node)
 {
-	char **new_argv;
-	int i;
+	char	**new_argv;
+	int		i;
 
 	i = 0;
-	if(!find_set_redirect(condition, node))
+	if (!find_set_redirect(condition, node))
 		return (false);
 	new_argv = molding_argv(node);
 	if (!new_argv)
@@ -107,4 +93,3 @@ bool interpret_redirect(t_condition *condition, t_node *node)
 	(void)condition;
 	return (true);
 }
-

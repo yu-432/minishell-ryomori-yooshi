@@ -6,16 +6,16 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:35 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:36 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:07:17 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/lexer.h"
 #include "../../header/standard.h"
 
-t_token *lexer(t_condition *condition, char *line)
+t_token	*lexer(t_condition *condition, char *line)
 {
-	t_token *tokenized;
+	t_token	*tokenized;
 
 	tokenized = tokenizer(line);
 	if (!tokenized)

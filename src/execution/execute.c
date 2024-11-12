@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:58 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:53:41 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "../../header/builtin_func.h"
 #include "../../header/signal.h"
 
-void execute_builtin(t_condition *condition, t_node *node)
+void	execute_builtin(t_condition *condition, t_node *node)
 {
 	if (ft_strncmp(node->argv[0], "echo", 5) == 0)
 		builtin_echo(condition, node->argv);
@@ -38,9 +38,9 @@ void execute_builtin(t_condition *condition, t_node *node)
 		ft_putstr_fd("error: builtin command not found\n", STDERR_FILENO);
 }
 
-bool convert_list_to_array(t_item *environ, char **ft_envp)
+static bool	convert_list_to_array(t_item *environ, char **ft_envp)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (environ)
@@ -58,20 +58,20 @@ bool convert_list_to_array(t_item *environ, char **ft_envp)
 	return (true);
 }
 
-bool make_envp(t_condition *condition)
+static bool	make_envp(t_condition *condition)
 {
-	int item_count;
+	int	item_count;
 
 	item_count = count_environ(condition->environ);
 	condition->envp = ft_calloc(item_count + 1, sizeof(char *));
 	if (!condition->envp)
 		return (false);
-	if(!convert_list_to_array(condition->environ, condition->envp))
+	if (!convert_list_to_array(condition->environ, condition->envp))
 		return (false);
 	return (true);
 }
 
-void path_check(t_node *node, char *path)
+static void	path_check(t_node *node, char *path)
 {
 	if (!path)
 	{
@@ -86,18 +86,17 @@ void path_check(t_node *node, char *path)
 		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 		exit (127);
 	}
-	if(!is_executable(path))
+	if (!is_executable(path))
 		exit (126);
 	if (path[0] == '\0')
 		exit(EXIT_SUCCESS);
-
 }
 
-int execute(t_condition *condition, t_node *node)
+int	execute(t_condition *condition, t_node *node)
 {
-	char *path;
+	char	*path;
 
-	if(!interpret_redirect(condition, node))
+	if (!interpret_redirect(condition, node))
 		exit(EXIT_FAILURE);
 	set_redirect_fd(node);
 	make_envp(condition);

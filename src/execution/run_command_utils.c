@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:45 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:56:46 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:23:50 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "../../libft/libft.h"
 #include "../../header/lexer.h"
 
-bool is_redirect(char *str)
+bool	is_redirect(char *str)
 {
 	if (ft_strncmp(str, "<", 2) == 0 || \
 		ft_strncmp(str, ">", 2) == 0 || \
@@ -26,7 +26,7 @@ bool is_redirect(char *str)
 	return (false);
 }
 
-bool is_heredoc(char *str)
+bool	is_heredoc(char *str)
 {
 	if (ft_strncmp(str, "<<", 3) == 0)
 		return (true);

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:19 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:20 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:59:42 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 #include "../../header/token.h"
 #include "../../libft/libft.h"
 
-
-static bool init_env_value_new(char **new, char **env_value)
+static bool	init_env_value_new(char **new, char **env_value)
 {
 	if (!(*env_value))
 		*env_value = ft_strdup("");
@@ -27,16 +26,16 @@ static bool init_env_value_new(char **new, char **env_value)
 	return (true);
 }
 
-static bool replace_env(t_token *token, char *env_value, int env_len)
+static bool	replace_env(t_token *token, char *env_value, int env_len)
 {
-	char *new;
-	int i;
+	char	*new;
+	int		i;
 
 	new = NULL;
 	if (!init_env_value_new(&new, &env_value))
 		return (false);
 	i = 0;
-	while(token->token[i])
+	while (token->token[i])
 	{
 		if (token->token[i] == '$')
 		{
@@ -56,9 +55,8 @@ static bool replace_env(t_token *token, char *env_value, int env_len)
 	return (true);
 }
 
-
-
-static bool handle_dollar(t_condition *condition, t_token *tokenized, t_lexer *info, int *i)
+static bool	handle_dollar(t_condition *condition, t_token *tokenized, \
+							t_lexer *info, int *i)
 {
 	(*i)++;
 	info->env_key = ft_substr(tokenized->token, *i, \
@@ -76,10 +74,10 @@ static bool handle_dollar(t_condition *condition, t_token *tokenized, t_lexer *i
 	return (true);
 }
 
-bool expand_dollar(t_condition *condition, t_token *tokenized)
+bool	expand_dollar(t_condition *condition, t_token *tokenized)
 {
-	int i;
-	t_lexer info;
+	int		i;
+	t_lexer	info;
 
 	i = 0;
 	ft_memset(&info, 0, sizeof(t_lexer));

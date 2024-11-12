@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:47 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:48 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:08:54 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,10 @@
 #include "../../libft/libft.h"
 #include "../../header/print.h"
 
-
-static int count_word_len(char *line)
+static int	count_word_len(char *line)
 {
-	int count;
-	char quote;
+	int		count;
+	char	quote;
 
 	count = 0;
 	while (line[count] && !is_metacharacter(line[count]))
@@ -37,10 +36,10 @@ static int count_word_len(char *line)
 	return (count);
 }
 
-static bool take_meta_token(char **line, t_token *tail_token)
+static bool	take_meta_token(char **line, t_token *tail_token)
 {
-	char *token;
-	int count;
+	char	*token;
+	int		count;
 
 	count = count_same_char(*line, (*line)[0]);
 	token = ft_calloc(count + 1, sizeof(char));
@@ -57,10 +56,10 @@ static bool take_meta_token(char **line, t_token *tail_token)
 	return (true);
 }
 
-static bool take_word_token(char **line, t_token *tail_token)
+static bool	take_word_token(char **line, t_token *tail_token)
 {
-	char *token;
-	int count;
+	char	*token;
+	int		count;
 
 	count = count_word_len(*line);
 	token = ft_substr(*line, 0, count);
@@ -70,15 +69,15 @@ static bool take_word_token(char **line, t_token *tail_token)
 	if (!tail_token->next)
 	{
 		free(token);
-		return(put_tokenizer_error(strerror(errno)), false);
+		return (put_tokenizer_error(strerror(errno)), false);
 	}
 	*line += count;
 	return (true);
 }
 
-t_token *tokenizer(char *line)
+t_token	*tokenizer(char *line)
 {
-	t_token head;
+	t_token	head;
 
 	ft_memset(&head, 0, sizeof(t_token));
 	while (*line)
@@ -96,5 +95,5 @@ t_token *tokenizer(char *line)
 				return (free_tokens(head.next), NULL);
 		}
 	}
-	return(head.next);
+	return (head.next);
 }

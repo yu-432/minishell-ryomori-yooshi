@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:42 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:43 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:12:27 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #include "../../libft/libft.h"
 #include "../../header/token.h"
 
-int get_token_kind(char *token)
+int	get_token_kind(char *token)
 {
 	if (ft_strncmp(token, ">>", 3) == 0)
 		return (TOKEN_REDIRECT_APPEND);
 	else if (ft_strncmp(token, ">", 2) == 0)
-		return(TOKEN_REDIRECT_OUT);
+		return (TOKEN_REDIRECT_OUT);
 	else if (ft_strncmp(token, "<<", 3) == 0)
 		return (TOKEN_REDIRECT_HEREDOC);
 	else if (ft_strncmp(token, "<", 2) == 0)
@@ -30,19 +30,19 @@ int get_token_kind(char *token)
 		return (TOKEN_UNKNOWN);
 }
 
-int count_same_char(char *line, char c)
+int	count_same_char(char *line, char c)
 {
-	int count;
+	int	count;
 
 	count = 0;
-	while(line[count] == c)
+	while (line[count] == c)
 		count++;
 	return (count);
 }
 
-t_token *find_tail_token(t_token *token)
+t_token	*find_tail_token(t_token *token)
 {
-	t_token *temp;
+	t_token	*temp;
 
 	temp = token;
 	while (temp->next)
@@ -50,9 +50,9 @@ t_token *find_tail_token(t_token *token)
 	return (temp);
 }
 
-t_token *new_token(char *token, t_token_kind kind)
+t_token	*new_token(char *token, t_token_kind kind)
 {
-	t_token *new;
+	t_token	*new;
 
 	new = ft_calloc(1, sizeof(t_token));
 	if (!new)
@@ -60,4 +60,17 @@ t_token *new_token(char *token, t_token_kind kind)
 	new->token = token;
 	new->kind = kind;
 	return (new);
+}
+
+void	free_tokens(t_token *token)
+{
+	t_token	*temp;
+
+	while (token)
+	{
+		temp = token->next;
+		free(token->token);
+		free(token);
+		token = temp;
+	}
 }

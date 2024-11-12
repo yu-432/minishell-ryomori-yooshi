@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:58:05 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:58:07 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:21:40 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,11 @@
 #include "../header/print.h"
 #include "../header/execution.h"
 
-sig_atomic_t g_sig = 0;
+sig_atomic_t	g_sig = 0;
 
-void free_tokens(t_token *token)
+char	*read_command_line(void)
 {
-	t_token *temp;
-
-	while (token)
-	{
-		temp = token->next;
-		free(token->token);
-		free(token);
-		token = temp;
-	}
-}
-
-char *read_command_line()
-{
-	char *line;
+	char	*line;
 
 	line = readline(PROMPT);
 	if (!line)
@@ -46,7 +33,7 @@ char *read_command_line()
 	return (line);
 }
 
-void init_condition(t_condition *condition)
+void	init_condition(t_condition *condition)
 {
 	errno = 0;
 	setup_parent_signal();
@@ -58,21 +45,21 @@ void init_condition(t_condition *condition)
 	(void)condition;
 }
 
-void shell_loop(t_condition *condition)
+void	shell_loop(t_condition *condition)
 {
-	char *line;
-	t_token *tokenized;
+	char	*line;
+	t_token	*tokenized;
 
 	while (true)
 	{
 		init_condition(condition);
 		line = read_command_line();
-		if(!line)
+		if (!line)
 			line = ft_strdup("exit");
 		if (*line == '\0')
 		{
 			free(line);
-			continue;
+			continue ;
 		}
 		tokenized = lexer(condition, line);
 		run_command(condition, tokenized);

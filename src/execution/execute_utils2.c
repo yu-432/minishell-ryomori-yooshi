@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:50 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:51 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:12:28 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 #include "../../header/execution.h"
 #include "../../header/builtin_func.h"
 
-int count_cmd_arg(t_node *node)
+int	count_cmd_arg(t_node *node)
 {
-	int count;
-	int i;
+	int	count;
+	int	i;
 
 	count = 0;
 	i = 0;
@@ -35,9 +35,22 @@ int count_cmd_arg(t_node *node)
 	return (count);
 }
 
-static char *take_env_value(t_condition *condition, char *key)
+int	count_environ(t_item *environ)
 {
-	t_item *current;
+	int	count;
+
+	count = 0;
+	while (environ)
+	{
+		count++;
+		environ = environ->next;
+	}
+	return (count);
+}
+
+static char	*take_env_value(t_condition *condition, char *key)
+{
+	t_item	*current;
 
 	current = condition->environ;
 	while (current)
@@ -74,17 +87,4 @@ char	*find_command_path(t_condition *condition, char *command)
 	}
 	free(path);
 	return (NULL);
-}
-
-int count_environ(t_item *environ)
-{
-	int count;
-
-	count = 0;
-	while (environ)
-	{
-		count++;
-		environ = environ->next;
-	}
-	return (count);
 }

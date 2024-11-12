@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:22 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:24 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:01:36 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,22 @@
 #include "../../header/lexer.h"
 #include "../../libft/libft.h"
 
-bool expand_quote(t_token *tokenized)
+bool	expand_quote(t_token *tokenized)
 {
-	int i;
-	char quote;
-	char *new;
+	int		i;
+	char	quote;
+	char	*new;
 
 	i = 0;
 	quote = 0;
 	new = ft_strdup("");
 	if (!new)
 		return (false);
-	while (tokenized->kind ==TOKEN_WORD && tokenized->token[i])
+	while (tokenized->kind == TOKEN_WORD && tokenized->token[i])
 	{
 		if (is_quote(tokenized->token[i]) && quote == 0)
 			quote = tokenized->token[i++];
-		else if(tokenized->token[i] == quote)
+		else if (tokenized->token[i] == quote)
 		{
 			quote = 0;
 			i++;

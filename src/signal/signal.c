@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:59 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:58:01 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:16:46 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 #include "../../libft/libft.h"
 #include <sys/ioctl.h>
 
-void handler(int signum)
+void	handler(int signum)
 {
-	if(signum == SIGINT)
+	if (signum == SIGINT)
 	{
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
@@ -29,15 +29,15 @@ void handler(int signum)
 	}
 }
 
-void setup_ignore_signal(void)
+void	setup_ignore_signal(void)
 {
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void setup_parent_signal(void)
+void	setup_parent_signal(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	ft_memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_handler = handler;
@@ -47,13 +47,13 @@ void setup_parent_signal(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void setup_heredoc_signal(void)
+void	setup_heredoc_signal(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void setup_child_signal(void)
+void	setup_child_signal(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);

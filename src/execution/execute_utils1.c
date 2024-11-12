@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:45 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:46 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:09:38 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 #include "../../header/execution.h"
 #include "../../header/builtin_func.h"
 
-bool is_builtin(char *cmd)
+bool	is_builtin(char *cmd)
 {
-	if(ft_strncmp(cmd, "echo", 5) == 0 || \
+	if (ft_strncmp(cmd, "echo", 5) == 0 || \
 		ft_strncmp(cmd, "cd", 3) == 0 || \
 		ft_strncmp(cmd, "pwd", 4) == 0 || \
 		ft_strncmp(cmd, "export", 7) == 0 || \
@@ -30,7 +30,7 @@ bool is_builtin(char *cmd)
 	return (false);
 }
 
-bool is_kind_redirect(t_token_kind kind)
+bool	is_kind_redirect(t_token_kind kind)
 {
 	if (kind == TOKEN_REDIRECT_IN || \
 		kind == TOKEN_REDIRECT_OUT || \
@@ -40,9 +40,9 @@ bool is_kind_redirect(t_token_kind kind)
 	return (false);
 }
 
-bool is_executable(char *path)
+bool	is_executable(char *path)
 {
-	struct stat st;
+	struct stat	st;
 
 	if (stat(path, &st))
 	{
@@ -60,10 +60,10 @@ bool is_executable(char *path)
 	}
 	return (true);
 }
-bool is_path(char *cmd)
+
+bool	is_path(char *cmd)
 {
 	if (ft_strchr(cmd, '/'))
 		return (true);
 	return (false);
 }
-

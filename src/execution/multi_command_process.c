@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   process.c                                          :+:      :+:    :+:   */
+/*   multi_command_process.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:38 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:56:39 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:47:15 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 #include "../../header/lexer.h"
 #include "../../header/signal.h"
 
-bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2])
+bool	parent_process(t_condition *condition, t_node *node, \
+						t_exec_info *info, int fds[2])
 {
 	wrap_close(fds[OUT]);
 	if (info->keep_fd != -2)
@@ -28,7 +29,8 @@ bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int
 	return (true);
 }
 
-bool child_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2])
+bool	child_process(t_condition *condition, t_node *node, \
+						t_exec_info *info, int fds[2])
 {
 	setup_child_signal();
 	if (info->executed_count < info->pipe_count)

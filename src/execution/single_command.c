@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:57 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:56:59 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:32:47 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 #include "../../header/signal.h"
 #include "../../header/print.h"
 
-static int handle_single_builtin_command(t_condition *condition, t_node *node)
+static int	handle_single_builtin_command(t_condition *condition, t_node *node)
 {
-	int keep_fds[3];
+	int	keep_fds[3];
 
 	storage_fd(keep_fds);
 	if (!interpret_redirect(condition, node))
@@ -31,33 +31,33 @@ static int handle_single_builtin_command(t_condition *condition, t_node *node)
 	return (EXIT_SUCCESS);
 }
 
-static void wait_child_status(t_condition *condition, pid_t pid)
+static void	wait_child_status(t_condition *condition, pid_t pid)
 {
-	int status;
+	int	status;
 
 	waitpid(pid, &status, 0);
 	if (!condition->exit_status)
 	{
-		if(WIFSIGNALED(status))
+		if (WIFSIGNALED(status))
 			set_exit_status_by_signal(status);
-		else if(WIFEXITED(status))
+		else if (WIFEXITED(status))
 			set_exit_status_by_status(condition, status);
 	}
 }
 
-int execute_single_command(t_condition *condition, t_node *node)
+int	execute_single_command(t_condition *condition, t_node *node)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	setup_ignore_signal();
-	if(!exec_heredoc(condition, node))
+	if (!exec_heredoc(condition, node))
 		return (false);
 	if (is_builtin(node->argv[0]))
 		return (handle_single_builtin_command(condition, node));
 	pid = fork();
 	if (pid == -1)
 		return (put_error(strerror(errno)), false);
-	if(pid == 0)
+	if (!pid)
 	{
 		setup_child_signal();
 		execute(condition, node);

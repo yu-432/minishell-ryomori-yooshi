@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:28 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:56:29 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 00:40:29 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,24 @@
 #include "../../header/execution.h"
 #include "../../libft/libft.h"
 
-static void add_kind_info(t_node *node)
+static void	add_kind_info(t_node *node)
 {
-	if(ft_strncmp(node->argv[0], "|\0", 2) == 0)
+	if (ft_strncmp(node->argv[0], "|\0", 2) == 0)
 		node->kind = NODE_PIPE;
 	else
 		node->kind = NODE_CMD;
 }
 
-static int count_token_until_pipe(t_token *token_list)
+static int	count_token_until_pipe(t_token *token_list)
 {
-	int count;
-	t_token *current;
+	int		count;
+	t_token	*current;
 
 	count = 0;
 	current = token_list;
 	if (current->kind == TOKEN_PIPE)
 		return (1);
-	while(current && current->kind != TOKEN_PIPE)
+	while (current && current->kind != TOKEN_PIPE)
 	{
 		count++;
 		current = current->next;
@@ -41,20 +41,21 @@ static int count_token_until_pipe(t_token *token_list)
 	return (count);
 }
 
-static bool make_node_argv(t_condition *condition, t_token **token_list, t_node *current_node)
+static bool	make_node_argv(t_condition *condition, t_token **token_list, \
+							t_node *current_node)
 {
-	int word_count;
-	int i;
+	int	word_count;
+	int	i;
 
 	word_count = count_token_until_pipe(*token_list);
 	current_node->argv = ft_calloc(word_count + 1, sizeof(char *));
-	if(!current_node->argv)
-		return(false);
+	if (!current_node->argv)
+		return (false);
 	i = 0;
 	while (i < word_count)
 	{
 		current_node->argv[i] = ft_strdup((*token_list)->token);
-		if(!current_node->argv[i])
+		if (!current_node->argv[i])
 			return (false);
 		i++;
 		*token_list = (*token_list)->next;
@@ -64,19 +65,19 @@ static bool make_node_argv(t_condition *condition, t_token **token_list, t_node 
 	return (true);
 }
 
-t_node *make_node(t_condition *condition, t_token *token_list)
+t_node	*make_node(t_condition *condition, t_token *token_list)
 {
-	t_node head;
-	t_node *current;
+	t_node	head;
+	t_node	*current;
 
 	head.next = NULL;
-	while(token_list)
+	while (token_list)
 	{
 		current = find_last_node(&head);
 		current->next = new_node();
 		if (!current->next)
 			return (NULL);
-		if(!make_node_argv(condition, &token_list, current->next))
+		if (!make_node_argv(condition, &token_list, current->next))
 		{
 			free_node(head.next);
 			return (NULL);
@@ -87,4 +88,3 @@ t_node *make_node(t_condition *condition, t_token *token_list)
 	current = head.next;
 	return (head.next);
 }
-
