@@ -3,13 +3,12 @@
 #include "../../header/init.h"
 #include "../../libft/libft.h"
 
-
-void free_environ(t_item *environ)
+void	free_environ(t_item *environ)
 {
-	t_item *temp;
+	t_item	*temp;
 
 	if (!environ)
-		return;
+		return ;
 	while (environ)
 	{
 		temp = environ->next;
@@ -20,21 +19,21 @@ void free_environ(t_item *environ)
 	}
 }
 
-bool get_environ(t_condition *condition, char **envp)
+bool	get_environ(t_condition *condition, char **envp)
 {
 	int	i;
 
 	i = 0;
-	while(envp[i])
+	while (envp[i])
 	{
-		if(!add_env(condition, envp[i]))
+		if (!add_env(condition, envp[i]))
 		{
 			free_environ(condition->environ);
-			return(false);
+			return (false);
 		}
 		i++;
 	}
-	return(true);
+	return (true);
 }
 
 bool	init_shell(t_condition *condition, char **envp)
@@ -42,6 +41,6 @@ bool	init_shell(t_condition *condition, char **envp)
 	ft_memset(condition, 0, sizeof(t_condition));
 	condition->envp = envp;
 	if (!get_environ(condition, envp))
-		return(false);
-	return(true);
+		return (false);
+	return (true);
 }

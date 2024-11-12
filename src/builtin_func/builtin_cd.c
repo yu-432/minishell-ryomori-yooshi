@@ -21,10 +21,13 @@ char	*get_item_value(t_item *item, char *key)
 
 int	update_item_value(t_condition *cond, t_item *item, const char *cwd)
 {
-	free(item->value);
-	item->value = ft_strdup(cwd);
+	char	*tmp;
+
+	tmp = ft_strdup(cwd);
 	if (item->value == NULL)
 		return (put_cd_error(cond, NULL, "malloc"), 1);
+	free(item->value);
+	item->value = tmp;
 	return (0);
 }
 

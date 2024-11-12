@@ -3,9 +3,9 @@
 #include "../../header/init.h"
 #include "../../libft/libft.h"
 
-bool insert_env(t_condition *condition, char *key, char *value)
+bool	insert_env(t_condition *condition, char *key, char *value)
 {
-	t_item *new;
+	t_item	*new;
 
 	new = touch_t_item();
 	if (!new)
@@ -21,19 +21,19 @@ bool insert_env(t_condition *condition, char *key, char *value)
 	return (true);
 }
 
-static void replace_env(t_item *dup_key_node, char *value, char *key)
+static void	replace_env(t_item *dup_key_node, char *value, char *key)
 {
 	free(dup_key_node->value);
 	dup_key_node->value = value;
 	free(key);
 }
 
-bool add_env(t_condition *condition, char *env_str)
+bool	add_env(t_condition *condition, char *env_str)
 {
-	char *equal;
-	char *key;
-	char *value;
-	t_item *dup_key_node;
+	char	*equal;
+	char	*key;
+	char	*value;
+	t_item	*dup_key_node;
 
 	equal = ft_strchr(env_str, '=');
 	if (!equal)
@@ -48,5 +48,5 @@ bool add_env(t_condition *condition, char *env_str)
 	else
 		if (!insert_env(condition, key, value))
 			return (false);
-	return(true);
+	return (true);
 }
