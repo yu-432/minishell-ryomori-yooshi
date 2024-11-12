@@ -4,6 +4,7 @@
 #include "../../libft/libft.h"
 #include "../../header/lexer.h"
 #include "../../header/signal.h"
+#include "../../header/print.h"
 
 void wait_signal(t_condition *condition, t_exec_info *info)
 {

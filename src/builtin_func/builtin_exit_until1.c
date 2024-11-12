@@ -2,6 +2,8 @@
 #include "../../header/standard.h"
 #include "../../libft/libft.h"
 #include "../../header/builtin_func.h"
+#include "../../header/print.h"
+
 
 void	numeric_argument_error(char *argment)
 {

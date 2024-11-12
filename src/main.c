@@ -7,12 +7,9 @@
 #include "../header/print.h"
 #include "../header/execution.h"
 
-#include <unistd.h>
-
 sig_atomic_t g_sig = 0;
 
-
-void free_tokens(t_token *token)////////////////
+void free_tokens(t_token *token)
 {
 	t_token *temp;
 
@@ -66,7 +63,7 @@ void shell_loop(t_condition *condition)
 			continue;
 		}
 		tokenized = lexer(condition, line);
-		run_command(condition, tokenized);//TOKEN_UNKNOWNが含まれている場合止めておいたほうがいい
+		run_command(condition, tokenized);
 		free(line);
 	}
 	return ;

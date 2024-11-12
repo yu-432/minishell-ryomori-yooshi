@@ -2,7 +2,15 @@
 #include "../../header/token.h"
 #include "../../libft/libft.h"
 
-bool ft_strjoin_free(char **s1, char *s2)
+static void update_quote_status(t_lexer *info, char c)
+{
+	if (info->quote == 0)
+		info->quote = c;
+	else if (info->quote == c)
+		info->quote = 0;
+}
+
+static bool ft_strjoin_free(char **s1, char *s2)
 {
 	char *new;
 
@@ -16,13 +24,30 @@ bool ft_strjoin_free(char **s1, char *s2)
 	return (true);
 }
 
+static char *find_env(t_condition *condition, char *env_key)
+{
+	t_item *temp;
+
+	temp = condition->environ;
+	if (ft_strncmp(env_key, "?\0", 2) == 0)
+		return (ft_itoa(condition->exit_status));
+	while(temp)
+	{
+		if(ft_strncmp(temp->key, env_key, ft_strlen(temp->key) + 1) == 0)
+			return (temp->value);
+		temp = temp->next;
+	}
+	(void)condition;
+	return (NULL);
+}
+
 static bool replace_env(t_token *token, char *env_value, int env_len)
 {
 	char *new;
 	int i;
 
 	if (!env_value)
-		env_value = "";//環境変数が存在しない場合要確認
+		env_value = "";
 	i = 0;
 	new = ft_strdup("");
 	if (!new)
@@ -47,22 +72,7 @@ static bool replace_env(t_token *token, char *env_value, int env_len)
 	return (true);
 }
 
-bool append_char(char **str, char c)
-{
-	char *new;
-	char join[2];
-
-	join[0] = c;
-	join[1] = '\0';
-	new = ft_strjoin(*str, join);
-	if(!new)
-		return (false);
-	free(*str);
-	*str = new;
-	return (true);
-}
-
-bool get_env_name(t_condition *condition, t_token *tokenized, t_lexer *info, int *i)
+static bool get_env_name(t_condition *condition, t_token *tokenized, t_lexer *info, int *i)
 {
 	int env_len;
 
@@ -86,21 +96,24 @@ bool get_env_name(t_condition *condition, t_token *tokenized, t_lexer *info, int
 	return (true);
 }
 
-char *find_env(t_condition *condition, char *env_key)
+bool expand_dollar(t_condition *condition, t_token *tokenized)
 {
-	t_item *temp;
+	int i;
+	t_lexer info;
 
-	temp = condition->environ;
-	if (ft_strncmp(env_key, "?\0", 2) == 0)
-		return (ft_itoa(condition->exit_status));
-	while(temp)
+	i = 0;
+	ft_memset(&info, 0, sizeof(t_lexer));
+	while (tokenized->kind == TOKEN_WORD && tokenized->token[i])
 	{
-		if(ft_strncmp(temp->key, env_key, ft_strlen(temp->key) + 1) == 0)
-			return (temp->value);
-		temp = temp->next;
+		if (is_quote(tokenized->token[i]))
+			update_quote_status(&info, tokenized->token[i]);
+		if (tokenized->token[i] == '$' && info.quote != SINGLE_QUOTE)
+		{
+			if (!get_env_name(condition, tokenized, &info, &i))
+				return (false);
+		}
+		else
+			i++;
 	}
-	(void)condition;
-	return (NULL);
+	return (true);
 }
-
-

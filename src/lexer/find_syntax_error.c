@@ -2,27 +2,10 @@
 #include "../../header/token.h"
 #include "../../header/condition.h"
 #include "../../libft/libft.h"
+#include "../../header/print.h"
 
 //仮置き
-void put_unexpected_token_error(char *token)
-{
-	ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-	if (ft_strlen(token) <= 3)
-		ft_putchar_fd(token[0], 2);
-	else
-	{												//どうにかしてくれ
-		ft_putchar_fd(*token, 2);
-		ft_putchar_fd(*token, 2);
-	}
-	ft_putstr_fd("'\n", 2);
-}
 
-void put_unclosed_quote_error(char quote)
-{
-	ft_putstr_fd("minishell: syntax error unclosed quote `", 2);
-	ft_putchar_fd(quote, 2);
-	ft_putstr_fd("'\n", 2);
-}
 
 bool check_quote_error(char *token)
 {

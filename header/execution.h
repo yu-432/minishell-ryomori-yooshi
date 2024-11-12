@@ -39,7 +39,7 @@ typedef struct s_exec_info
 	int executed_count;
 } t_exec_info;
 
-bool run_command(t_condition *condition, t_token *token_list);
+void run_command(t_condition *condition, t_token *token_list);
 bool redirect_in(t_condition *condition, t_node *node, int i);
 bool redirect_out(t_condition *condition, t_node *node, int i);
 bool redirect_append(t_condition *condition, t_node *node, int i);

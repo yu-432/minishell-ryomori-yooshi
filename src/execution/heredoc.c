@@ -3,6 +3,8 @@
 #include "../../libft/libft.h"
 #include "../../header/signal.h"
 #include "../../header/execution.h"
+#include "../../header/print.h"
+
 
 bool heredoc_strjoin(char **heredoc_str, char *line)
 {

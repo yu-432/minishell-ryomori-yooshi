@@ -124,18 +124,18 @@ bool exec_command(t_condition *condition, t_node *node)
 
 
 
-bool run_command(t_condition *condition, t_token *token_list)
+void run_command(t_condition *condition, t_token *token_list)
 {
 	t_node *node;
-	char **ft_envp;
 
-	ft_envp = NULL;
+	if (!token_list)
+		return ;
 	node = make_node(condition, token_list);//TOEKN_WORDのみでargvを作成
 	if (node == NULL)
-		return (false);
+		return ;
 	exec_command(condition, node);
 	(void)condition;//free token_list
-	return (true);
+	return ;
 }
 
 	// t_node *temp = node;//////////////////////////確認用

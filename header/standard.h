@@ -10,8 +10,6 @@
 #include <unistd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-
-void put_error(char *str);
-
+#include <unistd.h>
 
 # endif

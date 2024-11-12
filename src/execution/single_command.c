@@ -4,6 +4,8 @@
 #include "../../libft/libft.h"
 #include "../../header/lexer.h"
 #include "../../header/signal.h"
+#include "../../header/print.h"
+
 
 static int handle_single_builtin_command(t_condition *condition, t_node *node, int keep_fds[3])
 {

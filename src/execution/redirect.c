@@ -4,6 +4,8 @@
 #include "../../header/condition.h"
 #include "../../header/execution.h"
 #include "../../libft/libft.h"
+#include "../../header/print.h"
+
 
 void put_redirect_error(t_condition *condition, char *str)
 {

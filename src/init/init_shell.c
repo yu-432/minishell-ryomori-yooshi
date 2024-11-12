@@ -39,8 +39,9 @@ bool get_environ(t_condition *condition, char **envp)
 
 bool	init_shell(t_condition *condition, char **envp)
 {
-	ft_memset(condition, 0, sizeof(t_condition));
 	condition->envp = envp;
+	condition->exit_status = 0;
+	condition->environ = NULL;
 	if (!get_environ(condition, envp))
 		return(false);
 	return(true);

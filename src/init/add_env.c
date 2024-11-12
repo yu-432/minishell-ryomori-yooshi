@@ -21,11 +21,11 @@ bool insert_env(t_condition *condition, char *key, char *value)
 	return (true);
 }
 
-static void replace_env(t_item *dup_key_node, char *value, char *key)
+static void replace_env(t_item *dup_key_node, char *key, char *value)
 {
+	free(key);
 	free(dup_key_node->value);
 	dup_key_node->value = value;
-	free(key);
 }
 
 bool add_env(t_condition *condition, char *env_str)
@@ -39,12 +39,14 @@ bool add_env(t_condition *condition, char *env_str)
 	if (!equal)
 		return (false);
 	key = ft_substr(env_str, 0, equal - env_str);
-	value = ft_strdup(equal + 1);
-	if (!key || !value)
+	if(!key)
 		return (false);
+	value = ft_strdup(equal + 1);
+	if (!value)
+		return (free(key), false);
 	dup_key_node = search_dup_item(condition, key);
 	if (dup_key_node)
-		replace_env(dup_key_node, value, key);
+		replace_env(dup_key_node, key, value);
 	else
 		if (!insert_env(condition, key, value))
 			return (false);

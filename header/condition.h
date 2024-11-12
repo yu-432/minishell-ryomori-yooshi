@@ -1,8 +1,6 @@
 #ifndef CONDITION_H
 # define CONDITION_H
 
-#include <signal.h>
-
 #define PROMPT "minishell$ "
 
 typedef struct s_item
