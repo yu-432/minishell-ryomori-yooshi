@@ -4,6 +4,7 @@
 #include "../../header/standard.h"
 #include "../../header/execution.h"
 #include "../../libft/libft.h"
+#include "../../header/free_list_func.h"
 
 t_node *new_node(void)
 {
@@ -79,11 +80,15 @@ t_node *make_node(t_condition *condition, t_token *token_list)
 		if (!current->next)
 			return (NULL);
 		if(!make_node_argv(condition, &token_list, current->next))//PIPE区切りでargvを作成//redirect未処理
-			return (NULL);//free?
+		{
+			free_node(current->next);
+			free_token(token_list);
+			return (NULL);
+		}
 		add_kind_info(current->next);
 		current->next->prev = current;
 	}
 	current = head.next;
+	free_token(token_list);
 	return (head.next);
 }
-
