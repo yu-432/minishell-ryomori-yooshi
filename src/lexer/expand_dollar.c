@@ -1,33 +1,41 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_dollar.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:57:19 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/13 00:59:42 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/lexer.h"
 #include "../../header/token.h"
 #include "../../libft/libft.h"
 
-bool ft_strjoin_free(char **s1, char *s2)
+static bool	init_env_value_new(char **new, char **env_value)
 {
-	char *new;
-
-	if (!s1 || !s2)
+	if (!(*env_value))
+		*env_value = ft_strdup("");
+	if (!(*env_value))
 		return (false);
-	new = ft_strjoin(*s1, s2);
-	if (!new)
-		return (false);
-	free(*s1);
-	*s1 = new;
+	*new = ft_strdup("");
+	if (!(*new))
+		return (free(*env_value), false);
 	return (true);
 }
 
-static bool replace_env(t_token *token, char *env_value, int env_len)
+static bool	replace_env(t_token *token, char *env_value, int env_len)
 {
-	char *new;
-	int i;
+	char	*new;
+	int		i;
 
-	if (!env_value)
-		env_value = "";//環境変数が存在しない場合要確認
-	i = 0;
-	new = ft_strdup("");
-	if (!new)
+	new = NULL;
+	if (!init_env_value_new(&new, &env_value))
 		return (false);
-	while(token->token[i])
+	i = 0;
+	while (token->token[i])
 	{
 		if (token->token[i] == '$')
 		{
@@ -47,33 +55,12 @@ static bool replace_env(t_token *token, char *env_value, int env_len)
 	return (true);
 }
 
-bool append_char(char **str, char c)
+static bool	handle_dollar(t_condition *condition, t_token *tokenized, \
+							t_lexer *info, int *i)
 {
-	char *new;
-	char join[2];
-
-	join[0] = c;
-	join[1] = '\0';
-	new = ft_strjoin(*str, join);
-	if(!new)
-		return (false);
-	free(*str);
-	*str = new;
-	return (true);
-}
-
-bool get_env_name(t_condition *condition, t_token *tokenized, t_lexer *info, int *i)
-{
-	int env_len;
-
-	env_len = 0;
 	(*i)++;
-	if (tokenized->token[*i] == '?')
-		env_len++;
-	else
-		while (ft_isalnum(tokenized->token[*i + env_len]))
-			env_len++;
-	info->env_key = ft_substr(tokenized->token, *i, env_len);
+	info->env_key = ft_substr(tokenized->token, *i, \
+						count_envname_len(tokenized, i));
 	if (!info->env_key)
 		return (false);
 	if (info->env_key[0] == '\0')
@@ -81,26 +68,30 @@ bool get_env_name(t_condition *condition, t_token *tokenized, t_lexer *info, int
 		(*i)++;
 		return (true);
 	}
-	if (!replace_env(tokenized, find_env(condition, info->env_key), ft_strlen(info->env_key)))
+	if (!replace_env(tokenized, find_env(condition, info->env_key), \
+			ft_strlen(info->env_key)))
 		return (false);
 	return (true);
 }
 
-char *find_env(t_condition *condition, char *env_key)
+bool	expand_dollar(t_condition *condition, t_token *tokenized)
 {
-	t_item *temp;
+	int		i;
+	t_lexer	info;
 
-	temp = condition->environ;
-	if (ft_strncmp(env_key, "?\0", 2) == 0)
-		return (ft_itoa(condition->exit_status));
-	while(temp)
+	i = 0;
+	ft_memset(&info, 0, sizeof(t_lexer));
+	while (tokenized->kind == TOKEN_WORD && tokenized->token[i])
 	{
-		if(ft_strncmp(temp->key, env_key, ft_strlen(temp->key) + 1) == 0)
-			return (temp->value);
-		temp = temp->next;
+		if (is_quote(tokenized->token[i]))
+			update_quote_status(&info, tokenized->token[i]);
+		if (tokenized->token[i] == '$' && info.quote != SINGLE_QUOTE)
+		{
+			if (!handle_dollar(condition, tokenized, &info, &i))
+				return (false);
+		}
+		else
+			i++;
 	}
-	(void)condition;
-	return (NULL);
+	return (true);
 }
-
-

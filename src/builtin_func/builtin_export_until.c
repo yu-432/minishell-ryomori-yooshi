@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_env.c                                      :+:      :+:    :+:   */
+/*   builtin_export_until.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 23:55:14 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:15 by yooshima         ###   ########.fr       */
+/*   Created: 2024/11/12 23:55:28 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:55:29 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,19 @@
 #include "../../libft/libft.h"
 #include "../../header/condition.h"
 #include "../../header/init.h"
+#include "../../header/builtin_func.h"
 
-void	builtin_env(t_condition *condition)
+bool	is_envname(char c)
 {
-	t_item	*current;
+	if (ft_isalnum(c) || c == '_')
+		return (true);
+	return (false);
+}
 
-	current = condition->environ;
-	while (current)
-	{
-		ft_putstr_fd(current->key, STDOUT_FILENO);
-		ft_putstr_fd("=", STDOUT_FILENO);
-		ft_putstr_fd(current->value, STDOUT_FILENO);
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		current = current->next;
-	}
+void	put_export_error(t_condition *condition, char *argv)
+{
+	ft_putstr_fd("export: `", STDERR_FILENO);
+	ft_putstr_fd(argv, STDERR_FILENO);
+	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+	condition->exit_status = 1;
 }

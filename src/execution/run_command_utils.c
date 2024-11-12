@@ -1,31 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_env.c                                      :+:      :+:    :+:   */
+/*   run_command_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 23:55:14 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:15 by yooshima         ###   ########.fr       */
+/*   Created: 2024/11/12 23:56:45 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/13 00:23:50 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../header/execution.h"
 #include "../../header/standard.h"
-#include "../../libft/libft.h"
 #include "../../header/condition.h"
-#include "../../header/init.h"
+#include "../../header/token.h"
+#include "../../libft/libft.h"
+#include "../../header/lexer.h"
 
-void	builtin_env(t_condition *condition)
+bool	is_redirect(char *str)
 {
-	t_item	*current;
+	if (ft_strncmp(str, "<", 2) == 0 || \
+		ft_strncmp(str, ">", 2) == 0 || \
+		ft_strncmp(str, ">>", 3) == 0)
+		return (true);
+	return (false);
+}
 
-	current = condition->environ;
-	while (current)
-	{
-		ft_putstr_fd(current->key, STDOUT_FILENO);
-		ft_putstr_fd("=", STDOUT_FILENO);
-		ft_putstr_fd(current->value, STDOUT_FILENO);
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		current = current->next;
-	}
+bool	is_heredoc(char *str)
+{
+	if (ft_strncmp(str, "<<", 3) == 0)
+		return (true);
+	return (false);
 }

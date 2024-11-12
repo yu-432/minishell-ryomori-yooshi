@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wrapper.c                                          :+:      :+:    :+:   */
+/*   set_exit_status.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 23:57:01 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:52:46 by yooshima         ###   ########.fr       */
+/*   Created: 2024/11/12 23:56:54 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/13 00:52:26 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,23 @@
 #include "../../header/execution.h"
 #include "../../libft/libft.h"
 #include "../../header/lexer.h"
+#include "../../header/signal.h"
+#include "../../header/print.h"
 
-void	wrap_close(int fd)
+void	set_exit_status_by_signal(int status)
 {
-	if (fd != -1 && close(fd) == -1)
+	if (WTERMSIG(status) == SIGQUIT)
 	{
-		perror("close");
-		fprintf(stderr, "fd = %d\n", fd);
-		exit(1);
+		ft_putstr_fd("Quit (core dumped)", STDERR_FILENO);
+		g_sig = SIGQUIT;
 	}
+	if (WTERMSIG(status) == SIGINT)
+		g_sig = SIGINT;
+	write(STDERR_FILENO, "\n", 1);
 }
 
-void	wrap_dup2(int oldfd, int newfd)
+void	set_exit_status_by_status(t_condition *condition, int status)
 {
-	if (dup2(oldfd, newfd) == -1)
-	{
-		perror("dup2");
-		exit(1);
-	}
+	g_sig = 0;
+	condition->exit_status = WEXITSTATUS(status);
 }

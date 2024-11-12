@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   expand_quote.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 23:57:26 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:02:22 by yooshima         ###   ########.fr       */
+/*   Created: 2024/11/12 23:57:22 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/13 01:01:36 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,31 @@
 #include "../../header/lexer.h"
 #include "../../libft/libft.h"
 
-bool	append_char(char **str, char c)
+bool	expand_quote(t_token *tokenized)
 {
+	int		i;
+	char	quote;
 	char	*new;
-	char	join[2];
 
-	join[0] = c;
-	join[1] = '\0';
-	new = ft_strjoin(*str, join);
+	i = 0;
+	quote = 0;
+	new = ft_strdup("");
 	if (!new)
 		return (false);
-	free(*str);
-	*str = new;
-	return (true);
-}
-
-bool	expand_token(t_condition *condition, t_token *tokenized)
-{
-	while (tokenized)
+	while (tokenized->kind == TOKEN_WORD && tokenized->token[i])
 	{
-		if (tokenized->kind == TOKEN_WORD)
+		if (is_quote(tokenized->token[i]) && quote == 0)
+			quote = tokenized->token[i++];
+		else if (tokenized->token[i] == quote)
 		{
-			if (!expand_dollar(condition, tokenized))
-				return (false);
-			if (!expand_quote(tokenized))
-				return (false);
+			quote = 0;
+			i++;
 		}
-		tokenized = tokenized->next;
+		else
+			if (!append_char(&new, tokenized->token[i++]))
+				return (false);
 	}
+	free(tokenized->token);
+	tokenized->token = new;
 	return (true);
 }

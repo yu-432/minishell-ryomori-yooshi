@@ -1,42 +1,28 @@
-#include "../../header/node.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:56:13 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/13 00:31:32 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/standard.h"
 #include "../../libft/libft.h"
 #include "../../header/signal.h"
 #include "../../header/execution.h"
+#include "../../header/print.h"
 
-bool heredoc_strjoin(char **heredoc_str, char *line)
+static void	heredoc_child_process(char *delimiter, int fds[2])
 {
-	char *temp;
+	char	*line;
+	int		line_count;
 
-	temp = ft_strjoin(*heredoc_str, line);
-	if (!temp)
-		return (false);
-	free(*heredoc_str);
-	*heredoc_str = NULL;
-	*heredoc_str = ft_strjoin(temp, "\n");
-	if (!heredoc_str)
-		return (free(temp), false);
-	return (true);
-}
-
-void put_heredoc_warning(int line_count, char *delimiter)
-{
-	char *line_count_str;
-
-	line_count_str = ft_itoa(line_count);
-	ft_putstr_fd("warning: here-document at line ", STDERR_FILENO);
-	ft_putnbr_fd(line_count, STDERR_FILENO);
-	ft_putstr_fd(" delimited by end-of-file (wanted `", STDERR_FILENO);
-	ft_putstr_fd(delimiter, STDERR_FILENO);
-	ft_putstr_fd("')\n", STDERR_FILENO);
-}
-
-void read_heredoc(t_node *node, char *delimiter)
-{
-	char *line;
-	int line_count;
-
-	line_count = 1;
+	setup_heredoc_signal();
+	line_count = 0;
 	while (true)
 	{
 		line = readline(HEREDOC_PROMPT);
@@ -45,45 +31,36 @@ void read_heredoc(t_node *node, char *delimiter)
 		if (!ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1))
 		{
 			free(line);
-			break;
+			break ;
 		}
-		heredoc_strjoin(&node->heredoc_str, line);
+		ft_putstr_fd(line, fds[OUT]);
+		ft_putchar_fd('\n', fds[OUT]);
 		free(line);
 		line_count++;
 	}
-}
-
-void heredoc_child_process(t_node *node, char *delimiter, int fds[2])
-{
-	setup_heredoc_signal();
-	read_heredoc(node, delimiter);
-	dup2(fds[OUT], STDOUT_FILENO);
 	wrap_double_close(fds[IN], fds[OUT]);
-	ft_putstr_fd(node->heredoc_str, STDOUT_FILENO);
 	exit(0);
 }
 
-bool heredoc_parent_process(t_condition *condition, t_node *node, int fds[2], int pid)
+static bool	heredoc_parent_process(t_condition *condition, t_node *node, \
+									int fds[2], int pid)
 {
-	int status;
+	int	status;
 
 	waitpid(pid, &status, 0);
 	close(fds[OUT]);
 	node->fd_in = fds[IN];
 	setup_parent_signal();
-	if(WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-	{
-		write(STDERR_FILENO, "\n", 1);
-		g_sig = SIGINT;
-		return (false);//condition設定
-	}
+	if (WIFSIGNALED(status))
+		return (set_exit_status_by_signal(status), false);
 	(void)condition;
 	return (true);
 }
-bool heredoc(t_condition *condition, t_node *node, char *delimiter)
+
+static bool	heredoc(t_condition *condition, t_node *node, char *delimiter)
 {
-	int fds[2];
-	pid_t pid;
+	int		fds[2];
+	pid_t	pid;
 
 	if (pipe(fds) == -1)
 	{
@@ -95,20 +72,16 @@ bool heredoc(t_condition *condition, t_node *node, char *delimiter)
 	if (pid == -1)
 		return (put_error(strerror(errno)), false);
 	else if (!pid)
-		heredoc_child_process(node, delimiter, fds);
+		heredoc_child_process(delimiter, fds);
 	else
-		if(!heredoc_parent_process(condition, node, fds, pid))
+		if (!heredoc_parent_process(condition, node, fds, pid))
 			return (false);
 	return (true);
 }
 
-bool redirect_heredoc(t_condition *condition, t_node *node, int i)
+static bool	redirect_heredoc(t_condition *condition, t_node *node, int i)
 {
 	reset_fd(&node->fd_in);
-	free(node->heredoc_str);
-	node->heredoc_str = ft_strdup("");
-	if (!node->heredoc_str)
-		return (false);
 	if (!node->argv[i + 1])
 	{
 		put_error("syntax error near unexpected token `newline'");
@@ -117,5 +90,25 @@ bool redirect_heredoc(t_condition *condition, t_node *node, int i)
 	if (!heredoc(condition, node, node->argv[i + 1]))
 		return (false);
 	(void)condition;
+	return (true);
+}
+
+bool	exec_heredoc(t_condition *condition, t_node *node)
+{
+	int	i;
+
+	i = 0;
+	while (node->argv[i])
+	{
+		if (is_pipe(node->argv[0]))
+			break ;
+		if (is_heredoc(node->argv[i]))
+		{
+			if (!redirect_heredoc(condition, node, i))
+				return (false);
+			i++;
+		}
+		i++;
+	}
 	return (true);
 }

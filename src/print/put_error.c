@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   put_error.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:57:51 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/13 01:26:16 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../libft/libft.h"
 #include "../../header/condition.h"
 
@@ -10,8 +22,8 @@ void	put_error(char *str)
 
 void	put_syntax_error(char *str)
 {
-	ft_putstr_fd("minishell: syntax error \
-		near unexpected token ", STDERR_FILENO);
+	ft_putstr_fd("minishell: syntax error near unexpected token ", \
+					STDERR_FILENO);
 	ft_putstr_fd(str, 2);
 	ft_putchar_fd('\n', 2);
 }

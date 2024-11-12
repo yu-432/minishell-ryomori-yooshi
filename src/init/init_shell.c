@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_shell.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:57:12 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:57:14 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/condition.h"
 #include "../../header/standard.h"
 #include "../../header/init.h"
@@ -38,8 +50,9 @@ bool	get_environ(t_condition *condition, char **envp)
 
 bool	init_shell(t_condition *condition, char **envp)
 {
-	ft_memset(condition, 0, sizeof(t_condition));
 	condition->envp = envp;
+	condition->exit_status = 0;
+	condition->environ = NULL;
 	if (!get_environ(condition, envp))
 		return (false);
 	return (true);
