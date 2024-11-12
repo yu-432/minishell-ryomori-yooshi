@@ -11,7 +11,8 @@ int	builtin_pwd(t_condition *cond, char **argv)
 	pwd_path = getcwd(NULL, 0);
 	if (pwd_path == NULL)
 	{
-		perror("getcwd");
+		ft_putstr_fd("minishell:", STDERR_FILENO);
+		perror("getcwd:");
 		return (1);
 	}
 	else
