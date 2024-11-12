@@ -3,6 +3,14 @@
 #include "../../header/condition.h"
 #include "../../header/init.h"
 #include "../../header/builtin_func.h"
+#include "../../header/print.h"
+
+bool	is_envname(char c)
+{
+	if (ft_isalnum(c) || c == '_')
+		return (true);
+	return (false);
+}
 
 char	*split_key(t_condition *condition, char *argv)
 {
@@ -20,7 +28,7 @@ char	*split_key(t_condition *condition, char *argv)
 		return (put_export_error(condition, argv), NULL);
 	key = ft_substr(argv, 0, i);
 	if (!key)
-		return (perror("export"), NULL);
+		return (export_error(condition, NULL, "malloc"), NULL);
 	return (key);
 }
 
@@ -41,7 +49,8 @@ bool	split_argv(t_condition *condition, char *argv, char **key_value)
 		return (false);
 	key_value[1] = split_value(argv);
 	if (!key_value[1])
-		return (free(key_value[0]), perror("export"), false);
+		return (free(key_value[0]),
+			export_error(condition, NULL, "malloc"), false);
 	return (true);
 }
 
@@ -69,7 +78,7 @@ void	builtin_export(t_condition *condition, char **argv)
 		}
 		else
 			if (!insert_env(condition, key_value[0], key_value[1]))
-				perror("export");
+				export_error(condition, NULL, "calloc");
 		argv++;
 	}
 }
