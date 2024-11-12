@@ -15,19 +15,6 @@
 #include "../../header/builtin_func.h"
 #include "../../libft/libft.h"
 
-void	put_cd_error(t_condition *cond, char *str, char *perr)
-{
-	cond->exit_status = 1;
-	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-	if (perr)
-		perror(NULL);
-	else
-	{
-		ft_putstr_fd(str, STDERR_FILENO);
-		ft_putchar_fd('\n', STDERR_FILENO);
-	}
-}
-
 char	*lst_getenv(t_item *item, char *key)
 {
 	char	*value;

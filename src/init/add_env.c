@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:09 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:11 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:28:59 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include "../../header/init.h"
 #include "../../libft/libft.h"
 
-bool insert_env(t_condition *condition, char *key, char *value)
+bool	insert_env(t_condition *condition, char *key, char *value)
 {
-	t_item *new;
+	t_item	*new;
 
 	new = touch_t_item();
 	if (!new)
@@ -40,12 +40,12 @@ static void replace_env(t_item *dup_key_node, char *key, char *value)
 	dup_key_node->value = value;
 }
 
-bool add_env(t_condition *condition, char *env_str)
+bool	add_env(t_condition *condition, char *env_str)
 {
-	char *equal;
-	char *key;
-	char *value;
-	t_item *dup_key_node;
+	char	*equal;
+	char	*key;
+	char	*value;
+	t_item	*dup_key_node;
 
 	equal = ft_strchr(env_str, '=');
 	if (!equal)
@@ -62,5 +62,5 @@ bool add_env(t_condition *condition, char *env_str)
 	else
 		if (!insert_env(condition, key, value))
 			return (false);
-	return(true);
+	return (true);
 }
