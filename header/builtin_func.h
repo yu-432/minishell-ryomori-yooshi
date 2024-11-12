@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_func.h                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:53:56 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:54:13 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef BUILTIN_FUNC_H
 # define BUILTIN_FUNC_H
 
@@ -18,7 +30,6 @@ void	builtin_unset(t_condition *condition, char **argv);
 int		builtin_pwd(t_condition *cond, char **argv);
 int		builtin_cd(t_condition *cond, char **args);
 int		builtin_exit(t_condition *condition, char **args);
-char	*get_item_value(t_item *item, char *key);
 
 //cd_until
 int				update_cwd(t_condition *cond, char *newcwd);

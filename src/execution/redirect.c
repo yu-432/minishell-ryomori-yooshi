@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirect.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:56:41 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:56:43 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/lexer.h"
 #include "../../header/standard.h"
 #include "../../header/token.h"
@@ -30,11 +42,6 @@ bool redirect_in(t_condition *condition, t_node *node, int i)
 	if (fd == -1)
 		return (put_redirect_error(condition, node->argv[i + 1]), false);
 	node->fd_in = fd;
-	if(node->heredoc_str)
-	{
-		free(node->heredoc_str);
-		node->heredoc_str = NULL;
-	}
 	return (true);
 }
 

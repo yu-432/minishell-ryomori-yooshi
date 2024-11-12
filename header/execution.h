@@ -1,5 +1,17 @@
-#ifndef EXECVE_H
-# define EXECVE_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:54:28 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:54:30 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef EXECUTION_H
+# define EXECUTION_H
 
 #include "standard.h"
 #include "condition.h"
@@ -24,7 +36,6 @@ typedef struct s_node
 {
 	t_node_kind kind;
 	char **argv;
-	char *heredoc_str;
 	int fd_in;
 	int fd_out;
 	struct s_node *next;
@@ -39,12 +50,11 @@ typedef struct s_exec_info
 	int executed_count;
 } t_exec_info;
 
+int count_cmd_arg(t_node *node);
 void run_command(t_condition *condition, t_token *token_list);
 bool redirect_in(t_condition *condition, t_node *node, int i);
 bool redirect_out(t_condition *condition, t_node *node, int i);
 bool redirect_append(t_condition *condition, t_node *node, int i);
-bool redirect_heredoc(t_condition *condition, t_node *node, int i);
-bool exec_command(t_condition *condition, t_node *node);
 bool is_pipe(char *str);
 t_node *make_node(t_condition *condition, t_token *token_list);
 int execute(t_condition *condition, t_node *node);
@@ -57,7 +67,6 @@ bool set_redirect_fd(t_node *node);
 char **molding_argv(t_node *node);
 char	*find_command_path(t_condition *condition, char *command);
 t_node *find_last_node(t_node *head);
-int count_cmd_arg(t_node *node);
 bool is_not_redirect(char *str);
 bool close_redirect_fd(t_node *node);
 bool set_redirect_fd(t_node *node);
@@ -69,24 +78,20 @@ bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int
 void wrap_double_close(int fd1, int fd2);
 bool is_kind_redirect(t_token_kind kind);
 bool is_redirect(char *str);
-
 bool interpret_redirect(t_condition *condition, t_node *node);
-
+t_node *new_node(void);
+void set_exit_status_by_status(t_condition *condition, int status);
 void storage_fd(int *keep_fds);
 bool restore_fd(int *keep_fds);
 bool find_set_redirect(t_condition *condition, t_node *node);
 bool exec_heredoc(t_condition *condition, t_node *node);
-
-
-
-
-
-
-
-
-
-
-
-
+void free_node(t_node *node);
+bool is_heredoc(char *str);
+bool is_redirect(char *str);
+void set_exit_status_by_signal(int status);
+int count_environ(t_item *environ);
+bool is_executable(char *path);
+bool is_path(char *cmd);
+bool is_heredoc(char *str);
 
 #endif

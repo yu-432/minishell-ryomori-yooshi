@@ -1,24 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   node.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:56:28 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:56:29 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/condition.h"
 #include "../../header/lexer.h"
-#include "../../header/node.h"
 #include "../../header/standard.h"
 #include "../../header/execution.h"
 #include "../../libft/libft.h"
 
-t_node *new_node(void)
+static void add_kind_info(t_node *node)
 {
-	t_node *node;
-
-	node = ft_calloc(1, sizeof(t_node));
-	if (node == NULL)
-		return (NULL);
-	node->next = NULL;
-	node->fd_in = -2;
-	node->fd_out = -2;
-	return (node);
+	if(ft_strncmp(node->argv[0], "|\0", 2) == 0)
+		node->kind = NODE_PIPE;
+	else
+		node->kind = NODE_CMD;
 }
 
-int count_token_until_pipe(t_token *token_list)
+static int count_token_until_pipe(t_token *token_list)
 {
 	int count;
 	t_token *current;
@@ -35,7 +41,7 @@ int count_token_until_pipe(t_token *token_list)
 	return (count);
 }
 
-bool make_node_argv(t_condition *condition, t_token **token_list, t_node *current_node)
+static bool make_node_argv(t_condition *condition, t_token **token_list, t_node *current_node)
 {
 	int word_count;
 	int i;
@@ -58,14 +64,6 @@ bool make_node_argv(t_condition *condition, t_token **token_list, t_node *curren
 	return (true);
 }
 
-void add_kind_info(t_node *node)
-{
-	if(ft_strncmp(node->argv[0], "|\0", 2) == 0)
-		node->kind = NODE_PIPE;
-	else
-		node->kind = NODE_CMD;
-}
-
 t_node *make_node(t_condition *condition, t_token *token_list)
 {
 	t_node head;
@@ -78,8 +76,11 @@ t_node *make_node(t_condition *condition, t_token *token_list)
 		current->next = new_node();
 		if (!current->next)
 			return (NULL);
-		if(!make_node_argv(condition, &token_list, current->next))//PIPE区切りでargvを作成//redirect未処理
-			return (NULL);//free?
+		if(!make_node_argv(condition, &token_list, current->next))
+		{
+			free_node(head.next);
+			return (NULL);
+		}
 		add_kind_info(current->next);
 		current->next->prev = current;
 	}

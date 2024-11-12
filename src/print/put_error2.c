@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   put_error2.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:57:55 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:57:57 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../libft/libft.h"
 
 void put_tokenizer_error(char *str)
@@ -26,4 +38,13 @@ void put_unclosed_quote_error(char quote)
 	ft_putstr_fd("minishell: syntax error unclosed quote `", 2);
 	ft_putchar_fd(quote, 2);
 	ft_putstr_fd("'\n", 2);
+}
+
+void put_heredoc_warning(int line_count, char *delimiter)
+{
+	ft_putstr_fd("warning: here-document at line ", STDERR_FILENO);
+	ft_putnbr_fd(line_count, STDERR_FILENO);
+	ft_putstr_fd(" delimited by end-of-file (wanted `", STDERR_FILENO);
+	ft_putstr_fd(delimiter, STDERR_FILENO);
+	ft_putstr_fd("')\n", STDERR_FILENO);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:58:05 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:58:07 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../header/standard.h"
 #include "../header/condition.h"
 #include "../header/lexer.h"
@@ -69,9 +81,9 @@ void shell_loop(t_condition *condition)
 	return ;
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_condition condition;
+	t_condition	condition;
 
 	if (!init_shell(&condition, envp))
 		return (put_error(strerror(errno)), 1);

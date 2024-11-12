@@ -1,11 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   find_syntax_error.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:57:29 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:57:33 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/lexer.h"
 #include "../../header/token.h"
 #include "../../header/condition.h"
 #include "../../libft/libft.h"
 #include "../../header/print.h"
-
-//仮置き
-
 
 bool check_quote_error(char *token)
 {

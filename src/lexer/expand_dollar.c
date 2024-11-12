@@ -1,44 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_dollar.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:57:19 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:57:20 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/lexer.h"
 #include "../../header/token.h"
 #include "../../libft/libft.h"
 
-static void update_quote_status(t_lexer *info, char c)
-{
-	if (info->quote == 0)
-		info->quote = c;
-	else if (info->quote == c)
-		info->quote = 0;
-}
 
-static bool ft_strjoin_free(char **s1, char *s2)
+static bool init_env_value_new(char **new, char **env_value)
 {
-	char *new;
-
-	if (!s1 || !s2)
+	if (!(*env_value))
+		*env_value = ft_strdup("");
+	if (!(*env_value))
 		return (false);
-	new = ft_strjoin(*s1, s2);
-	if (!new)
-		return (false);
-	free(*s1);
-	*s1 = new;
+	*new = ft_strdup("");
+	if (!(*new))
+		return (free(*env_value), false);
 	return (true);
-}
-
-static char *find_env(t_condition *condition, char *env_key)
-{
-	t_item *temp;
-
-	temp = condition->environ;
-	if (ft_strncmp(env_key, "?\0", 2) == 0)
-		return (ft_itoa(condition->exit_status));
-	while(temp)
-	{
-		if(ft_strncmp(temp->key, env_key, ft_strlen(temp->key) + 1) == 0)
-			return (temp->value);
-		temp = temp->next;
-	}
-	(void)condition;
-	return (NULL);
 }
 
 static bool replace_env(t_token *token, char *env_value, int env_len)
@@ -46,12 +32,10 @@ static bool replace_env(t_token *token, char *env_value, int env_len)
 	char *new;
 	int i;
 
-	if (!env_value)
-		env_value = "";
-	i = 0;
-	new = ft_strdup("");
-	if (!new)
+	new = NULL;
+	if (!init_env_value_new(&new, &env_value))
 		return (false);
+	i = 0;
 	while(token->token[i])
 	{
 		if (token->token[i] == '$')
@@ -72,18 +56,13 @@ static bool replace_env(t_token *token, char *env_value, int env_len)
 	return (true);
 }
 
-static bool get_env_name(t_condition *condition, t_token *tokenized, t_lexer *info, int *i)
-{
-	int env_len;
 
-	env_len = 0;
+
+static bool handle_dollar(t_condition *condition, t_token *tokenized, t_lexer *info, int *i)
+{
 	(*i)++;
-	if (tokenized->token[*i] == '?')
-		env_len++;
-	else
-		while (ft_isalnum(tokenized->token[*i + env_len]))
-			env_len++;
-	info->env_key = ft_substr(tokenized->token, *i, env_len);
+	info->env_key = ft_substr(tokenized->token, *i, \
+						count_envname_len(tokenized, i));
 	if (!info->env_key)
 		return (false);
 	if (info->env_key[0] == '\0')
@@ -91,7 +70,8 @@ static bool get_env_name(t_condition *condition, t_token *tokenized, t_lexer *in
 		(*i)++;
 		return (true);
 	}
-	if (!replace_env(tokenized, find_env(condition, info->env_key), ft_strlen(info->env_key)))
+	if (!replace_env(tokenized, find_env(condition, info->env_key), \
+			ft_strlen(info->env_key)))
 		return (false);
 	return (true);
 }
@@ -109,7 +89,7 @@ bool expand_dollar(t_condition *condition, t_token *tokenized)
 			update_quote_status(&info, tokenized->token[i]);
 		if (tokenized->token[i] == '$' && info.quote != SINGLE_QUOTE)
 		{
-			if (!get_env_name(condition, tokenized, &info, &i))
+			if (!handle_dollar(condition, tokenized, &info, &i))
 				return (false);
 		}
 		else

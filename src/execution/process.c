@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   process.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:56:38 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:56:39 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/token.h"
-#include "../../header/node.h"
 #include "../../header/execution.h"
 #include "../../libft/libft.h"
 #include "../../header/lexer.h"
@@ -20,7 +31,7 @@ bool parent_process(t_condition *condition, t_node *node, t_exec_info *info, int
 bool child_process(t_condition *condition, t_node *node, t_exec_info *info, int fds[2])
 {
 	setup_child_signal();
-	if (info->executed_count < info->pipe_count)//pipe接続
+	if (info->executed_count < info->pipe_count)
 	{
 		wrap_dup2(fds[OUT], STDOUT_FILENO);
 		wrap_close(fds[OUT]);

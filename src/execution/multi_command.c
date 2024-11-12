@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   multi_command.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:56:21 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:56:22 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/token.h"
-#include "../../header/node.h"
 #include "../../header/execution.h"
 #include "../../libft/libft.h"
 #include "../../header/lexer.h"
@@ -12,21 +23,9 @@ void wait_signal(t_condition *condition, t_exec_info *info)
 
 	waitpid(info->pid[info->executed_count--], &status, 0);
 	if(WIFSIGNALED(status))
-	{
-		if(WTERMSIG(status) == SIGQUIT)
-		{
-			ft_putstr_fd("Quit (core dumped)", STDERR_FILENO);
-			g_sig = SIGQUIT;
-		}
-		if(WTERMSIG(status) == SIGINT)
-			g_sig = SIGINT;
-		write(STDERR_FILENO, "\n", 1);
-	}
+		set_exit_status_by_signal(status);
 	else if(WIFEXITED(status))
-	{
-		g_sig = 0;//やばすぎ
-		condition->exit_status = WEXITSTATUS(status);
-	}
+		set_exit_status_by_status(condition, status);
 	while(info->executed_count >= 0)
 	{
 		waitpid(info->pid[info->executed_count], &status, 0);

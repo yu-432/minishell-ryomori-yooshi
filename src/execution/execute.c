@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:55:56 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:55:58 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/condition.h"
 #include "../../header/lexer.h"
-#include "../../header/node.h"
 #include "../../header/standard.h"
 #include "../../libft/libft.h"
 #include "../../header/execution.h"
@@ -25,40 +36,6 @@ void execute_builtin(t_condition *condition, t_node *node)
 		builtin_exit(condition, node->argv);
 	else
 		ft_putstr_fd("error: builtin command not found\n", STDERR_FILENO);
-}
-
-bool is_executable(char *path)
-{
-	struct stat st;
-
-	if (stat(path, &st))
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(path, STDERR_FILENO);
-		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
-		return (false);
-	}
-	if (S_ISDIR(st.st_mode))
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(path, STDERR_FILENO);
-		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
-		return (false);
-	}
-	return (true);
-}
-
-int count_environ(t_item *environ)
-{
-	int count;
-
-	count = 0;
-	while (environ)
-	{
-		count++;
-		environ = environ->next;
-	}
-	return (count);
 }
 
 bool convert_list_to_array(t_item *environ, char **ft_envp)
@@ -94,31 +71,14 @@ bool make_envp(t_condition *condition)
 	return (true);
 }
 
-int execute(t_condition *condition, t_node *node)
+void path_check(t_node *node, char *path)
 {
-	char *path;
-
-	if(!interpret_redirect(condition, node))
-		exit(EXIT_FAILURE);
-	// setup_child_signal();
-	set_redirect_fd(node);
-	make_envp(condition);
-	if (is_builtin(node->argv[0]))
-	{
-		execute_builtin(condition, node);
-		exit (EXIT_SUCCESS);
-	}
-	if (node->argv[0][0] == '/' || ft_strncmp(node->argv[0], "./", 2) == 0)
-		path = ft_strdup(node->argv[0]);
-	else
-		path = find_command_path(condition, node->argv[0]);//対象の存在を確認する
 	if (!path)
 	{
 		ft_putstr_fd(node->argv[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit (127);
 	}
-
 	if (access(path, F_OK) != 0)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
@@ -126,14 +86,34 @@ int execute(t_condition *condition, t_node *node)
 		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 		exit (127);
 	}
-
 	if(!is_executable(path))
 		exit (126);
 	if (path[0] == '\0')
 		exit(EXIT_SUCCESS);
+
+}
+
+int execute(t_condition *condition, t_node *node)
+{
+	char *path;
+
+	if(!interpret_redirect(condition, node))
+		exit(EXIT_FAILURE);
+	set_redirect_fd(node);
+	make_envp(condition);
+	if (is_builtin(node->argv[0]))
+	{
+		execute_builtin(condition, node);
+		exit (EXIT_SUCCESS);
+	}
+	if (is_path(node->argv[0]))
+		path = ft_strdup(node->argv[0]);
+	else
+		path = find_command_path(condition, node->argv[0]);
+	path_check(node, path);
 	execve(path, node->argv, condition->envp);
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(node->argv[0], STDERR_FILENO);
-	perror(": ");//permission denied
+	perror(": ");
 	exit(126);
 }

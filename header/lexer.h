@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 23:54:37 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/12 23:54:38 by yooshima         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef LEXER_H
 # define LEXER_H
 
@@ -29,6 +41,11 @@ int count_same_char(char *line, char c);
 bool expand_quote(t_token *tokenized);
 bool expand_dollar(t_condition *condition, t_token *tokenized);
 bool append_char(char **str, char c);
+void update_quote_status(t_lexer *info, char c);
+bool ft_strjoin_free(char **s1, char *s2);
+char *find_env(t_condition *condition, char *env_key);
+int count_envname_len(t_token *tokenized, int *i);
+
 
 
 
