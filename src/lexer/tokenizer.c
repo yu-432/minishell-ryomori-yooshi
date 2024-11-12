@@ -5,15 +5,15 @@
 
 int get_token_kind(char *token)
 {
-	if (ft_strncmp(token, ">>", 2) == 0)
+	if (ft_strncmp(token, ">>", 3) == 0)
 		return (TOKEN_REDIRECT_APPEND);
-	else if (ft_strncmp(token, ">", 1) == 0)
+	else if (ft_strncmp(token, ">", 2) == 0)
 		return(TOKEN_REDIRECT_OUT);
-	else if (ft_strncmp(token, "<<", 2) == 0)
+	else if (ft_strncmp(token, "<<", 3) == 0)
 		return (TOKEN_REDIRECT_HEREDOC);
-	else if (ft_strncmp(token, "<", 1) == 0)
+	else if (ft_strncmp(token, "<", 2) == 0)
 		return (TOKEN_REDIRECT_IN);
-	else if (ft_strncmp(token, "|", 1) == 0)
+	else if (ft_strncmp(token, "|", 2) == 0)
 		return (TOKEN_PIPE);
 	else
 		return (TOKEN_UNKNOWN);

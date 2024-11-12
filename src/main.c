@@ -19,7 +19,6 @@ void free_tokens(t_token *token)////////////////
 	while (token)
 	{
 		temp = token->next;
-		printf("freed token = %s\n", token->token);
 		free(token->token);
 		free(token);
 		token = temp;

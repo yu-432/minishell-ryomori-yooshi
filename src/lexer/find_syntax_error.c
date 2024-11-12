@@ -61,15 +61,28 @@ bool check_token_kind(t_token_kind kind, t_token *token)
 	return (true);
 }
 
+bool check_pipe_error(t_token_kind kind, t_token *token, t_token_kind prev_kind)
+{
+	if ((prev_kind == TOKEN_PIPE && kind == TOKEN_PIPE) || \
+		(kind == TOKEN_PIPE && !token->next))
+		return (put_unexpected_token_error(token->token), false);
+	return (true);
+}
 
 bool find_syntax_error(t_condition *condition, t_token *tokenized)
 {
+	t_token_kind prev_kind;
+
+	prev_kind = TOKEN_PIPE;
 	while (tokenized)
 	{
 		if (!check_token_kind(tokenized->kind, tokenized))
-			return(false);
+			return (false);
+		if (!check_pipe_error(tokenized->kind, tokenized, prev_kind))
+			return (false);
 		if (!check_quote_error(tokenized->token))
-			return(false);
+			return (false);
+		prev_kind = tokenized->kind;
 		tokenized = tokenized->next;
 	}
 	(void)condition;
