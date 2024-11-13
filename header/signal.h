@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:44 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:21:20 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 09:04:17 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <signal.h>
 
-extern sig_atomic_t	g_sig;
+extern volatile sig_atomic_t	g_sig;
 
 void	setup_parent_signal(void);
 void	setup_child_signal(void);

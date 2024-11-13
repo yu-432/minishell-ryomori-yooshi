@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:16 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:57:38 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 12:12:25 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ bool	ft_strjoin_free(char **s1, char *s2)
 	new = ft_strjoin(*s1, s2);
 	if (!new)
 		return (false);
-	free(*s1);
+	if (*s1)
+		free(*s1);
 	*s1 = new;
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:24 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:26 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 10:08:54 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ int	long_over_check(char *argment)
 	return (long_check_return(argment, sign));
 }
 
-int	exit_with_argment(t_condition *condition, char *argment, char **args)
+int	exit_with_argment(t_condition *condition, t_node *node, char *argment, \
+						char **args)
 {
 	long	num;
 	int		judge;
@@ -91,23 +92,25 @@ int	exit_with_argment(t_condition *condition, char *argment, char **args)
 	num = ft_atoll(argment);
 	result = exit_status_num(num);
 	exit(result);
+	all_free(condition, node);
 	return (0);
 }
 
-int	builtin_exit(t_condition *condition, char **args)
+int	builtin_exit(t_condition *condition, t_node *node)
 {
 	char	*argment;
 
-	if (args[1] == NULL)
+	if (node->argv[1] == NULL)
 	{
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		all_free(condition, node);
 		exit(condition->exit_status);
 	}
-	argment = (skip_space(args[1]));
+	argment = (skip_space(node->argv[1]));
 	if (!is_check_num(argment))
 	{
 		numeric_argument_error(argment);
 		return (1);
 	}
-	return (exit_with_argment(condition, argment, args));
+	return (exit_with_argment(condition, node, argment, node->argv));
 }

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:45 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:09:38 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 02:49:16 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,17 @@ bool	is_path(char *cmd)
 	if (ft_strchr(cmd, '/'))
 		return (true);
 	return (false);
+}
+
+int	count_environ(t_item *environ)
+{
+	int	count;
+
+	count = 0;
+	while (environ)
+	{
+		count++;
+		environ = environ->next;
+	}
+	return (count);
 }

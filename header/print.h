@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:41 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:29:43 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 10:19:14 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,9 @@ void	put_unexpected_token_error(char *token);
 void	put_unclosed_quote_error(char quote);
 void	put_heredoc_warning(int line_count, char *delimiter);
 void	put_redirect_error(t_condition *condition, char *str);
+void	export_error(t_condition *cond, char *str, char *perr);
+void	put_export_error(t_condition *condition, char *argv);
+int		not_found_error(char *str);
+int		no_file_error(char *str);
 
 #endif

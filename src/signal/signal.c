@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:59 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:16:46 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 09:54:45 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../../header/signal.h"	
 #include "../../header/standard.h"
 #include "../../header/condition.h"
+#include "../../header/execution.h"
 #include "../../libft/libft.h"
 #include <sys/ioctl.h>
 

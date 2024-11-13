@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:21 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:36:34 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 03:57:04 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,8 @@ static void	wait_signal(t_condition *condition, t_exec_info *info)
 		info->executed_count--;
 	}
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-	{
 		write(STDERR_FILENO, "\n", 1);
-	}
+	free(info->pid);
 }
 
 pid_t	execute_last_pipeline_cmd(t_condition *condition, t_node *node, \

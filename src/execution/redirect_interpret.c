@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe.c                                             :+:      :+:    :+:   */
+/*   redirect_interpret.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:34 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:43:59 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 11:05:50 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,5 @@ bool	interpret_redirect(t_condition *condition, t_node *node)
 		return (false);
 	free_node_argv(node);
 	node->argv = new_argv;
-	(void)condition;
 	return (true);
 }

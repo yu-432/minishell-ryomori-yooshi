@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_export_until.c                             :+:      :+:    :+:   */
+/*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 23:55:28 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:29 by yooshima         ###   ########.fr       */
+/*   Created: 2024/11/12 23:56:13 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/13 10:21:22 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/standard.h"
 #include "../../libft/libft.h"
-#include "../../header/condition.h"
-#include "../../header/init.h"
-#include "../../header/builtin_func.h"
+#include "../../header/signal.h"
+#include "../../header/execution.h"
+#include "../../header/print.h"
+#include "../../header/lexer.h"
 
-bool	is_envname(char c)
+char	*get_line(int fd)
 {
-	if (ft_isalnum(c) || c == '_')
-		return (true);
-	return (false);
-}
+	char	buf;
+	char	*result;
 
-void	put_export_error(t_condition *condition, char *argv)
-{
-	ft_putstr_fd("export: `", STDERR_FILENO);
-	ft_putstr_fd(argv, STDERR_FILENO);
-	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-	condition->exit_status = 1;
+	result = ft_strdup("");
+	while (read(fd, &buf, 1) > 0)
+	{
+		if (buf == '\n')
+			break ;
+		ft_strjoin_free(&result, &buf);
+	}
+	return (result);
 }

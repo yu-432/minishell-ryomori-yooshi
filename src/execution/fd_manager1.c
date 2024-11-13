@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:04 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:37:15 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 04:52:17 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	reset_fd(int *fd)
 {
 	if (*fd != -2)
 	{
-		close(*fd);
+		wrap_close(*fd);
 		*fd = -2;
 	}
 }

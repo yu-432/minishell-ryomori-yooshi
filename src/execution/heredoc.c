@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:13 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:31:32 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 09:55:47 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,31 @@ static void	heredoc_child_process(char *delimiter, int fds[2])
 	int		line_count;
 
 	setup_heredoc_signal();
+	wrap_close(fds[IN]);
 	line_count = 0;
 	while (true)
 	{
-		line = readline(HEREDOC_PROMPT);
-		if (!line)
-			return (put_heredoc_warning(line_count, delimiter));
+		ft_putstr_fd(HEREDOC_PROMPT, STDERR_FILENO);
+		line = get_line(STDIN_FILENO);
+		if (*line == '\0' || g_sig == SIGINT)
+		{
+			free(line);
+			if (g_sig == SIGINT)
+				exit(1);
+			put_heredoc_warning(line_count, delimiter);
+			break ;
+		}
 		if (!ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1))
 		{
 			free(line);
 			break ;
 		}
 		ft_putstr_fd(line, fds[OUT]);
-		ft_putchar_fd('\n', fds[OUT]);
+		ft_putstr_fd("\n", fds[OUT]);
 		free(line);
 		line_count++;
 	}
-	wrap_double_close(fds[IN], fds[OUT]);
+	wrap_close(fds[OUT]);
 	exit(0);
 }
 
@@ -48,11 +56,14 @@ static bool	heredoc_parent_process(t_condition *condition, t_node *node, \
 	int	status;
 
 	waitpid(pid, &status, 0);
-	close(fds[OUT]);
+	wrap_close(fds[OUT]);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		wrap_close(fds[IN]);
+		return (set_exit_status_by_signal(status), false);
+	}
 	node->fd_in = fds[IN];
 	setup_parent_signal();
-	if (WIFSIGNALED(status))
-		return (set_exit_status_by_signal(status), false);
 	(void)condition;
 	return (true);
 }
@@ -70,7 +81,10 @@ static bool	heredoc(t_condition *condition, t_node *node, char *delimiter)
 	setup_ignore_signal();
 	pid = fork();
 	if (pid == -1)
+	{
+		wrap_double_close(fds[IN], fds[OUT]);
 		return (put_error(strerror(errno)), false);
+	}
 	else if (!pid)
 		heredoc_child_process(delimiter, fds);
 	else

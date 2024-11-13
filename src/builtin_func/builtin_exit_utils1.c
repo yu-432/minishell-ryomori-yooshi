@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_exit_until1.c                              :+:      :+:    :+:   */
+/*   builtin_exit_utils1.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:17 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:18 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 03:41:28 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/condition.h"
+#include "../../header/execution.h"
 #include "../../header/standard.h"
 #include "../../libft/libft.h"
 #include "../../header/builtin_func.h"
 #include "../../header/print.h"
-
 
 bool	is_spase(char c)
 {
@@ -42,4 +42,24 @@ int	get_sign_skip0(char **str)
 	while (**str == '0')
 		str++;
 	return (sign);
+}
+
+static void	free_condition(t_condition *condition)
+{
+	t_item	*temp;
+
+	while (condition->environ)
+	{
+		temp = condition->environ->next;
+		free(condition->environ->key);
+		free(condition->environ->value);
+		free(condition->environ);
+		condition->environ = temp;
+	}
+}
+
+void	all_free(t_condition *condition, t_node *node)
+{
+	free_node(node);
+	free_condition(condition);
 }

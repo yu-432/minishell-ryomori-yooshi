@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:57 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:32:47 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 03:13:07 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,22 @@
 
 static int	handle_single_builtin_command(t_condition *condition, t_node *node)
 {
-	int	keep_fds[3];
+	int		keep_fds[3];
+	bool	is_fd_changed;
 
-	storage_fd(keep_fds);
+	is_fd_changed = false;
 	if (!interpret_redirect(condition, node))
 		return (false);
+	if (node->fd_in != -2 || node->fd_out != -2)
+	{
+		storage_fd(keep_fds);
+		is_fd_changed = true;
+	}
 	set_redirect_fd(node);
 	setup_parent_signal();
 	execute_builtin(condition, node);
-	restore_fd(keep_fds);
+	if (is_fd_changed)
+		restore_fd(keep_fds);
 	return (EXIT_SUCCESS);
 }
 
