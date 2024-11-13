@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:01 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:52:46 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 03:14:30 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	wrap_close(int fd)
 	if (fd != -1 && close(fd) == -1)
 	{
 		perror("close");
-		fprintf(stderr, "fd = %d\n", fd);
 		exit(1);
 	}
 }

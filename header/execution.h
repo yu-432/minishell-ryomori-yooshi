@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:28 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:56:43 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 10:09:50 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ bool	is_path(char *cmd);
 int		count_cmd_arg(t_node *node);
 int		count_environ(t_item *environ);
 char	*find_command_path(t_condition *condition, char *command);
+void	free_argv(char **argv);
 
 //single_command
 int		execute_single_command(t_condition *condition, t_node *node);
@@ -88,6 +89,7 @@ bool	interpret_redirect(t_condition *condition, t_node *node);
 
 //heredoc
 bool	exec_heredoc(t_condition *condition, t_node *node);
+char	*get_line(int fd);
 
 //fd_manager
 void	reset_fd(int *fd);

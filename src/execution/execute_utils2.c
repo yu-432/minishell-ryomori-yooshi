@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:50 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:12:28 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 10:57:12 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,18 @@ int	count_cmd_arg(t_node *node)
 	return (count);
 }
 
-int	count_environ(t_item *environ)
+void	free_argv(char **argv)
 {
-	int	count;
+	int	i;
 
-	count = 0;
-	while (environ)
+	i = 0;
+	while (argv[i])
 	{
-		count++;
-		environ = environ->next;
+		free(argv[i]);
+		i++;
 	}
-	return (count);
+	free(argv);
+	return ;
 }
 
 static char	*take_env_value(t_condition *condition, char *key)
@@ -62,18 +63,12 @@ static char	*take_env_value(t_condition *condition, char *key)
 	return (NULL);
 }
 
-char	*find_command_path(t_condition *condition, char *command)
+static char	*search_can_access_path(char **path, char *command)
 {
 	int		i;
-	char	**path;
 	char	*slash;
 	char	*joined;
 
-	if (command[0] == '\0')
-		return (ft_strdup(""));
-	path = ft_split(take_env_value(condition, "PATH"), ':');
-	if (!path)
-		path = ft_split(get_item_value(condition->environ, "PWD"), ':');
 	i = 0;
 	while (path[i])
 	{
@@ -81,10 +76,25 @@ char	*find_command_path(t_condition *condition, char *command)
 		joined = ft_strjoin(path[i], slash);
 		free(slash);
 		if (!access(joined, F_OK))
-			return (free(path), joined);
+		{
+			free_argv(path);
+			return (joined);
+		}
 		free(joined);
 		i++;
 	}
-	free(path);
+	free_argv(path);
 	return (NULL);
+}
+
+char	*find_command_path(t_condition *condition, char *command)
+{
+	char	**path;
+
+	if (command[0] == '\0')
+		return (ft_strdup(""));
+	path = ft_split(take_env_value(condition, "PATH"), ':');
+	if (!path)
+		path = ft_split(get_item_value(condition->environ, "PWD"), ':');
+	return (search_can_access_path(path, command));
 }

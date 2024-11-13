@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yooshima <yooshima@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:57:32 by yooshima          #+#    #+#             */
-/*   Updated: 2024/05/02 13:53:35 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 03:14:25 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,3 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 	}
 	return (0);
 }
-
-//#include <string.h>
-//
-// int main(void)
-// {
-// 	// char s1[] = "abcd";
-// 	// char s2[] = "\200";
-// 	long long i1[] = { 1, 2, 3, 4};
-// 	long long i2[] = { 1, 2, 3000033333300000000, 4};
-// 	size_t len = sizeof(i1);
-// 	printf("%d\n", memcmp(i1, i2, len));
-// 	printf("%d\n", ft_memcmp(i1, i2, len));
-
-// }

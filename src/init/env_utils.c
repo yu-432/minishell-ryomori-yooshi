@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   add_env_util.c                                     :+:      :+:    :+:   */
+/*   env_util.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 23:57:06 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:07 by yooshima         ###   ########.fr       */
+/*   Created: 2024/11/13 01:36:49 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/13 01:36:51 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include "../../header/init.h"
 #include "../../libft/libft.h"
 
-t_item *search_dup_item(t_condition *condition, char *key)
+t_item	*search_dup_item(t_condition *condition, char *key)
 {
-	t_item *cur;
+	t_item	*cur;
 
 	if (!condition->environ)
 		return (NULL);
@@ -31,9 +31,9 @@ t_item *search_dup_item(t_condition *condition, char *key)
 	return (NULL);
 }
 
-t_item *find_tail(t_item *head)
+t_item	*find_tail(t_item *head)
 {
-	t_item *tail;
+	t_item	*tail;
 
 	tail = head;
 	while (tail)
@@ -42,12 +42,12 @@ t_item *find_tail(t_item *head)
 			break ;
 		tail = tail->next;
 	}
-	return(tail);
+	return (tail);
 }
 
-t_item *touch_t_item()
+t_item	*touch_t_item(void)
 {
-	t_item *item;
+	t_item	*item;
 
 	item = ft_calloc(1, sizeof(t_item));
 	if (!item)

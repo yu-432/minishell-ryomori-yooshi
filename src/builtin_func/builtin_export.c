@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:31 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:32 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 02:23:45 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@
 #include "../../header/builtin_func.h"
 #include "../../header/print.h"
 
-bool	is_envname(char c)
+static bool	is_envname(char c)
 {
 	if (ft_isalnum(c) || c == '_')
 		return (true);
 	return (false);
 }
 
-char	*split_key(t_condition *condition, char *argv)
+static char	*split_key(t_condition *condition, char *argv)
 {
 	int		i;
 	char	*key;
@@ -44,7 +44,7 @@ char	*split_key(t_condition *condition, char *argv)
 	return (key);
 }
 
-char	*split_value(char *argv)
+static char	*split_value(char *argv)
 {
 	char	*equal;
 
@@ -54,7 +54,7 @@ char	*split_value(char *argv)
 	return (ft_substr(equal, 1, ft_strlen(argv) - (equal - argv)));
 }
 
-bool	split_argv(t_condition *condition, char *argv, char **key_value)
+static bool	split_argv(t_condition *condition, char *argv, char **key_value)
 {
 	key_value[0] = split_key(condition, argv);
 	if (!key_value[0])

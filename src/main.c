@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:58:05 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:21:40 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 06:45:15 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "../header/print.h"
 #include "../header/execution.h"
 
-sig_atomic_t	g_sig = 0;
+volatile sig_atomic_t	g_sig = 0;
 
 char	*read_command_line(void)
 {
@@ -62,8 +62,8 @@ void	shell_loop(t_condition *condition)
 			continue ;
 		}
 		tokenized = lexer(condition, line);
-		run_command(condition, tokenized);
 		free(line);
+		run_command(condition, tokenized);
 	}
 	return ;
 }

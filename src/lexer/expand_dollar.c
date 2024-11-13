@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:19 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:59:42 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 10:35:37 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,15 @@ static bool	init_env_value_new(char **new, char **env_value)
 	return (true);
 }
 
+static bool	append_env_value(t_token *token, char **new, char *env_value, int i)
+{
+	if (!ft_strjoin_free(new, env_value))
+		return (false);
+	if (token->token[i + 1] == '?')
+		free(env_value);
+	return (true);
+}
+
 static bool	replace_env(t_token *token, char *env_value, int env_len)
 {
 	char	*new;
@@ -39,8 +48,7 @@ static bool	replace_env(t_token *token, char *env_value, int env_len)
 	{
 		if (token->token[i] == '$')
 		{
-			if (!ft_strjoin_free(&new, env_value))
-				return (false);
+			append_env_value(token, &new, env_value, i);
 			i += env_len;
 			if (!ft_strjoin_free(&new, token->token + i + 1))
 				return (free(new), false);
@@ -70,8 +78,8 @@ static bool	handle_dollar(t_condition *condition, t_token *tokenized, \
 	}
 	if (!replace_env(tokenized, find_env(condition, info->env_key), \
 			ft_strlen(info->env_key)))
-		return (false);
-	return (true);
+		return (free(info->env_key), false);
+	return (free(info->env_key), true);
 }
 
 bool	expand_dollar(t_condition *condition, t_token *tokenized)

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:12 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:57:14 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 02:04:19 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	free_environ(t_item *environ)
 	}
 }
 
-bool	get_environ(t_condition *condition, char **envp)
+static bool	get_environ(t_condition *condition, char **envp)
 {
 	int	i;
 

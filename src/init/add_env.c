@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:09 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:28:59 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 01:36:31 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool	insert_env(t_condition *condition, char *key, char *value)
 	return (true);
 }
 
-static void replace_env(t_item *dup_key_node, char *key, char *value)
+static void	replace_env(t_item *dup_key_node, char *key, char *value)
 {
 	free(key);
 	free(dup_key_node->value);
@@ -51,7 +51,7 @@ bool	add_env(t_condition *condition, char *env_str)
 	if (!equal)
 		return (false);
 	key = ft_substr(env_str, 0, equal - env_str);
-	if(!key)
+	if (!key)
 		return (false);
 	value = ft_strdup(equal + 1);
 	if (!value)
