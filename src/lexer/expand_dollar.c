@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:19 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 10:35:37 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/13 14:11:32 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,16 @@ static bool	replace_env(t_token *token, char *env_value, int env_len)
 		{
 			append_env_value(token, &new, env_value, i);
 			i += env_len;
-			if (!ft_strjoin_free(&new, token->token + i + 1))
+			if ((token->token[i]) != '\0' && !ft_strjoin_free(&new, \
+					token->token + i + 1))
 				return (free(new), false);
 			break ;
 		}
 		else
+		{
 			if (!append_char(&new, token->token[i++]))
 				return (free(new), false);
+		}
 	}
 	free(token->token);
 	token->token = new;
