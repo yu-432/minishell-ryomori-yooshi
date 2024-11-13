@@ -37,7 +37,7 @@ int	update_item_value(t_condition *cond, t_item *item, const char *cwd)
 	char	*tmp;
 
 	tmp = ft_strdup(cwd);
-	if (item->value == NULL)
+	if (tmp == NULL)
 		return (put_cd_error(cond, NULL, "malloc"), 1);
 	free(item->value);
 	item->value = tmp;
@@ -77,7 +77,11 @@ int	move_path(int option, t_condition cond)
 
 	env_path = NULL;
 	if (option == MOVE_TO_HOME)
+	{
 		env_path = getenv("HOME");
+		if (!env_path)
+			return (1);
+	}
 	else if (option == MOVE_TO_OLDPWD)
 	{
 		env_path = get_item_value(cond.environ, "OLDPWD");
