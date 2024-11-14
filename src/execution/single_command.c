@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:57 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 13:53:36 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 21:15:45 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	handle_single_builtin_command(t_condition *condition, t_node *node)
 	return (EXIT_SUCCESS);
 }
 
-static void	wait_child_status(t_condition *condition, pid_t pid)
+void	wait_child_status(t_condition *condition, pid_t pid)
 {
 	int	status;
 
@@ -57,8 +57,6 @@ int	execute_single_command(t_condition *condition, t_node *node)
 	pid_t	pid;
 
 	setup_ignore_signal();
-	if (!exec_heredoc(condition, node))
-		return (false);
 	if (is_builtin(node->argv[0]))
 		return (handle_single_builtin_command(condition, node));
 	pid = fork();
@@ -68,9 +66,9 @@ int	execute_single_command(t_condition *condition, t_node *node)
 	{
 		setup_child_signal();
 		execute(condition, node);
-		exit(EXIT_FAILURE);
 	}
 	wait_child_status(condition, pid);
 	setup_parent_signal();
+	close_redirect_fd(node);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:38 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:47:15 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 21:20:32 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ bool	parent_process(t_condition *condition, t_node *node, \
 	if (info->keep_fd != -2)
 		wrap_close(info->keep_fd);
 	info->keep_fd = fds[IN];
+	close_redirect_fd(node);
 	(void)condition;
-	(void)node;
-	(void)info;
 	return (true);
 }
 

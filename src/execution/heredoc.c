@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:13 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 09:55:47 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 00:09:08 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,35 @@ static void	heredoc_child_process(char *delimiter, int fds[2])
 {
 	char	*line;
 	int		line_count;
+	int		read_status;
 
 	setup_heredoc_signal();
 	wrap_close(fds[IN]);
 	line_count = 0;
+	read_status = 0;
+	line = NULL;
 	while (true)
 	{
 		ft_putstr_fd(HEREDOC_PROMPT, STDERR_FILENO);
-		line = get_line(STDIN_FILENO);
-		if (*line == '\0' || g_sig == SIGINT)
+		line = get_line(STDIN_FILENO, &read_status);
+		if (g_sig == SIGINT)
+		{
+			write(STDERR_FILENO, "\n", 1);
+			free(line);
+			wrap_close(fds[OUT]);
+			exit(130);
+		}
+		if (read_status == INPUT_EOF)
 		{
 			free(line);
-			if (g_sig == SIGINT)
-				exit(1);
+			wrap_close(fds[OUT]);
 			put_heredoc_warning(line_count, delimiter);
-			break ;
+			exit(EXIT_SUCCESS);
 		}
 		if (!ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1))
 		{
 			free(line);
+			wrap_close(fds[OUT]);
 			break ;
 		}
 		ft_putstr_fd(line, fds[OUT]);
@@ -46,33 +56,31 @@ static void	heredoc_child_process(char *delimiter, int fds[2])
 		free(line);
 		line_count++;
 	}
-	wrap_close(fds[OUT]);
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 static bool	heredoc_parent_process(t_condition *condition, t_node *node, \
 									int fds[2], int pid)
 {
-	int	status;
-
-	waitpid(pid, &status, 0);
-	wrap_close(fds[OUT]);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-	{
-		wrap_close(fds[IN]);
-		return (set_exit_status_by_signal(status), false);
-	}
-	node->fd_in = fds[IN];
+	wait_child_status(condition, pid);
 	setup_parent_signal();
+	if (condition->exit_status)
+	{
+		wrap_double_close(fds[IN], fds[OUT]);
+		return (false);
+	}
+	wrap_close(fds[OUT]);
+	node->fd_in = fds[IN];
 	(void)condition;
 	return (true);
 }
 
-static bool	heredoc(t_condition *condition, t_node *node, char *delimiter)
+static bool	setup_heredoc(t_condition *condition, t_node *node, int i)
 {
 	int		fds[2];
 	pid_t	pid;
 
+	reset_fd(&node->fd_in);
 	if (pipe(fds) == -1)
 	{
 		put_error(strerror(errno));
@@ -86,24 +94,12 @@ static bool	heredoc(t_condition *condition, t_node *node, char *delimiter)
 		return (put_error(strerror(errno)), false);
 	}
 	else if (!pid)
-		heredoc_child_process(delimiter, fds);
-	else
-		if (!heredoc_parent_process(condition, node, fds, pid))
-			return (false);
-	return (true);
-}
-
-static bool	redirect_heredoc(t_condition *condition, t_node *node, int i)
-{
-	reset_fd(&node->fd_in);
-	if (!node->argv[i + 1])
 	{
-		put_error("syntax error near unexpected token `newline'");
-		return (false);
+		close_prev_node_fd(node);
+		heredoc_child_process(node->argv[i + 1], fds);
 	}
-	if (!heredoc(condition, node, node->argv[i + 1]))
+	if (!heredoc_parent_process(condition, node, fds, pid))
 		return (false);
-	(void)condition;
 	return (true);
 }
 
@@ -118,7 +114,12 @@ bool	exec_heredoc(t_condition *condition, t_node *node)
 			break ;
 		if (is_heredoc(node->argv[i]))
 		{
-			if (!redirect_heredoc(condition, node, i))
+			if (!node->argv[i + 1])
+			{
+				put_error("syntax error near unexpected token `newline'");
+				return (false);
+			}
+			if (!setup_heredoc(condition, node, i))
 				return (false);
 			i++;
 		}

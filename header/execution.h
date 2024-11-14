@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:28 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 10:09:50 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 23:42:48 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,14 @@
 # include <fcntl.h>
 
 # define HEREDOC_PROMPT "> "
-# define IN 0
-# define OUT 1
-# define ERR 2
+# define INPUT_EOF 1
+
+typedef enum e_std_fd
+{
+	IN,
+	OUT,
+	ERR
+}	t_std_fd;
 
 typedef enum e_node_kind
 {
@@ -69,6 +74,7 @@ void	free_argv(char **argv);
 
 //single_command
 int		execute_single_command(t_condition *condition, t_node *node);
+void	wait_child_status(t_condition *condition, pid_t pid);
 
 //multi_command
 bool	execute_pipeline_cmd(t_condition *condition, t_node *node, \
@@ -89,7 +95,7 @@ bool	interpret_redirect(t_condition *condition, t_node *node);
 
 //heredoc
 bool	exec_heredoc(t_condition *condition, t_node *node);
-char	*get_line(int fd);
+char	*get_line(int fd, int *input_status);
 
 //fd_manager
 void	reset_fd(int *fd);
@@ -98,6 +104,8 @@ void	wrap_double_close(int fd1, int fd2);
 bool	set_redirect_fd(t_node *node);
 void	storage_fd(int *keep_fds);
 bool	restore_fd(int *keep_fds);
+void	close_child_process_fd(t_node *node);
+void close_prev_node_fd(t_node *node);
 
 //node
 t_node	*make_node(t_condition *condition, t_token *token_list);

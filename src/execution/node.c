@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:28 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 12:19:59 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 23:05:16 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,10 @@ t_node	*make_node(t_condition *condition, t_token *token_list)
 			return (NULL);
 		}
 		add_kind_info(current->next);
-		current->next->prev = current;
+		if (current == &head)
+			current->next->prev = NULL;
+		else
+			current->next->prev = current;
 	}
 	current = head.next;
 	return (head.next);
