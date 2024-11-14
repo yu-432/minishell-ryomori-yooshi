@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:50 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 10:57:12 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 13:52:19 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,15 @@ int	count_cmd_arg(t_node *node)
 	i = 0;
 	while (node->argv[i])
 	{
-		if (!is_redirect(node->argv[i]) && !is_heredoc(node->argv[i]))
+		if (!is_redirect(node->argv[i]) && !is_heredoc(node->argv[i]) \
+			&& node->argv[i][0] != '\0')
 			count++;
-		else
+		else if (is_heredoc(node->argv[i]))
 			count--;
 		i++;
 	}
+	if (count < 0)
+		count = 0;
 	return (count);
 }
 
