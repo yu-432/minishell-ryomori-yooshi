@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:50 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 12:17:48 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 21:15:42 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,31 @@ static bool	init_exec_info(t_exec_info *info, t_node *node)
 	return (true);
 }
 
+static bool process_heredoc(t_condition *condition, t_node *node)
+{
+	t_node	*current;
+
+	current = node;
+	while (current)
+	{
+		if (current->kind == NODE_CMD)
+		{
+			if (!exec_heredoc(condition, current))
+				return (false);
+		}
+		current = current->next;
+	}
+	return (true);
+}
+
 static bool	exec_command(t_condition *condition, t_node *node)
 {
 	t_node		*current;
 	t_exec_info	info;
 
 	condition->exit_status = 0;
+	if (!process_heredoc(condition, node))
+		return (false);
 	if (node->next == NULL && node->argv[0] != NULL)
 		return (execute_single_command(condition, node), true);
 	current = node;
@@ -57,7 +76,6 @@ static bool	exec_command(t_condition *condition, t_node *node)
 	{
 		if (current->kind == NODE_CMD)
 		{
-			exec_heredoc(condition, node);
 			if (!execute_pipeline_cmd(condition, current, &info))
 				return (false);
 		}

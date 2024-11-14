@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:21 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 03:57:04 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 22:31:55 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ static void	wait_signal(t_condition *condition, t_exec_info *info)
 pid_t	execute_last_pipeline_cmd(t_condition *condition, t_node *node, \
 									t_exec_info *info)
 {
-	if (!exec_heredoc(condition, node))
-		return (false);
 	setup_ignore_signal();
 	info->pid[info->executed_count] = fork();
 	if (info->pid[info->executed_count] == -1)
@@ -50,11 +48,11 @@ pid_t	execute_last_pipeline_cmd(t_condition *condition, t_node *node, \
 		setup_child_signal();
 		wrap_dup2(info->keep_fd, STDIN_FILENO);
 		wrap_close(info->keep_fd);
-		if (!execute(condition, node))
-			exit(EXIT_SUCCESS);
+		execute(condition, node);
 		exit(EXIT_FAILURE);
 	}
 	wrap_close(info->keep_fd);
+	close_redirect_fd(node);
 	wait_signal(condition, info);
 	setup_parent_signal();
 	return (0);
@@ -73,7 +71,6 @@ bool	execute_pipeline_cmd(t_condition *condition, t_node *node, \
 	if (!info->pid[info->executed_count])
 		child_process(condition, node, info, fds);
 	parent_process(condition, node, info, fds);
-	close_redirect_fd(node);
 	info->executed_count++;
 	return (true);
 }

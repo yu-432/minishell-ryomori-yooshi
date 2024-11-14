@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 13:41:51 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 22:33:50 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,13 @@ static void	path_check(t_condition *condition, t_node *node, char *path)
 	}
 }
 
+void	free_close_exit(t_condition *condition, t_node *node, int exit_status)
+{
+	free_node(node);
+	free_argv(condition->envp);
+	exit(exit_status);
+}
+
 int	execute(t_condition *condition, t_node *node)
 {
 	char	*path;
@@ -103,8 +110,12 @@ int	execute(t_condition *condition, t_node *node)
 	if (!interpret_redirect(condition, node))
 		exit(EXIT_FAILURE);
 	if (node->argv[0] == NULL)
+	{
+		close_child_process_fd(node);
 		exit(EXIT_SUCCESS);
+	}
 	set_redirect_fd(node);
+	close_child_process_fd(node);
 	make_envp(condition);
 	if (is_builtin(node->argv[0]))
 	{
@@ -122,3 +133,4 @@ int	execute(t_condition *condition, t_node *node)
 	perror(": ");
 	exit(126);
 }
+
