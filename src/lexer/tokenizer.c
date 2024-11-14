@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:47 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:08:54 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 15:15:30 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static int	count_word_len(char *line)
 			quote = line[count++];
 			while (line[count] && line[count] != quote)
 				count++;
+			if (!line[count])
+				return (count);
 			count++;
 		}
 		else
