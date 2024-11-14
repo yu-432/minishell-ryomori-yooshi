@@ -37,7 +37,7 @@ int	update_item_value(t_condition *cond, t_item *item, const char *cwd)
 	char	*tmp;
 
 	tmp = ft_strdup(cwd);
-	if (tmp == NULL)
+	if (item->value == NULL)
 		return (put_cd_error(cond, NULL, "malloc"), 1);
 	free(item->value);
 	item->value = tmp;
@@ -77,11 +77,7 @@ int	move_path(int option, t_condition cond)
 
 	env_path = NULL;
 	if (option == MOVE_TO_HOME)
-	{
 		env_path = getenv("HOME");
-		if (!env_path)
-			return (1);
-	}
 	else if (option == MOVE_TO_OLDPWD)
 	{
 		env_path = get_item_value(cond.environ, "OLDPWD");
@@ -96,7 +92,7 @@ int	builtin_cd(t_condition *cond, char **args)
 	int		judge;
 	char	cwd[PATH_MAX];
 
-	if (args[2])
+	if (count_cd_arg(args) > 2)
 		return (put_cd_error(cond, "too many arguments", NULL), 1);
 	if (!args[1] || !ft_strncmp(args[1], "~", 2))
 		judge = move_path(MOVE_TO_HOME, *cond);

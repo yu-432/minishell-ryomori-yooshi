@@ -59,3 +59,13 @@ int	update_cwd(t_condition *cond, char *newcwd)
 	}
 	return (0);
 }
+
+int	count_cd_arg(char **args)
+{
+	int	count;
+
+	count = 0;
+	while (args[count])
+		count++;
+	return (count);
+}
