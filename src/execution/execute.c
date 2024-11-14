@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 11:14:41 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 13:41:51 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ static void	path_check(t_condition *condition, t_node *node, char *path)
 		exit_status = 0;
 	if (exit_status != -1)
 	{
+		free(path);
 		free_node(node);
 		free_argv(condition->envp);
 		exit(exit_status);
@@ -101,6 +102,8 @@ int	execute(t_condition *condition, t_node *node)
 
 	if (!interpret_redirect(condition, node))
 		exit(EXIT_FAILURE);
+	if (node->argv[0] == NULL)
+		exit(EXIT_SUCCESS);
 	set_redirect_fd(node);
 	make_envp(condition);
 	if (is_builtin(node->argv[0]))

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:37 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:18:54 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 10:39:31 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ bool	append_char(char **str, char c);
 
 //expand_dollar
 bool	expand_dollar(t_condition *condition, t_token *tokenized);
-int		count_envname_len(t_token *tokenized, int *i);
 char	*find_env(t_condition *condition, char *env_key);
 void	update_quote_status(t_lexer *info, char c);
 bool	ft_strjoin_free(char **s1, char *s2);

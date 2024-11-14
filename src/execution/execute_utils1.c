@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:45 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 02:49:16 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 13:39:11 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 
 bool	is_builtin(char *cmd)
 {
+	if (!cmd || *cmd == '\0')
+		return (false);
 	if (ft_strncmp(cmd, "echo", 5) == 0 || \
 		ft_strncmp(cmd, "cd", 3) == 0 || \
 		ft_strncmp(cmd, "pwd", 4) == 0 || \

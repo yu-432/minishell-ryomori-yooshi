@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:11 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:12 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/14 14:34:18 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	builtin_echo(t_condition *condition, char **argv)
 	bool	is_newline;
 
 	i = 1;
+	if (argv[1] == NULL)
+		return (ft_putstr_fd("\n", STDOUT_FILENO));
 	is_newline = true;
 	if (echo_n_option(argv[1]))
 	{
