@@ -92,7 +92,7 @@ int	builtin_cd(t_condition *cond, char **args)
 	int		judge;
 	char	cwd[PATH_MAX];
 
-	if (args[2])
+	if (count_cd_arg(args) > 2)
 		return (put_cd_error(cond, "too many arguments", NULL), 1);
 	if (!args[1] || !ft_strncmp(args[1], "~", 2))
 		judge = move_path(MOVE_TO_HOME, *cond);

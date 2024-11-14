@@ -35,6 +35,7 @@ int	update_cwd(t_condition *cond, char *newcwd)
 {
 	t_item	*item;
 	t_item	*old_item;
+	char	*tmp;
 
 	item = cond->environ;
 	old_item = NULL;
@@ -49,10 +50,22 @@ int	update_cwd(t_condition *cond, char *newcwd)
 	}
 	if (old_item)
 	{
-		free(old_item->value);
-		old_item->value = ft_strdup(newcwd);
-		if (old_item->value == NULL)
+		tmp = ft_strdup(newcwd);
+		if (tmp == NULL)
 			return (put_cd_error(cond, NULL, "malloc"), 1);
+		if (old_item->value != NULL)
+			free(old_item->value);
+		old_item->value = tmp;
 	}
 	return (0);
+}
+
+int	count_cd_arg(char **args)
+{
+	int	count;
+
+	count = 0;
+	while (args[count])
+		count++;
+	return (count);
 }
