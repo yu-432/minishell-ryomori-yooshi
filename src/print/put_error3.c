@@ -13,6 +13,7 @@
 #include "../../libft/libft.h"
 #include "../../header/condition.h"
 #include "../../header/print.h"
+#include "../../header/execution.h"
 
 void	numeric_argument_error(char *argment)
 {
@@ -48,3 +49,12 @@ int	no_file_error(char *str)
 	ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 	return (127);
 }
+
+void	execve_error(t_node *node)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(node->argv[0], STDERR_FILENO);
+	perror(": ");
+}
+
+void	execve_free
