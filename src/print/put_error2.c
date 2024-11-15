@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:55 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:13:08 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 12:00:21 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,9 @@ void	put_unclosed_quote_error(char quote)
 	ft_putstr_fd("'\n", 2);
 }
 
-void	put_heredoc_warning(int line_count, char *delimiter)
+void	put_heredoc_warning(char *delimiter)
 {
-	ft_putstr_fd("warning: here-document at line ", STDERR_FILENO);
-	ft_putnbr_fd(line_count, STDERR_FILENO);
+	ft_putstr_fd("warning: here-document", STDERR_FILENO);
 	ft_putstr_fd(" delimited by end-of-file (wanted `", STDERR_FILENO);
 	ft_putstr_fd(delimiter, STDERR_FILENO);
 	ft_putstr_fd("')\n", STDERR_FILENO);

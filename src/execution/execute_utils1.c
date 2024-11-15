@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:45 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 13:39:11 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 10:27:41 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,6 @@ bool	is_executable(char *path)
 	return (true);
 }
 
-bool	is_path(char *cmd)
-{
-	if (ft_strchr(cmd, '/'))
-		return (true);
-	return (false);
-}
-
 int	count_environ(t_item *environ)
 {
 	int	count;
@@ -80,5 +73,26 @@ int	count_environ(t_item *environ)
 		count++;
 		environ = environ->next;
 	}
+	return (count);
+}
+
+int	count_cmd_arg(t_node *node)
+{
+	int	count;
+	int	i;
+
+	count = 0;
+	i = 0;
+	while (node->argv[i])
+	{
+		if (!is_redirect(node->argv[i]) && !is_heredoc(node->argv[i]) \
+			&& node->argv[i][0] != '\0')
+			count++;
+		else if (is_heredoc(node->argv[i]))
+			count--;
+		i++;
+	}
+	if (count < 0)
+		count = 0;
 	return (count);
 }

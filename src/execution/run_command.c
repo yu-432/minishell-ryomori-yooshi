@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:50 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 21:15:42 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 10:37:45 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static bool	init_exec_info(t_exec_info *info, t_node *node)
 	return (true);
 }
 
-static bool process_heredoc(t_condition *condition, t_node *node)
+static bool	process_heredoc(t_condition *condition, t_node *node)
 {
 	t_node	*current;
 

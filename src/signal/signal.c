@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:59 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 16:07:38 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 10:41:15 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,6 @@
 #include "../../header/execution.h"
 #include "../../libft/libft.h"
 #include <sys/ioctl.h>
-
-void	handler(int signum)
-{
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-	g_sig = signum;
-}
 
 void	setup_ignore_signal(void)
 {
@@ -43,11 +34,6 @@ void	setup_parent_signal(void)
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
-}
-
-void heredoc_handler(int signum)
-{
-	g_sig = signum;
 }
 
 void	setup_heredoc_signal(void)

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:28 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 23:42:48 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 12:03:29 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,13 @@ bool	is_builtin(char *cmd);
 bool	is_kind_redirect(t_token_kind kind);
 bool	is_executable(char *path);
 bool	is_path(char *cmd);
+char	*get_path(t_condition *condition, char *command);
 int		count_cmd_arg(t_node *node);
 int		count_environ(t_item *environ);
 char	*find_command_path(t_condition *condition, char *command);
 void	free_argv(char **argv);
+void	free_exit(t_condition *condition, t_node *node, char *path, \
+					int exit_status);
 
 //single_command
 int		execute_single_command(t_condition *condition, t_node *node);
@@ -96,6 +99,7 @@ bool	interpret_redirect(t_condition *condition, t_node *node);
 //heredoc
 bool	exec_heredoc(t_condition *condition, t_node *node);
 char	*get_line(int fd, int *input_status);
+void	heredoc_free_exit(char *line, int fd, int exit_status);
 
 //fd_manager
 void	reset_fd(int *fd);
@@ -105,7 +109,7 @@ bool	set_redirect_fd(t_node *node);
 void	storage_fd(int *keep_fds);
 bool	restore_fd(int *keep_fds);
 void	close_child_process_fd(t_node *node);
-void close_prev_node_fd(t_node *node);
+void	close_prev_node_fd(t_node *node);
 
 //node
 t_node	*make_node(t_condition *condition, t_token *token_list);

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 01:39:14 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 10:22:10 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 10:23:27 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,11 @@ int	no_file_error(char *str)
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 	return (127);
+}
+
+void	put_execve_error(char *path)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(path, STDERR_FILENO);
+	perror(": ");
 }

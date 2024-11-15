@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:13 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 00:09:08 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 12:03:20 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,47 +16,41 @@
 #include "../../header/execution.h"
 #include "../../header/print.h"
 
+static void	heredoc_check_status(char *line, char *delimiter, \
+									int read_status, int fd)
+{
+	if (g_sig == SIGINT)
+	{
+		write(STDERR_FILENO, "\n", 1);
+		heredoc_free_exit(line, fd, 130);
+	}
+	if (read_status == INPUT_EOF)
+	{
+		put_heredoc_warning(delimiter);
+		heredoc_free_exit(line, fd, EXIT_SUCCESS);
+	}
+	if (!ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1))
+		heredoc_free_exit(line, fd, EXIT_SUCCESS);
+}
+
 static void	heredoc_child_process(char *delimiter, int fds[2])
 {
 	char	*line;
-	int		line_count;
 	int		read_status;
 
 	setup_heredoc_signal();
 	wrap_close(fds[IN]);
-	line_count = 0;
 	read_status = 0;
 	line = NULL;
 	while (true)
 	{
 		ft_putstr_fd(HEREDOC_PROMPT, STDERR_FILENO);
 		line = get_line(STDIN_FILENO, &read_status);
-		if (g_sig == SIGINT)
-		{
-			write(STDERR_FILENO, "\n", 1);
-			free(line);
-			wrap_close(fds[OUT]);
-			exit(130);
-		}
-		if (read_status == INPUT_EOF)
-		{
-			free(line);
-			wrap_close(fds[OUT]);
-			put_heredoc_warning(line_count, delimiter);
-			exit(EXIT_SUCCESS);
-		}
-		if (!ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1))
-		{
-			free(line);
-			wrap_close(fds[OUT]);
-			break ;
-		}
+		heredoc_check_status(line, delimiter, read_status, fds[OUT]);
 		ft_putstr_fd(line, fds[OUT]);
 		ft_putstr_fd("\n", fds[OUT]);
 		free(line);
-		line_count++;
 	}
-	exit(EXIT_SUCCESS);
 }
 
 static bool	heredoc_parent_process(t_condition *condition, t_node *node, \

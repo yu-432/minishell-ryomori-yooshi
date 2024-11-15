@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 22:33:50 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 10:36:53 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,23 +96,16 @@ static void	path_check(t_condition *condition, t_node *node, char *path)
 	}
 }
 
-void	free_close_exit(t_condition *condition, t_node *node, int exit_status)
-{
-	free_node(node);
-	free_argv(condition->envp);
-	exit(exit_status);
-}
-
 int	execute(t_condition *condition, t_node *node)
 {
 	char	*path;
 
 	if (!interpret_redirect(condition, node))
-		exit(EXIT_FAILURE);
+		free_exit(NULL, node, NULL, EXIT_FAILURE);
 	if (node->argv[0] == NULL)
 	{
 		close_child_process_fd(node);
-		exit(EXIT_SUCCESS);
+		free_exit(NULL, node, NULL, EXIT_SUCCESS);
 	}
 	set_redirect_fd(node);
 	close_child_process_fd(node);
@@ -120,17 +113,12 @@ int	execute(t_condition *condition, t_node *node)
 	if (is_builtin(node->argv[0]))
 	{
 		execute_builtin(condition, node);
-		exit (EXIT_SUCCESS);
+		free_exit(condition, node, NULL, EXIT_SUCCESS);
 	}
-	if (is_path(node->argv[0]))
-		path = ft_strdup(node->argv[0]);
-	else
-		path = find_command_path(condition, node->argv[0]);
+	path = get_path(condition, node->argv[0]);
 	path_check(condition, node, path);
 	execve(path, node->argv, condition->envp);
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(node->argv[0], STDERR_FILENO);
-	perror(": ");
-	exit(126);
+	put_execve_error(path);
+	free_exit(condition, node, path, 126);
+	exit(EXIT_FAILURE);
 }
-
