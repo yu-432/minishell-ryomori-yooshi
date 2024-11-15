@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:04 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 23:44:15 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 10:38:03 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ void	reset_fd(int *fd)
 
 void	close_child_process_fd(t_node *node)
 {
-	t_node *temp;
+	t_node	*temp;
 
 	temp = node;
 	while (temp->prev)
 		temp = temp->prev;
-	while(temp)
+	while (temp)
 	{
 		close_redirect_fd(temp);
 		temp = temp->next;

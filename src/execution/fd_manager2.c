@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:07 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 23:42:39 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 10:36:23 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool	restore_fd(int *keep_fds)
 	return (true);
 }
 
-void close_prev_node_fd(t_node *node)
+void	close_prev_node_fd(t_node *node)
 {
 	t_node	*temp;
 

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:44 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 09:04:17 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 10:40:45 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,7 @@ void	handle_sigint(int signum);
 void	setup_ignore_signal(void);
 void	child_signal_handler(int signum);
 void	setup_heredoc_signal(void);
+void	handler(int signum);
+void	heredoc_handler(int signum);
 
 #endif

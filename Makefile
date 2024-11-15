@@ -10,8 +10,8 @@ SRCS		=	src/main.c \
 				\
 				src/execution/run_command.c src/execution/run_command_utils.c src/execution/single_command.c \
 				src/execution/multi_command.c src/execution/multi_command_process.c src/execution/execute.c \
-				src/execution/execute_utils1.c src/execution/execute_utils2.c src/execution/node.c \
-				src/execution/node_utils.c src/execution/redirect.c src/execution/redirect_interpret.c \
+				src/execution/execute_utils1.c src/execution/execute_utils2.c src/execution/execute_free.c \
+				src/execution/node.c src/execution/node_utils.c src/execution/redirect.c src/execution/redirect_interpret.c \
 				src/execution/heredoc.c src/execution/fd_manager1.c src/execution/fd_manager2.c \
 				src/execution/set_exit_status.c src/execution/wrapper.c src/execution/heredoc_utils.c\
 				\
@@ -22,7 +22,7 @@ SRCS		=	src/main.c \
 				\
 				src/print/put_error1.c src/print/put_error2.c src/print/put_error3.c \
 				\
-				src/signal/signal.c
+				src/signal/signal.c src/signal/signal_handler.c
 
 OBJS		= ${SRCS:.c=.o}
 

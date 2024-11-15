@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:50 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 20:09:16 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 10:31:40 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,41 +16,6 @@
 #include "../../libft/libft.h"
 #include "../../header/execution.h"
 #include "../../header/builtin_func.h"
-
-int	count_cmd_arg(t_node *node)
-{
-	int	count;
-	int	i;
-
-	count = 0;
-	i = 0;
-	while (node->argv[i])
-	{
-		if (!is_redirect(node->argv[i]) && !is_heredoc(node->argv[i]) \
-			&& node->argv[i][0] != '\0')
-			count++;
-		else if (is_heredoc(node->argv[i]))
-			count--;
-		i++;
-	}
-	if (count < 0)
-		count = 0;
-	return (count);
-}
-
-void	free_argv(char **argv)
-{
-	int	i;
-
-	i = 0;
-	while (argv[i])
-	{
-		free(argv[i]);
-		i++;
-	}
-	free(argv);
-	return ;
-}
 
 static char	*take_env_value(t_condition *condition, char *key)
 {
@@ -64,6 +29,13 @@ static char	*take_env_value(t_condition *condition, char *key)
 		current = current->next;
 	}
 	return (NULL);
+}
+
+bool	is_path(char *cmd)
+{
+	if (ft_strchr(cmd, '/'))
+		return (true);
+	return (false);
 }
 
 static char	*search_can_access_path(char **path, char *command)
@@ -100,4 +72,16 @@ char	*find_command_path(t_condition *condition, char *command)
 	if (!path)
 		path = ft_split(get_item_value(condition->environ, "PWD"), ':');
 	return (search_can_access_path(path, command));
+}
+
+	// if (is_path(node->argv[0]))
+	// 	path = ft_strdup(node->argv[0]);
+	// else
+	// 	path = find_command_path(condition, node->argv[0]);
+
+char	*get_path(t_condition *condition, char *command)
+{
+	if (is_path(command))
+		return (ft_strdup(command));
+	return (find_command_path(condition, command));
 }
