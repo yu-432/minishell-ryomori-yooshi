@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:34 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 13:52:37 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 17:03:56 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static char	**molding_argv(t_node *node)
 			j++;
 		if (!node->argv[j])
 			break ;
-		if (!is_redirect(node->argv[j]))
+		if (!is_redirect(node->argv[j]) && !is_heredoc(node->argv[j]))
 			res[i++] = ft_strdup(node->argv[j]);
 		else
 			j++;

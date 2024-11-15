@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:35 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:36 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 16:59:50 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	builtin_pwd(t_condition *cond, char **argv)
 	{
 		write(STDOUT_FILENO, pwd_path, ft_strlen(pwd_path));
 		write(STDOUT_FILENO, "\n", 1);
+		free(pwd_path);
 		return (0);
 	}
 	(void)argv;
