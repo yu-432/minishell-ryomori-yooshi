@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:19 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 14:09:05 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:14:23 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,16 @@ static bool	handle_dollar(t_condition *condition, t_token *tokenized, \
 	return (true);
 }
 
+static void	update_quote_status(char *quote, char c)
+{
+	if (*quote == 0)
+	{
+		*quote = c;
+	}
+	else if (*quote == c)
+		*quote = 0;
+}
+
 bool	expand_dollar(t_condition *condition, t_token *tokenized)
 {
 	int		i;
@@ -73,7 +83,7 @@ bool	expand_dollar(t_condition *condition, t_token *tokenized)
 	while (tokenized->token[i])
 	{
 		if (is_quote(tokenized->token[i]))
-			quote = tokenized->token[i];
+			update_quote_status(&quote, tokenized->token[i]);
 		if (quote != SINGLE_QUOTE && tokenized->token[i] == '$' && \
 				count_envname_len(tokenized->token, i + 1))
 			handle_dollar(condition, tokenized, &new, &i);
