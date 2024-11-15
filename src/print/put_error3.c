@@ -10,10 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../libft/libft.h"
+#include "../../header/lexer.h"
+#include "../../header/standard.h"
+#include "../../header/token.h"
 #include "../../header/condition.h"
-#include "../../header/print.h"
 #include "../../header/execution.h"
+#include "../../libft/libft.h"
+#include "../../header/print.h"
+
 
 void	numeric_argument_error(char *argment)
 {
@@ -56,5 +60,3 @@ void	execve_error(t_node *node)
 	ft_putstr_fd(node->argv[0], STDERR_FILENO);
 	perror(": ");
 }
-
-void	execve_free

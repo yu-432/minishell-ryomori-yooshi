@@ -19,6 +19,31 @@
 #include "../../header/signal.h"
 #include "../../header/print.h"
 
+static void	free_string_array(char **array)
+{
+	int	i;
+
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
+void	clean_execute_free(t_condition *condition, t_node *node, char *path)
+{
+	if (path)
+		free(path);
+	if (node && node->argv)
+		free_string_array(node->argv);
+	if (condition->envp)
+		free_string_array(condition->envp);
+}
+
 void	execute_builtin(t_condition *condition, t_node *node)
 {
 	if (ft_strncmp(node->argv[0], "echo", 5) == 0)
@@ -120,29 +145,4 @@ int	execute(t_condition *condition, t_node *node)
 	clean_execute_free(condition, node, path);
 	execve_error(node);
 	exit(126);
-}
-
-static void	free_string_array(char **array)
-{
-	int	i;
-
-	if (!array)
-		return ;
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
-}
-
-void	clean_execute_free(t_condition *condition, t_node *node, char *path)
-{
-	if (path)
-		free(path);
-	if (node && node->argv)
-		free_string_array(node->argv);
-	if (condition->envp)
-		free_string_array(condition->envp);
 }

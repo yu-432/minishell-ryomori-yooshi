@@ -13,6 +13,8 @@
 #ifndef PRINT_H
 # define PRINT_H
 
+#include "execution.h"
+
 void	put_error(char *str);
 void	put_syntax_error(char *str);
 void	put_tokenizer_error(char *str);
@@ -24,5 +26,7 @@ void	export_error(t_condition *cond, char *str, char *perr);
 void	put_export_error(t_condition *condition, char *argv);
 int		not_found_error(char *str);
 int		no_file_error(char *str);
+void	execve_error(t_node *node);
+
 
 #endif
