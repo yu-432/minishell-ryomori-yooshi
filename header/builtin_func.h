@@ -21,7 +21,6 @@
 typedef enum e_move_position
 {
 	MOVE_TO_HOME,
-	MOVE_TO_OLDPWD
 }	t_move_position;
 
 void	builtin_echo(t_condition *condition, char **argv);
@@ -36,7 +35,7 @@ int		builtin_exit(t_condition *condition, t_node *node);
 int		update_cwd(t_condition *cond, char *newcwd);
 char	*lst_getenv(t_item *item, char *key);
 void	put_cd_error(t_condition *cond, char *str, char *perr);
-int		move_path(int option, t_condition cond);
+int		move_path(int option);
 int		update_old_pwd(t_condition *cond);
 char	*get_item_value(t_item *item, char *key);
 int		update_item_value(t_condition *cond, t_item *item, const char *cwd);
