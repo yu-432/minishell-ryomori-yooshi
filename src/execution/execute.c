@@ -79,7 +79,18 @@ static void	path_check(t_condition *condition, t_node *node, char *path)
 	int	exit_status;
 
 	exit_status = -1;
-	if (!path)
+	if (ft_strncmp(node->argv[0], ".", 2) == 0)
+	{
+		ft_putstr_fd("minishell: .: filename argument required\n", STDERR_FILENO);
+		ft_putstr_fd(".: usage: . filename [arguments]\n", STDERR_FILENO);
+		exit_status = 2;
+	}
+	else if (ft_strncmp(node->argv[0], "..", 3) == 0)
+	{
+		ft_putstr_fd("minishell: ..: command not found\n", STDERR_FILENO);
+		exit_status = 127;
+	}
+	else if (!path)
 		exit_status = not_found_error(node->argv[0]);
 	else if (access(path, F_OK) != 0)
 		exit_status = no_file_error(node->argv[0]);

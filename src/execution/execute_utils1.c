@@ -45,7 +45,9 @@ bool	is_kind_redirect(t_token_kind kind)
 bool	is_executable(char *path)
 {
 	struct stat	st;
-
+	
+	if (strcmp(path, ".") == 0 || strcmp(path, "..") == 0)
+		return (false);
 	if (stat(path, &st))
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
