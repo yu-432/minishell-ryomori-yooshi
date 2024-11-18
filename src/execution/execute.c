@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 10:36:53 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/18 12:08:57 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ static void	path_check(t_condition *condition, t_node *node, char *path)
 	exit_status = -1;
 	if (!path)
 		exit_status = not_found_error(node->argv[0]);
+	else if (!ft_strncmp(path, ".", 2))
+		exit_status = filename_required_error(node->argv[0]);
 	else if (access(path, F_OK) != 0)
 		exit_status = no_file_error(node->argv[0]);
 	else if (!is_executable(path))

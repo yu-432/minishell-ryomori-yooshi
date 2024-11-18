@@ -20,7 +20,7 @@ SRCS		=	src/main.c \
 				src/builtin_func/builtin_exit_utils2.c src/builtin_func/builtin_export.c \
 				src/builtin_func/builtin_pwd.c src/builtin_func/builtin_unset.c\
 				\
-				src/print/put_error1.c src/print/put_error2.c src/print/put_error3.c \
+				src/print/put_error1.c src/print/put_error2.c src/print/put_error3.c src/print/put_error4.c \
 				\
 				src/signal/signal.c src/signal/signal_handler.c
 

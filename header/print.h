@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:41 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 12:00:27 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/18 12:09:14 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ void	put_export_error(t_condition *condition, char *argv);
 int		not_found_error(char *str);
 int		no_file_error(char *str);
 void	put_execve_error(char *path);
+int		filename_required_error(char *command);
 
 #endif

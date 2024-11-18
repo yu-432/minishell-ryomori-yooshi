@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:50 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 10:31:40 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/18 11:53:23 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,13 @@ char	*find_command_path(t_condition *condition, char *command)
 	return (search_can_access_path(path, command));
 }
 
-	// if (is_path(node->argv[0]))
-	// 	path = ft_strdup(node->argv[0]);
-	// else
-	// 	path = find_command_path(condition, node->argv[0]);
-
 char	*get_path(t_condition *condition, char *command)
 {
 	if (is_path(command))
 		return (ft_strdup(command));
+	else if (!ft_strncmp(command, ".", 2))
+		return (ft_strdup(command));
+	else if (!ft_strncmp(command, "..", 3))
+		return (NULL);
 	return (find_command_path(condition, command));
 }
