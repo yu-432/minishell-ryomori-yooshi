@@ -72,8 +72,8 @@ void	builtin_export(t_condition *condition, char **argv)
 	t_item	*dup_item;
 
 	argv++;
-	if (!*argv)
-		return (builtin_env(condition));
+	if (check_condition(condition, argv))
+		return ;
 	while (*argv)
 	{
 		if (!split_argv(condition, *argv, key_value))
