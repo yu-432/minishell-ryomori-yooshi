@@ -71,19 +71,13 @@ int	update_old_pwd(t_condition *cond)
 	return (0);
 }
 
-int	move_path(int option, t_condition cond)
+int	move_path(int option)
 {
 	char	*env_path;
 
 	env_path = NULL;
 	if (option == MOVE_TO_HOME)
 		env_path = getenv("HOME");
-	else if (option == MOVE_TO_OLDPWD)
-	{
-		env_path = get_item_value(cond.environ, "OLDPWD");
-		if (!env_path)
-			return (1);
-	}
 	return (chdir(env_path));
 }
 
@@ -94,19 +88,14 @@ int	builtin_cd(t_condition *cond, char **args)
 
 	if (count_cd_arg(args) > 2)
 		return (put_cd_error(cond, "too many arguments", NULL), 1);
-	if (!args[1] || !ft_strncmp(args[1], "~", 2))
-		judge = move_path(MOVE_TO_HOME, *cond);
-	else if (ft_strncmp(args[1], "-", 2) == 0)
-		judge = move_path(MOVE_TO_OLDPWD, *cond);
+	if (args[1] && (!ft_strncmp(args[1], "~", 2) || !ft_strncmp(args[1], "-", 2)))
+		return (put_cd_error(cond, "Out of subject", NULL), 1);
+	if (!args[1])
+		judge = move_path(MOVE_TO_HOME);
 	else
 		judge = chdir(args[1]);
 	if (judge != 0)
-	{
-		if (!args[1] || ft_strncmp(args[1], "-", 2) == 0)
-			return (put_cd_error(cond, "OLDPWD not found", NULL), 1);
-		else
-			return (put_cd_error(cond, NULL, "chdir"), 1);
-	}
+		return (put_cd_error(cond, NULL, "chdir"), 1);
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 		return (put_cd_error(cond, NULL, "getcwd"), 1);
 	update_old_pwd(cond);
