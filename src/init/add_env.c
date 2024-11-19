@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:09 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:36:31 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 09:52:17 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../../header/standard.h"
 #include "../../header/init.h"
 #include "../../libft/libft.h"
+#include "../../header/print.h"
 
 bool	insert_env(t_condition *condition, char *key, char *value)
 {
@@ -40,6 +41,26 @@ static void	replace_env(t_item *dup_key_node, char *key, char *value)
 	dup_key_node->value = value;
 }
 
+static void	increment_shelvl(char **value)
+{
+	int		shelvl;
+	char	*new_value;
+
+	shelvl = ft_atoi(*value);
+	shelvl++;
+	if (shelvl > 999)
+	{
+		put_error("minishell: warning: shell level (1000) too high,");
+		put_error(" resetting to 1");
+		shelvl = 1;
+	}
+	free(*value);
+	new_value = ft_itoa(shelvl);
+	if (!new_value)
+		return ;
+	*value = new_value;
+}
+
 bool	add_env(t_condition *condition, char *env_str)
 {
 	char	*equal;
@@ -54,6 +75,8 @@ bool	add_env(t_condition *condition, char *env_str)
 	if (!key)
 		return (false);
 	value = ft_strdup(equal + 1);
+	if (value && !ft_strncmp(key, "SHLVL", 6))
+		increment_shelvl(&value);
 	if (!value)
 		return (free(key), false);
 	dup_key_node = search_dup_item(condition, key);
