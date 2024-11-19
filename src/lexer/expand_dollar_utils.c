@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:16 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 14:35:47 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:59:06 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,5 @@ char	*find_env(t_condition *condition, char *env_key)
 			return (ft_strdup(temp->value));
 		temp = temp->next;
 	}
-	(void)condition;
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:13 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 12:03:20 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:32:48 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "../../header/signal.h"
 #include "../../header/execution.h"
 #include "../../header/print.h"
+#include "../../header/lexer.h"
 
 static void	heredoc_check_status(char *line, char *delimiter, \
 									int read_status, int fd)
@@ -33,7 +34,8 @@ static void	heredoc_check_status(char *line, char *delimiter, \
 		heredoc_free_exit(line, fd, EXIT_SUCCESS);
 }
 
-static void	heredoc_child_process(char *delimiter, int fds[2])
+static void	heredoc_child_process(t_condition *condition, char *delimiter, \
+									int fds[2])
 {
 	char	*line;
 	int		read_status;
@@ -46,6 +48,8 @@ static void	heredoc_child_process(char *delimiter, int fds[2])
 	{
 		ft_putstr_fd(HEREDOC_PROMPT, STDERR_FILENO);
 		line = get_line(STDIN_FILENO, &read_status);
+		if (ft_strchr(line, '$'))
+			expand_heredoc_dollar(condition, &line);
 		heredoc_check_status(line, delimiter, read_status, fds[OUT]);
 		ft_putstr_fd(line, fds[OUT]);
 		ft_putstr_fd("\n", fds[OUT]);
@@ -90,7 +94,7 @@ static bool	setup_heredoc(t_condition *condition, t_node *node, int i)
 	else if (!pid)
 	{
 		close_prev_node_fd(node);
-		heredoc_child_process(node->argv[i + 1], fds);
+		heredoc_child_process(condition, node->argv[i + 1], fds);
 	}
 	if (!heredoc_parent_process(condition, node, fds, pid))
 		return (false);

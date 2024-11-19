@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:19 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 15:14:23 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:25:02 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ static int	count_envname_len(char *token, int i)
 	if (token[i] == '?')
 		len++;
 	else
-		while (ft_isalnum(token[i + len]) || token[i + len] == '_')
+		while (token[i] && (ft_isalnum(token[i + len]) || \
+					token[i + len] == '_'))
 			len++;
 	return (len);
 }
@@ -35,14 +36,14 @@ static char	*split_keyname(char *token, int i)
 	return (ft_substr(token, i, len));
 }
 
-static bool	handle_dollar(t_condition *condition, t_token *tokenized, \
+bool	handle_dollar(t_condition *condition, char *token, \
 							char **new, int *i)
 {
 	char	*env_key;
 	char	*env_value;
 
 	(*i)++;
-	env_key = split_keyname(tokenized->token, *i);
+	env_key = split_keyname(token, *i);
 	if (!env_key)
 		return (false);
 	(*i) += ft_strlen(env_key);
@@ -51,8 +52,9 @@ static bool	handle_dollar(t_condition *condition, t_token *tokenized, \
 	env_value = find_env(condition, env_key);
 	free(env_key);
 	if (!env_value)
-		return (false);
-	ft_strjoin_free(new, env_value);
+		env_value = ft_strdup("");
+	if (!ft_strjoin_free(new, env_value))
+		return (free(*new), free(env_value), false);
 	free(env_value);
 	if (!*new)
 		return (false);
@@ -86,7 +88,7 @@ bool	expand_dollar(t_condition *condition, t_token *tokenized)
 			update_quote_status(&quote, tokenized->token[i]);
 		if (quote != SINGLE_QUOTE && tokenized->token[i] == '$' && \
 				count_envname_len(tokenized->token, i + 1))
-			handle_dollar(condition, tokenized, &new, &i);
+			handle_dollar(condition, tokenized->token, &new, &i);
 		else
 		{
 			append_char(&new, tokenized->token[i]);
