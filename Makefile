@@ -18,7 +18,7 @@ SRCS		=	src/main.c \
 				src/builtin_func/builtin_cd.c src/builtin_func/builtin_cd_utils.c src/builtin_func/builtin_echo.c \
 				src/builtin_func/builtin_env.c src/builtin_func/builtin_exit.c src/builtin_func/builtin_exit_utils1.c \
 				src/builtin_func/builtin_exit_utils2.c src/builtin_func/builtin_export.c \
-				src/builtin_func/builtin_pwd.c src/builtin_func/builtin_unset.c\
+				src/builtin_func/builtin_pwd.c src/builtin_func/builtin_unset.c src/builtin_func/builtin_export_utils.c\
 				\
 				src/print/put_error1.c src/print/put_error2.c src/print/put_error3.c src/print/put_error4.c \
 				\

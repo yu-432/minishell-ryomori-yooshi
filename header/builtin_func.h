@@ -53,5 +53,8 @@ long	over_256(long num);
 long	negative_num(long num);
 long	exit_status_num(long num);
 bool	is_check_num(char *str);
+//export_utils
+void	export_env(t_condition *condition);
+bool	check_condition(t_condition *condition, char **argv);
 
 #endif
