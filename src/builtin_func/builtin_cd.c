@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:06 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 14:33:32 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:46:32 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ int	builtin_cd(t_condition *cond, char **args)
 
 	if (count_cd_arg(args) > 2)
 		return (put_cd_error(cond, "too many arguments", NULL), 1);
-	if (args[1] && (!ft_strncmp(args[1], "~", 2) || !ft_strncmp(args[1], "-", 2)))
+	if (args[1] && (!ft_strncmp(args[1], "~", 2) || \
+			!ft_strncmp(args[1], "-", 2)))
 		return (put_cd_error(cond, "Out of subject", NULL), 1);
 	if (!args[1])
 		judge = move_path(MOVE_TO_HOME);
