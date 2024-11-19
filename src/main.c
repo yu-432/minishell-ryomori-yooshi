@@ -6,18 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:58:05 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 06:45:15 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:23:10 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/standard.h"
-#include "../header/condition.h"
-#include "../header/lexer.h"
-#include "../header/signal.h" 
-#include "../header/init.h"
-#include "../libft/libft.h"
-#include "../header/print.h"
-#include "../header/execution.h"
+#include "../header/main.h"
 
 volatile sig_atomic_t	g_sig = 0;
 
@@ -42,7 +35,6 @@ void	init_condition(t_condition *condition)
 		condition->exit_status = g_sig + 128;
 		g_sig = 0;
 	}
-	(void)condition;
 }
 
 void	shell_loop(t_condition *condition)
@@ -72,11 +64,12 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_condition	condition;
 
+	if (argc != 1)
+		return (put_error("minishell: too many arguments"), 1);
 	if (!init_shell(&condition, envp))
 		return (put_error(strerror(errno)), 1);
 	shell_loop(&condition);
 	rl_clear_history();
-	(void)argc;
 	(void)argv;
 	exit(condition.exit_status);
 }

@@ -6,13 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:16 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 11:59:06 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:03:01 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/lexer.h"
-#include "../../header/token.h"
-#include "../../libft/libft.h"
 
 bool	ft_strjoin_free(char **s1, char *s2)
 {

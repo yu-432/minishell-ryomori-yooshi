@@ -6,16 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:50 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/18 11:53:23 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:24:01 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/lexer.h"
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
 #include "../../header/execution.h"
-#include "../../header/builtin_func.h"
 
 static char	*take_env_value(t_condition *condition, char *key)
 {
@@ -24,7 +19,7 @@ static char	*take_env_value(t_condition *condition, char *key)
 	current = condition->environ;
 	while (current)
 	{
-		if (!ft_strncmp(current->key, key, strlen(key) + 1))
+		if (!ft_strncmp(current->key, key, ft_strlen(key) + 1))
 			return (current->value);
 		current = current->next;
 	}

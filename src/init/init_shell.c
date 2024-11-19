@@ -6,14 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:12 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 02:04:19 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:02:04 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/standard.h"
 #include "../../header/init.h"
-#include "../../libft/libft.h"
 
 void	free_environ(t_item *environ)
 {

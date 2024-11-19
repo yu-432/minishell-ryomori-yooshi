@@ -6,15 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:24 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 10:08:54 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:56:49 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
 #include "../../header/builtin_func.h"
-#include "../../header/print.h"
 
 long	ft_atoll(const char *str)
 {

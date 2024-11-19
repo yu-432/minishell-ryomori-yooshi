@@ -6,22 +6,18 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:04 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 10:38:03 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:58:17 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/lexer.h"
-#include "../../header/standard.h"
-#include "../../header/token.h"
-#include "../../header/condition.h"
 #include "../../header/execution.h"
 
 void	reset_fd(int *fd)
 {
-	if (*fd != -2)
+	if (*fd != INVALID_FD)
 	{
 		wrap_close(*fd);
-		*fd = -2;
+		*fd = INVALID_FD;
 	}
 }
 
@@ -41,15 +37,15 @@ void	close_child_process_fd(t_node *node)
 
 bool	close_redirect_fd(t_node *node)
 {
-	if (node->fd_in != -2)
+	if (node->fd_in != INVALID_FD)
 	{
 		wrap_close(node->fd_in);
-		node->fd_in = -2;
+		node->fd_in = INVALID_FD;
 	}
-	if (node->fd_out != -2)
+	if (node->fd_out != INVALID_FD)
 	{
 		wrap_close(node->fd_out);
-		node->fd_out = -2;
+		node->fd_out = INVALID_FD;
 	}
 	return (true);
 }
@@ -62,11 +58,11 @@ void	wrap_double_close(int fd1, int fd2)
 
 bool	set_redirect_fd(t_node *node)
 {
-	if (node->fd_in != -2)
+	if (node->fd_in != INVALID_FD)
 	{
 		wrap_dup2(node->fd_in, STDIN_FILENO);
 	}
-	if (node->fd_out != -2)
+	if (node->fd_out != INVALID_FD)
 	{
 		wrap_dup2(node->fd_out, STDOUT_FILENO);
 	}

@@ -6,16 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:21 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 22:31:55 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:05:40 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/token.h"
 #include "../../header/execution.h"
-#include "../../libft/libft.h"
-#include "../../header/lexer.h"
-#include "../../header/signal.h"
-#include "../../header/print.h"
 
 static void	wait_signal(t_condition *condition, t_exec_info *info)
 {
@@ -70,7 +65,7 @@ bool	execute_pipeline_cmd(t_condition *condition, t_node *node, \
 		return (put_error(strerror(errno)), false);
 	if (!info->pid[info->executed_count])
 		child_process(condition, node, info, fds);
-	parent_process(condition, node, info, fds);
+	parent_process(node, info, fds);
 	info->executed_count++;
 	return (true);
 }

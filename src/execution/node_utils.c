@@ -6,15 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:25 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 23:26:07 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:01:38 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/lexer.h"
-#include "../../header/standard.h"
 #include "../../header/execution.h"
-#include "../../libft/libft.h"
 
 t_node	*find_last_node(t_node *head)
 {
@@ -59,7 +55,7 @@ t_node	*new_node(void)
 	if (node == NULL)
 		return (NULL);
 	node->next = NULL;
-	node->fd_in = -2;
-	node->fd_out = -2;
+	node->fd_in = INVALID_FD;
+	node->fd_out = INVALID_FD;
 	return (node);
 }

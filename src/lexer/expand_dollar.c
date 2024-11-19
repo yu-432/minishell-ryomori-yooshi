@@ -6,13 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:19 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 13:25:02 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:03:07 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/lexer.h"
-#include "../../header/token.h"
-#include "../../libft/libft.h"
 
 static int	count_envname_len(char *token, int i)
 {

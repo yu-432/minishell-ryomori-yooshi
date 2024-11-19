@@ -6,12 +6,17 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:41 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/18 12:09:14 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:31:00 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PRINT_H
 # define PRINT_H
+
+# include "enums.h"
+# include "types.h"
+# include "condition.h"
+# include "../libft/libft.h"
 
 void	put_error(char *str);
 void	put_syntax_error(char *str);

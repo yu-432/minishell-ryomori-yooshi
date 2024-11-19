@@ -6,14 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:14 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:15 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:30:37 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
-#include "../../header/condition.h"
-#include "../../header/init.h"
+#include "../../header/builtin_func.h"
 
 void	builtin_env(t_condition *condition)
 {

@@ -6,25 +6,24 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:37 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 11:43:42 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:12:33 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-# include "token.h"
 # include "condition.h"
+# include "enums.h"
+# include "types.h"
 # include "standard.h"
+# include "token.h"
+# include "print.h"
+# include "lexer.h"
+# include "../libft/libft.h"
 
 # define SINGLE_QUOTE '\''
 # define DOUBLE_QUOTE '\"'
-
-typedef struct s_lexer
-{
-	char	*env_key;
-	char	quote;
-}	t_lexer;
 
 //lexer
 t_token	*lexer(t_condition *condition, char *line);
@@ -55,6 +54,6 @@ bool	ft_strjoin_free(char **s1, char *s2);
 bool	expand_quote(t_token *tokenized);
 
 //find_syntax_error
-bool	find_syntax_error(t_condition *condition, t_token *tokenized);
+bool	find_syntax_error(t_token *tokenized);
 
 #endif

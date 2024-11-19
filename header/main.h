@@ -1,21 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   condition.h                                        :+:      :+:    :+:   */
+/*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 23:54:17 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 17:36:02 by yooshima         ###   ########.fr       */
+/*   Created: 2024/11/19 17:39:08 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/19 18:15:53 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CONDITION_H
-# define CONDITION_H
+#ifndef MAIN_H
+# define MAIN_H
 
-# define PROMPT "minishell$ "
-
-# include "enums.h"
-# include "types.h"
+# include "../header/standard.h"
+# include "../header/condition.h"
+# include "../header/enums.h"
+# include "../header/lexer.h"
+# include "../header/signal.h" 
+# include "../header/init.h"
+# include "../libft/libft.h"
+# include "../header/print.h"
+# include "../header/execution.h"
 
 #endif

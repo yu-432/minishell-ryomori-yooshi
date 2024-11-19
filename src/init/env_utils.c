@@ -1,19 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_util.c                                         :+:      :+:    :+:   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 01:36:49 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:36:51 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:02:00 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/standard.h"
 #include "../../header/init.h"
-#include "../../libft/libft.h"
 
 t_item	*search_dup_item(t_condition *condition, char *key)
 {

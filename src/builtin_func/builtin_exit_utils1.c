@@ -6,26 +6,15 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:17 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 03:41:28 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:34:51 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/execution.h"
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
 #include "../../header/builtin_func.h"
-#include "../../header/print.h"
-
-bool	is_spase(char c)
-{
-	return (c == ' ' || c == '\t' || c == '\n'
-		|| c == '\v' || c == '\f' || c == '\r');
-}
 
 char	*skip_space(char *str)
 {
-	while (is_spase(*str))
+	while (is_space(*str))
 		str++;
 	return (str);
 }

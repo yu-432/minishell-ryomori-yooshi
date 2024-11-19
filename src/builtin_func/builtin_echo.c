@@ -6,13 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:11 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 14:34:18 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:48:09 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/standard.h"
-#include "../../header/condition.h"
-#include "../../libft/libft.h"
+#include "../../header/builtin_func.h"
 
 bool	echo_n_option(char *argment)
 {
@@ -29,7 +27,7 @@ bool	echo_n_option(char *argment)
 	return (false);
 }
 
-void	builtin_echo(t_condition *condition, char **argv)
+void	builtin_echo(char **argv)
 {
 	int		i;
 	bool	is_newline;
@@ -52,5 +50,4 @@ void	builtin_echo(t_condition *condition, char **argv)
 	}
 	if (is_newline)
 		ft_putstr_fd("\n", STDOUT_FILENO);
-	(void)condition;
 }

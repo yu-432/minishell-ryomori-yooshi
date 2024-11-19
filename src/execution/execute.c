@@ -6,23 +6,16 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/18 12:08:57 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:20:53 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/lexer.h"
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
 #include "../../header/execution.h"
-#include "../../header/builtin_func.h"
-#include "../../header/signal.h"
-#include "../../header/print.h"
 
 void	execute_builtin(t_condition *condition, t_node *node)
 {
 	if (ft_strncmp(node->argv[0], "echo", 5) == 0)
-		builtin_echo(condition, node->argv);
+		builtin_echo(node->argv);
 	else if (ft_strncmp(node->argv[0], "export", 7) == 0)
 		builtin_export(condition, node->argv);
 	else if (ft_strncmp(node->argv[0], "unset", 6) == 0)
@@ -32,7 +25,7 @@ void	execute_builtin(t_condition *condition, t_node *node)
 	else if (ft_strncmp(node->argv[0], "cd", 3) == 0)
 		builtin_cd(condition, node->argv);
 	else if (ft_strncmp(node->argv[0], "pwd", 4) == 0)
-		builtin_pwd(condition, node->argv);
+		builtin_pwd();
 	else if (ft_strncmp(node->argv[0], "exit", 5) == 0)
 		builtin_exit(condition, node);
 	else
@@ -86,9 +79,9 @@ static void	path_check(t_condition *condition, t_node *node, char *path)
 	else if (access(path, F_OK) != 0)
 		exit_status = no_file_error(node->argv[0]);
 	else if (!is_executable(path))
-		exit_status = 126;
+		exit_status = EXIT_NOT_EXECUTABLE;
 	else if (path[0] == '\0')
-		exit_status = 0;
+		exit_status = EXIT_SUCCESS;
 	if (exit_status != -1)
 	{
 		free(path);
@@ -121,6 +114,6 @@ int	execute(t_condition *condition, t_node *node)
 	path_check(condition, node, path);
 	execve(path, node->argv, condition->envp);
 	put_execve_error(path);
-	free_exit(condition, node, path, 126);
+	free_exit(condition, node, path, EXIT_NOT_EXECUTABLE);
 	exit(EXIT_FAILURE);
 }

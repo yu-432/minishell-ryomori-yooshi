@@ -6,15 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:06 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 13:46:32 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:47:54 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/standard.h"
 #include "../../header/builtin_func.h"
-#include "../../libft/libft.h"
-#include "../../header/print.h"
 
 char	*get_item_value(t_item *item, char *key)
 {
@@ -22,7 +18,7 @@ char	*get_item_value(t_item *item, char *key)
 
 	while (item)
 	{
-		if (ft_strncmp (item->key, key, ft_strlen(key) + 1) == 0)
+		if (!ft_strncmp (item->key, key, ft_strlen(key) + 1))
 		{
 			value = item->value;
 			return (value);
@@ -38,10 +34,10 @@ int	update_item_value(t_condition *cond, t_item *item, const char *cwd)
 
 	tmp = ft_strdup(cwd);
 	if (item->value == NULL)
-		return (put_cd_error(cond, NULL, "malloc"), 1);
+		return (put_cd_error(cond, NULL, "malloc"), EXIT_FAILURE);
 	free(item->value);
 	item->value = tmp;
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 int	update_old_pwd(t_condition *cond)
@@ -57,7 +53,7 @@ int	update_old_pwd(t_condition *cond)
 	old_item = NULL;
 	while (item->next)
 	{
-		if (ft_strncmp (item->key, "OLDPWD", 7) == 0)
+		if (!ft_strncmp (item->key, "OLDPWD", 7))
 		{
 			old_item = item;
 			break ;
@@ -96,10 +92,10 @@ int	builtin_cd(t_condition *cond, char **args)
 	else
 		judge = chdir(args[1]);
 	if (judge != 0)
-		return (put_cd_error(cond, NULL, "chdir"), 1);
+		return (put_cd_error(cond, NULL, "chdir"), EXIT_FAILURE);
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
-		return (put_cd_error(cond, NULL, "getcwd"), 1);
+		return (put_cd_error(cond, NULL, "getcwd"), EXIT_FAILURE);
 	update_old_pwd(cond);
 	update_cwd(cond, cwd);
-	return (0);
+	return (EXIT_SUCCESS);
 }

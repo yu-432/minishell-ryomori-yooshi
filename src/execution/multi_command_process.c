@@ -6,25 +6,19 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:38 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 21:20:32 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:00:56 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/token.h"
 #include "../../header/execution.h"
-#include "../../libft/libft.h"
-#include "../../header/lexer.h"
-#include "../../header/signal.h"
 
-bool	parent_process(t_condition *condition, t_node *node, \
-						t_exec_info *info, int fds[2])
+bool	parent_process(t_node *node, t_exec_info *info, int fds[2])
 {
 	wrap_close(fds[OUT]);
-	if (info->keep_fd != -2)
+	if (info->keep_fd != INVALID_FD)
 		wrap_close(info->keep_fd);
 	info->keep_fd = fds[IN];
 	close_redirect_fd(node);
-	(void)condition;
 	return (true);
 }
 

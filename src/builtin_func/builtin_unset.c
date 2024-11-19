@@ -6,14 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:38 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:40 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:31:12 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
-#include "../../header/condition.h"
-#include "../../header/init.h"
+#include "../../header/builtin_func.h"
 
 void	free_t_item(t_item **item)
 {

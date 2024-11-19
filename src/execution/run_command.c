@@ -6,16 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:50 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 10:37:45 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:09:40 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/execution.h"
-#include "../../header/standard.h"
-#include "../../header/condition.h"
-#include "../../header/token.h"
-#include "../../libft/libft.h"
-#include "../../header/lexer.h"
 
 static int	count_pipe(t_node *node)
 {
@@ -90,12 +85,11 @@ void	run_command(t_condition *condition, t_token *token_list)
 
 	if (!token_list)
 		return ;
-	node = make_node(condition, token_list);
+	node = make_node(token_list);
 	free_tokens(token_list);
 	if (node == NULL)
 		return ;
 	exec_command(condition, node);
 	free_node(node);
-	(void)condition;
 	return ;
 }

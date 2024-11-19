@@ -6,15 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:28 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 23:05:16 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:08:51 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/lexer.h"
-#include "../../header/standard.h"
 #include "../../header/execution.h"
-#include "../../libft/libft.h"
 
 static void	add_kind_info(t_node *node)
 {
@@ -41,8 +37,7 @@ static int	count_token_until_pipe(t_token *token_list)
 	return (count);
 }
 
-static bool	make_node_argv(t_condition *condition, t_token **token_list, \
-							t_node *current_node)
+static bool	make_node_argv(t_token **token_list, t_node *current_node)
 {
 	int	word_count;
 	int	i;
@@ -61,11 +56,10 @@ static bool	make_node_argv(t_condition *condition, t_token **token_list, \
 		*token_list = (*token_list)->next;
 	}
 	current_node->argv[i] = NULL;
-	(void)condition;
 	return (true);
 }
 
-t_node	*make_node(t_condition *condition, t_token *token_list)
+t_node	*make_node(t_token *token_list)
 {
 	t_node	head;
 	t_node	*current;
@@ -77,7 +71,7 @@ t_node	*make_node(t_condition *condition, t_token *token_list)
 		current->next = new_node();
 		if (!current->next)
 			return (NULL);
-		if (!make_node_argv(condition, &token_list, current->next))
+		if (!make_node_argv(&token_list, current->next))
 		{
 			free_node(head.next);
 			return (NULL);

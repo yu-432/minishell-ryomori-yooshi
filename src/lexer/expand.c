@@ -6,13 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:26 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 09:39:03 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:03:16 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/token.h"
 #include "../../header/lexer.h"
-#include "../../libft/libft.h"
 
 bool	append_char(char **str, char c)
 {

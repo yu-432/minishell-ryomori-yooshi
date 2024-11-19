@@ -6,54 +6,27 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:28 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 12:25:20 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:09:09 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
-# include "standard.h"
 # include "condition.h"
+# include "standard.h"
+# include "enums.h"
+# include "types.h"
+# include "builtin_func.h"
+# include "lexer.h"
 # include "token.h"
+# include "signal.h"
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <fcntl.h>
 
 # define HEREDOC_PROMPT "> "
-# define INPUT_EOF 1
-
-typedef enum e_std_fd
-{
-	IN,
-	OUT,
-	ERR
-}	t_std_fd;
-
-typedef enum e_node_kind
-{
-	NODE_CMD,
-	NODE_PIPE
-}	t_node_kind;
-
-typedef struct s_node
-{
-	t_node_kind		kind;
-	char			**argv;
-	int				fd_in;
-	int				fd_out;
-	struct s_node	*next;
-	struct s_node	*prev;
-}	t_node;
-
-typedef struct s_exec_info
-{
-	pid_t	*pid;
-	int		keep_fd;
-	int		pipe_count;
-	int		executed_count;
-}	t_exec_info;
 
 //run_command
 void	run_command(t_condition *condition, t_token *token_list);
@@ -86,8 +59,7 @@ pid_t	execute_last_pipeline_cmd(t_condition *condition, t_node *node, \
 									t_exec_info *info);
 bool	child_process(t_condition *condition, t_node *node, \
 						t_exec_info *info, int fds[2]);
-bool	parent_process(t_condition *condition, t_node *node, \
-						t_exec_info *info, int fds[2]);
+bool	parent_process(t_node *node, t_exec_info *info, int fds[2]);
 
 //redirect
 bool	redirect_in(t_condition *condition, t_node *node, int i);
@@ -113,7 +85,7 @@ void	close_child_process_fd(t_node *node);
 void	close_prev_node_fd(t_node *node);
 
 //node
-t_node	*make_node(t_condition *condition, t_token *token_list);
+t_node	*make_node(t_token *token_list);
 t_node	*new_node(void);
 void	free_node(t_node *node);
 t_node	*find_last_node(t_node *head);

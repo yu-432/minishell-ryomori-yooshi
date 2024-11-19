@@ -6,16 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:13 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 13:28:17 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:00:10 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
-#include "../../header/signal.h"
 #include "../../header/execution.h"
-#include "../../header/print.h"
-#include "../../header/lexer.h"
 
 char	*get_line(int fd, int *read_status)
 {

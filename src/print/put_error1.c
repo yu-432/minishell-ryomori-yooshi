@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   put_error.c                                        :+:      :+:    :+:   */
+/*   put_error1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:51 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:26:16 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:13:07 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../libft/libft.h"
-#include "../../header/condition.h"
+#include "../../header/print.h"
 
 void	put_error(char *str)
 {
@@ -46,7 +45,7 @@ void	put_export_error(t_condition *condition, char *argv)
 	ft_putstr_fd("export: `", STDERR_FILENO);
 	ft_putstr_fd(argv, STDERR_FILENO);
 	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-	condition->exit_status = 1;
+	condition->exit_status = EXIT_FAILURE;
 }
 
 void	export_error(t_condition *cond, char *str, char *perr)
