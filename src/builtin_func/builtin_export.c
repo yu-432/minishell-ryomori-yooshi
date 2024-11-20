@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:31 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 13:57:01 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:14:11 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ static char	*split_key(t_condition *condition, char *argv)
 	}
 	if (i == 0)
 		return (put_export_error(condition, argv), NULL);
+	if (argv[i] && argv[i] != '=')
+		return (NULL);
 	key = ft_substr(argv, 0, i);
 	if (!key)
 		return (export_error(condition, NULL, "malloc"), NULL);

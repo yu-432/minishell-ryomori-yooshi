@@ -6,14 +6,13 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:53:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 17:52:01 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:53:52 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_FUNC_H
 # define BUILTIN_FUNC_H
 
-# include "condition.h"
 # include "execution.h"
 # include "types.h"
 # include "enums.h"

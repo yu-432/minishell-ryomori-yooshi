@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:41 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 14:31:00 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:54:13 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "enums.h"
 # include "types.h"
-# include "condition.h"
 # include "../libft/libft.h"
 
 void	put_error(char *str);

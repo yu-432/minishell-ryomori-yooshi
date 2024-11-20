@@ -6,14 +6,13 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:37 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 18:12:33 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:54:08 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-# include "condition.h"
 # include "enums.h"
 # include "types.h"
 # include "standard.h"
