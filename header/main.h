@@ -1,32 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   condition.h                                        :+:      :+:    :+:   */
+/*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 23:54:17 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:04:00 by yooshima         ###   ########.fr       */
+/*   Created: 2024/11/19 17:39:08 by yooshima          #+#    #+#             */
+/*   Updated: 2024/11/20 14:53:48 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CONDITION_H
-# define CONDITION_H
+#ifndef MAIN_H
+# define MAIN_H
+
+# include "../header/standard.h"
+# include "../header/enums.h"
+# include "../header/lexer.h"
+# include "../header/signal.h" 
+# include "../header/init.h"
+# include "../libft/libft.h"
+# include "../header/print.h"
+# include "../header/execution.h"
 
 # define PROMPT "minishell$ "
-
-typedef struct s_item
-{
-	char			*key;
-	char			*value;
-	struct s_item	*next;
-}	t_item;
-
-typedef struct s_condition
-{
-	t_item	*environ;
-	char	**envp;
-	int		exit_status;
-}	t_condition;
 
 #endif

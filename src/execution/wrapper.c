@@ -6,21 +6,18 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:01 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 03:14:30 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:03:05 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/token.h"
 #include "../../header/execution.h"
-#include "../../libft/libft.h"
-#include "../../header/lexer.h"
 
 void	wrap_close(int fd)
 {
 	if (fd != -1 && close(fd) == -1)
 	{
 		perror("close");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -29,6 +26,6 @@ void	wrap_dup2(int oldfd, int newfd)
 	if (dup2(oldfd, newfd) == -1)
 	{
 		perror("dup2");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 }

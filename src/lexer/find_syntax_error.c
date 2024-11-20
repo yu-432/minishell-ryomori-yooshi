@@ -6,15 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:29 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:06:56 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:11:32 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/lexer.h"
-#include "../../header/token.h"
-#include "../../header/condition.h"
-#include "../../libft/libft.h"
-#include "../../header/print.h"
 
 static bool	check_quote_error(char *token)
 {
@@ -61,7 +57,7 @@ static bool	check_pipe_error(t_token_kind kind, t_token *token, \
 	return (true);
 }
 
-bool	find_syntax_error(t_condition *condition, t_token *tokenized)
+bool	find_syntax_error(t_token *tokenized)
 {
 	t_token_kind	prev_kind;
 
@@ -77,6 +73,5 @@ bool	find_syntax_error(t_condition *condition, t_token *tokenized)
 		prev_kind = tokenized->kind;
 		tokenized = tokenized->next;
 	}
-	(void)condition;
 	return (true);
 }

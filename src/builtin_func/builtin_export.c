@@ -6,16 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:31 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 02:23:45 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:14:11 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
-#include "../../header/condition.h"
-#include "../../header/init.h"
 #include "../../header/builtin_func.h"
-#include "../../header/print.h"
 
 static bool	is_envname(char c)
 {
@@ -38,6 +33,8 @@ static char	*split_key(t_condition *condition, char *argv)
 	}
 	if (i == 0)
 		return (put_export_error(condition, argv), NULL);
+	if (argv[i] && argv[i] != '=')
+		return (NULL);
 	key = ft_substr(argv, 0, i);
 	if (!key)
 		return (export_error(condition, NULL, "malloc"), NULL);

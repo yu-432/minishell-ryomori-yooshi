@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize_util2.c                                   :+:      :+:    :+:   */
+/*   tokenize_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:42 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 01:12:27 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:04:12 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
-#include "../../header/token.h"
+#include "../../header/lexer.h"
 
 int	get_token_kind(char *token)
 {

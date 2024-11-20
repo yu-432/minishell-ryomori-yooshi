@@ -6,12 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:55 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 12:00:21 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:13:14 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../libft/libft.h"
-#include "../../header/condition.h"
+#include "../../header/print.h"
 
 void	put_tokenizer_error(char *str)
 {
@@ -54,5 +53,5 @@ void	put_redirect_error(t_condition *condition, char *str)
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
 	perror("");
-	condition->exit_status = 1;
+	condition->exit_status = EXIT_FAILURE;
 }

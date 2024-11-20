@@ -6,15 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:34 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 17:03:56 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:00:37 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/token.h"
 #include "../../header/execution.h"
-#include "../../libft/libft.h"
-#include "../../header/lexer.h"
-#include "../../header/signal.h"
 
 static bool	find_set_redirect(t_condition *condition, t_node *node)
 {

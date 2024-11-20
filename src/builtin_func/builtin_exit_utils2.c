@@ -1,18 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_exit_until2.c                              :+:      :+:    :+:   */
+/*   builtin_exit_utils2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:21 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:22 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:56:45 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
 #include "../../header/builtin_func.h"
 
 long	over_256(long num)

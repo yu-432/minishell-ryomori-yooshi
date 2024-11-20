@@ -6,28 +6,27 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:53:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 03:43:30 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/20 14:53:52 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_FUNC_H
 # define BUILTIN_FUNC_H
 
-# include "condition.h"
 # include "execution.h"
+# include "types.h"
+# include "enums.h"
+# include "print.h"
+# include "init.h"
+# include "../libft/libft.h"
 # include <limits.h>
 # include <sys/stat.h>
 
-typedef enum e_move_position
-{
-	MOVE_TO_HOME,
-}	t_move_position;
-
-void	builtin_echo(t_condition *condition, char **argv);
+void	builtin_echo(char **argv);
 void	builtin_env(t_condition *condition);
 void	builtin_export(t_condition *condition, char **argv);
 void	builtin_unset(t_condition *condition, char **argv);
-int		builtin_pwd(t_condition *cond, char **argv);
+int		builtin_pwd(void);
 int		builtin_cd(t_condition *cond, char **args);
 int		builtin_exit(t_condition *condition, t_node *node);
 
@@ -44,7 +43,7 @@ int		count_cd_arg(char **args);
 //exit_utils
 void	numeric_argument_error(char *argment);
 int		tma_error_check(t_condition *condition, char **args);
-bool	is_spase(char c);
+// bool	is_space(char c);
 char	*skip_space(char *str);
 int		get_sign_skip0(char **str);
 void	all_free(t_condition *condition, t_node *node);

@@ -6,16 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:45 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/13 00:23:50 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:00:53 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/execution.h"
-#include "../../header/standard.h"
-#include "../../header/condition.h"
-#include "../../header/token.h"
-#include "../../libft/libft.h"
-#include "../../header/lexer.h"
 
 bool	is_redirect(char *str)
 {

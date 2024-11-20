@@ -6,16 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:45 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 10:27:41 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:59:16 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/lexer.h"
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
 #include "../../header/execution.h"
-#include "../../header/builtin_func.h"
 
 bool	is_builtin(char *cmd)
 {

@@ -6,17 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 10:39:47 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 10:40:03 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:06:11 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/lexer.h"
 #include "../../header/signal.h"	
-#include "../../header/standard.h"
-#include "../../header/condition.h"
-#include "../../header/execution.h"
-#include "../../libft/libft.h"
-#include <sys/ioctl.h>
 
 void	heredoc_handler(int signum)
 {

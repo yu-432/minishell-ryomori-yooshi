@@ -6,16 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:57 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 21:15:45 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:02:52 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/token.h"
 #include "../../header/execution.h"
-#include "../../libft/libft.h"
-#include "../../header/lexer.h"
-#include "../../header/signal.h"
-#include "../../header/print.h"
 
 static int	handle_single_builtin_command(t_condition *condition, t_node *node)
 {
@@ -25,7 +20,7 @@ static int	handle_single_builtin_command(t_condition *condition, t_node *node)
 	is_fd_changed = false;
 	if (!interpret_redirect(condition, node))
 		return (false);
-	if (node->fd_in != -2 || node->fd_out != -2)
+	if (node->fd_in != INVALID_FD || node->fd_out != INVALID_FD)
 	{
 		storage_fd(keep_fds);
 		is_fd_changed = true;

@@ -1,19 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_cd_until.c                                 :+:      :+:    :+:   */
+/*   builtin_cd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:03 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/12 23:55:04 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:46:33 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/condition.h"
-#include "../../header/standard.h"
 #include "../../header/builtin_func.h"
-#include "../../libft/libft.h"
 
 char	*lst_getenv(t_item *item, char *key)
 {
@@ -21,7 +18,7 @@ char	*lst_getenv(t_item *item, char *key)
 
 	while (item)
 	{
-		if (ft_strncmp (item->key, key, ft_strlen(key) + 1) == 0)
+		if (!ft_strncmp (item->key, key, ft_strlen(key) + 1))
 		{
 			value = item->value;
 			return (value);
@@ -41,7 +38,7 @@ int	update_cwd(t_condition *cond, char *newcwd)
 	old_item = NULL;
 	while (item->next)
 	{
-		if (ft_strncmp (item->key, "PWD", 4) == 0)
+		if (!ft_strncmp (item->key, "PWD", 4))
 		{
 			old_item = item;
 			break ;
@@ -57,7 +54,7 @@ int	update_cwd(t_condition *cond, char *newcwd)
 			free(old_item->value);
 		old_item->value = tmp;
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 int	count_cd_arg(char **args)

@@ -6,13 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:19 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 13:25:02 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:14:26 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/lexer.h"
-#include "../../header/token.h"
-#include "../../libft/libft.h"
 
 static int	count_envname_len(char *token, int i)
 {
@@ -91,8 +89,8 @@ bool	expand_dollar(t_condition *condition, t_token *tokenized)
 			handle_dollar(condition, tokenized->token, &new, &i);
 		else
 		{
-			append_char(&new, tokenized->token[i]);
-			i++;
+			if (!append_char(&new, tokenized->token[i++]))
+				return (false);
 		}
 	}
 	free(tokenized->token);

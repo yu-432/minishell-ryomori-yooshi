@@ -6,16 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 13:44:55 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 13:45:03 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:56:55 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
-#include "../../header/condition.h"
-#include "../../header/init.h"
 #include "../../header/builtin_func.h"
-#include "../../header/print.h"
 
 void	print_env(t_condition *condition)
 {

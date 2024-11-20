@@ -6,13 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:22 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/15 15:35:45 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:03:11 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/token.h"
 #include "../../header/lexer.h"
-#include "../../libft/libft.h"
 
 bool	expand_quote(t_token *tokenized)
 {

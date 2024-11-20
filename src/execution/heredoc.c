@@ -6,16 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:13 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 13:32:48 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:16:40 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../header/standard.h"
-#include "../../libft/libft.h"
-#include "../../header/signal.h"
 #include "../../header/execution.h"
-#include "../../header/print.h"
-#include "../../header/lexer.h"
 
 static void	heredoc_check_status(char *line, char *delimiter, \
 									int read_status, int fd)
@@ -23,7 +18,7 @@ static void	heredoc_check_status(char *line, char *delimiter, \
 	if (g_sig == SIGINT)
 	{
 		write(STDERR_FILENO, "\n", 1);
-		heredoc_free_exit(line, fd, 130);
+		heredoc_free_exit(line, fd, EXIT_SIGINT);
 	}
 	if (read_status == INPUT_EOF)
 	{
@@ -69,7 +64,6 @@ static bool	heredoc_parent_process(t_condition *condition, t_node *node, \
 	}
 	wrap_close(fds[OUT]);
 	node->fd_in = fds[IN];
-	(void)condition;
 	return (true);
 }
 

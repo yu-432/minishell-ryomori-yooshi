@@ -6,12 +6,11 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:35 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/14 21:42:56 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:12:47 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/lexer.h"
-#include "../../header/standard.h"
 
 t_token	*lexer(t_condition *condition, char *line)
 {
@@ -20,7 +19,7 @@ t_token	*lexer(t_condition *condition, char *line)
 	tokenized = tokenizer(line);
 	if (!tokenized)
 		return (NULL);
-	if (!find_syntax_error(condition, tokenized))
+	if (!find_syntax_error(tokenized))
 		return (free_tokens(tokenized), NULL);
 	if (!expand_token(condition, tokenized))
 		return (free_tokens(tokenized), NULL);
