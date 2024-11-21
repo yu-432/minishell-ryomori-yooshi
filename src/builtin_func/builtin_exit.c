@@ -69,44 +69,34 @@ int	long_over_check(char *argment)
 	return (long_check_return(argment, sign));
 }
 
-int	exit_with_argment(t_condition *condition, t_node *node, char *argment, \
+void	exit_with_argment(t_condition *condition, t_node *node, char *argment, \
 						char **args)
 {
 	long	num;
-	int		judge;
 	long	result;
 
-	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	if (tma_error_check(condition, args))
-		return (1);
-	judge = long_over_check(argment);
-	if (judge == 1)
-	{
+		return ;
+	if (long_over_check(argment))
 		numeric_argument_error(argment);
-		return (1);
-	}
 	num = ft_atoll(argment);
 	result = exit_status_num(num);
-	exit(result);
 	all_free(condition, node);
-	return (0);
+	exit(result);
 }
 
-int	builtin_exit(t_condition *condition, t_node *node)
+void	builtin_exit(t_condition *condition, t_node *node)
 {
 	char	*argment;
 
+	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	if (node->argv[1] == NULL)
 	{
-		ft_putstr_fd("exit\n", STDOUT_FILENO);
 		all_free(condition, node);
 		exit(condition->exit_status);
 	}
 	argment = (skip_space(node->argv[1]));
 	if (!is_check_num(argment))
-	{
 		numeric_argument_error(argment);
-		return (1);
-	}
-	return (exit_with_argment(condition, node, argment, node->argv));
+	exit_with_argment(condition, node, argment, node->argv);
 }

@@ -12,7 +12,7 @@
 
 #include "../../header/builtin_func.h"
 
-int	builtin_pwd(void)
+void	builtin_pwd(void)
 {
 	char	*pwd_path;
 
@@ -21,13 +21,9 @@ int	builtin_pwd(void)
 	{
 		ft_putstr_fd("minishell:", STDERR_FILENO);
 		perror("getcwd:");
-		return (1);
+		return ;
 	}
-	else
-	{
-		write(STDOUT_FILENO, pwd_path, ft_strlen(pwd_path));
-		write(STDOUT_FILENO, "\n", 1);
-		free(pwd_path);
-		return (0);
-	}
+	write(STDOUT_FILENO, pwd_path, ft_strlen(pwd_path));
+	write(STDOUT_FILENO, "\n", 1);
+	free(pwd_path);
 }

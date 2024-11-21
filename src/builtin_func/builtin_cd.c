@@ -77,25 +77,24 @@ int	move_path(int option)
 	return (chdir(env_path));
 }
 
-int	builtin_cd(t_condition *cond, char **args)
+void	builtin_cd(t_condition *cond, char **args)
 {
 	int		judge;
 	char	cwd[PATH_MAX];
 
 	if (count_cd_arg(args) > 2)
-		return (put_cd_error(cond, "too many arguments", NULL), 1);
+		return(put_cd_error(cond, "too many arguments", NULL));
 	if (args[1] && (!ft_strncmp(args[1], "~", 2) || \
 			!ft_strncmp(args[1], "-", 2)))
-		return (put_cd_error(cond, "Out of subject", NULL), 1);
+		return (put_cd_error(cond, "Out of subject", NULL));
 	if (!args[1])
 		judge = move_path(MOVE_TO_HOME);
 	else
 		judge = chdir(args[1]);
 	if (judge != 0)
-		return (put_cd_error(cond, NULL, "chdir"), EXIT_FAILURE);
+		return (put_cd_error(cond, NULL, "chdir"));
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
-		return (put_cd_error(cond, NULL, "getcwd"), EXIT_FAILURE);
+		return (put_cd_error(cond, NULL, "getcwd"));
 	update_old_pwd(cond);
 	update_cwd(cond, cwd);
-	return (EXIT_SUCCESS);
 }

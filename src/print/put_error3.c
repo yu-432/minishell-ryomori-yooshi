@@ -14,7 +14,6 @@
 
 void	numeric_argument_error(char *argment)
 {
-	ft_putstr_fd("exit\n", STDERR_FILENO);
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 	ft_putstr_fd(argment, STDERR_FILENO);
 	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
