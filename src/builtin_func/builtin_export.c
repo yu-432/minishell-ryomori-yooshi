@@ -69,7 +69,7 @@ void	builtin_export(t_condition *condition, char **argv)
 	t_item	*dup_item;
 
 	argv++;
-	if (!argv)
+	if (!*argv)
 		has_not_argv(condition);
 	while (*argv)
 	{

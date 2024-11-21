@@ -46,8 +46,9 @@ static void	increment_shlvl(char **value)
 	shlvl++;
 	if (shlvl > SHLVL_MAX)
 	{
-		put_error("minishell: warning: shell level (1000) too high,");
-		put_error(" resetting to 1");
+		ft_putstr_fd("minishell: warning: shell level (1000) too high,", \
+			STDERR_FILENO);
+		ft_putstr_fd(" resetting to 1\n", STDERR_FILENO);
 		shlvl = 1;
 	}
 	free(*value);
