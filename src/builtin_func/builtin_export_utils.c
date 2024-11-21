@@ -6,13 +6,13 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 13:44:55 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 13:56:55 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:21:44 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/builtin_func.h"
 
-void	print_env(t_condition *condition)
+void	has_not_argv(t_condition *condition)
 {
 	t_item	*current;
 
@@ -28,13 +28,4 @@ void	print_env(t_condition *condition)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		current = current->next;
 	}
-}
-
-bool	check_condition(t_condition *condition, char **argv)
-{
-	if (!*argv)
-		return (print_env(condition), true);
-	if (!ft_strchr(*argv, '='))
-		return (true);
-	return (false);
 }

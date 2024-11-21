@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:24 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 13:56:49 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:03:19 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	exit_with_argment(t_condition *condition, t_node *node, char *argment, \
 	judge = long_over_check(argment);
 	if (judge == 1)
 	{
-		numeric_argument_error(argment);
+		numeric_argument_error(argment);//この関数内でputstr exitしているため、このエラーに引っかかる場合２回出力される
 		return (1);
 	}
 	num = ft_atoll(argment);
