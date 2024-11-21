@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:53:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/20 14:53:52 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:28:27 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ long	negative_num(long num);
 long	exit_status_num(long num);
 bool	is_check_num(char *str);
 //export_utils
-void	export_env(t_condition *condition);
-bool	check_condition(t_condition *condition, char **argv);
+void	has_not_argv(t_condition *condition);
 
 #endif
