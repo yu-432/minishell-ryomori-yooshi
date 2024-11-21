@@ -26,9 +26,9 @@ void	builtin_echo(char **argv);
 void	builtin_env(t_condition *condition);
 void	builtin_export(t_condition *condition, char **argv);
 void	builtin_unset(t_condition *condition, char **argv);
-int		builtin_pwd(void);
-int		builtin_cd(t_condition *cond, char **args);
-int		builtin_exit(t_condition *condition, t_node *node);
+void	builtin_pwd(void);
+void	builtin_cd(t_condition *cond, char **args);
+void	builtin_exit(t_condition *condition, t_node *node);
 
 //cd_utils
 int		update_cwd(t_condition *cond, char *newcwd);
@@ -38,7 +38,6 @@ int		move_path(int option);
 int		update_old_pwd(t_condition *cond);
 char	*get_item_value(t_item *item, char *key);
 int		update_item_value(t_condition *cond, t_item *item, const char *cwd);
-int		builtin_cd(t_condition *cond, char **args);
 int		count_cd_arg(char **args);
 //exit_utils
 void	numeric_argument_error(char *argment);
