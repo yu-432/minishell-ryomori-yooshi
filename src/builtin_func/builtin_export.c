@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:31 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/20 15:14:11 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:39:23 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	*split_key(t_condition *condition, char *argv)
 	}
 	if (i == 0)
 		return (put_export_error(condition, argv), NULL);
-	if (argv[i] && argv[i] != '=')
+	if (!argv[i])
 		return (NULL);
 	key = ft_substr(argv, 0, i);
 	if (!key)
@@ -69,8 +69,8 @@ void	builtin_export(t_condition *condition, char **argv)
 	t_item	*dup_item;
 
 	argv++;
-	if (check_condition(condition, argv))
-		return ;
+	if (!argv)
+		has_not_argv(condition);
 	while (*argv)
 	{
 		if (!split_argv(condition, *argv, key_value))
