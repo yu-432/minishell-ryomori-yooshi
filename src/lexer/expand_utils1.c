@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:19 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/20 15:14:26 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/22 17:42:05 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,44 +56,5 @@ bool	handle_dollar(t_condition *condition, char *token, \
 	free(env_value);
 	if (!*new)
 		return (false);
-	return (true);
-}
-
-static void	update_quote_status(char *quote, char c)
-{
-	if (*quote == 0)
-	{
-		*quote = c;
-	}
-	else if (*quote == c)
-		*quote = 0;
-}
-
-bool	expand_dollar(t_condition *condition, t_token *tokenized)
-{
-	int		i;
-	char	quote;
-	char	*new;
-
-	i = 0;
-	quote = 0;
-	new = ft_strdup("");
-	if (!new)
-		return (false);
-	while (tokenized->token[i])
-	{
-		if (is_quote(tokenized->token[i]))
-			update_quote_status(&quote, tokenized->token[i]);
-		if (quote != SINGLE_QUOTE && tokenized->token[i] == '$' && \
-				count_envname_len(tokenized->token, i + 1))
-			handle_dollar(condition, tokenized->token, &new, &i);
-		else
-		{
-			if (!append_char(&new, tokenized->token[i++]))
-				return (false);
-		}
-	}
-	free(tokenized->token);
-	tokenized->token = new;
 	return (true);
 }

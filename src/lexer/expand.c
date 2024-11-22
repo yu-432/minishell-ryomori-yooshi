@@ -6,39 +6,87 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:26 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 14:03:16 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/22 20:45:25 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/lexer.h"
 
-bool	append_char(char **str, char c)
+static bool	update_quote_status(t_expand *info, char *str)
 {
-	char	*new;
-	char	join[2];
-
-	join[0] = c;
-	join[1] = '\0';
-	new = ft_strjoin(*str, join);
-	if (!new)
+	if (info->quote == '\0')
+	{
+		info->quote = str[info->index];
+		return (true);
+	}
+	else if (info->quote == str[info->index])
+	{
+		info->quote = '\0';
+		return (true);
+	}
+	else
 		return (false);
-	free(*str);
-	*str = new;
+}
+
+static int	count_envname_len(char *token, int i)
+{
+	int	len;
+
+	len = 0;
+	if (token[i] == '?')
+		len++;
+	else
+		while (token[i] && (ft_isalnum(token[i + len]) || \
+					token[i + len] == '_'))
+			len++;
+	return (len);
+}
+
+bool	init_expand_info(t_expand *info)
+{
+	info->new = ft_strdup("");
+	if (!info->new)
+		return (false);
+	info->index = 0;
+	info->quote = '\0';
+	return (true);
+}
+
+bool	expand_single_token(t_condition *condition, t_token *tokenized)
+{
+	t_expand	info;
+
+	if (!init_expand_info(&info))
+		return (false);
+	while (tokenized->token[info.index])
+	{
+		if (is_quote(tokenized->token[info.index]) && \
+				update_quote_status(&info, tokenized->token))
+			info.index++;
+		else if (info.quote != SINGLE_QUOTE && \
+				tokenized->token[info.index] == '$' && \
+				count_envname_len(tokenized->token, info.index + 1))
+			handle_dollar(condition, tokenized->token, &info.new, &info.index);
+		else if (!append_char(&info.new, tokenized->token[info.index++]))
+			return (false);
+	}
+	free(tokenized->token);
+	tokenized->token = info.new;
 	return (true);
 }
 
 bool	expand_token(t_condition *condition, t_token *tokenized)
 {
-	while (tokenized)
+	bool	success;
+
+	success = true;
+	while (tokenized && success)
 	{
 		if (tokenized->kind == TOKEN_WORD)
-		{
-			if (!expand_dollar(condition, tokenized))
-				return (false);
-			if (!expand_quote(tokenized))
-				return (false);
-		}
+			success = expand_single_token(condition, tokenized);
 		tokenized = tokenized->next;
 	}
+	if (!success)
+		return (false);
 	return (true);
 }

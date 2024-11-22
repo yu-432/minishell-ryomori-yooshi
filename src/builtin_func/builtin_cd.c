@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:06 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 17:47:54 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/22 20:45:55 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	builtin_cd(t_condition *cond, char **args)
 	char	cwd[PATH_MAX];
 
 	if (count_cd_arg(args) > 2)
-		return(put_cd_error(cond, "too many arguments", NULL));
+		return (put_cd_error(cond, "too many arguments", NULL));
 	if (args[1] && (!ft_strncmp(args[1], "~", 2) || \
 			!ft_strncmp(args[1], "-", 2)))
 		return (put_cd_error(cond, "Out of subject", NULL));

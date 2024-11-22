@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 14:25:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 17:36:59 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/22 20:46:14 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,20 @@ typedef struct s_node
 	struct s_node	*prev;
 }	t_node;
 
+typedef struct s_token
+{
+	char			*token;
+	t_token_kind	kind;
+	struct s_token	*next;
+}	t_token;
+
+typedef struct s_expand
+{
+	char	*new;
+	int		index;
+	char	quote;
+}	t_expand;
+
 typedef struct s_item
 {
 	char			*key;
@@ -55,12 +69,5 @@ typedef struct s_lexer
 	char	*env_key;
 	char	quote;
 }	t_lexer;
-
-typedef struct s_token
-{
-	char			*token;
-	t_token_kind	kind;
-	struct s_token	*next;
-}	t_token;
 
 #endif
