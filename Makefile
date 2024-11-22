@@ -5,8 +5,8 @@ SRCS		=	src/main.c \
 				src/init/init_shell.c src/init/env_utils.c src/init/add_env.c \
 				\
 				src/lexer/lexer.c src/lexer/tokenizer.c src/lexer/tokenize_utils1.c \
-				src/lexer/tokenize_utils2.c src/lexer/expand.c src/lexer/expand_quote.c \
-				src/lexer/expand_dollar.c src/lexer/expand_dollar_utils.c src/lexer/find_syntax_error.c\
+				src/lexer/tokenize_utils2.c src/lexer/expand.c \
+				src/lexer/expand_utils1.c src/lexer/expand_utils2.c src/lexer/find_syntax_error.c\
 				\
 				src/execution/run_command.c src/execution/run_command_utils.c src/execution/single_command.c \
 				src/execution/multi_command.c src/execution/multi_command_process.c src/execution/execute.c \

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 14:25:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/22 19:33:56 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/22 20:46:14 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ typedef struct s_token
 
 typedef struct s_expand
 {
-	char *new;
-	int index;
-	char quote;
+	char	*new;
+	int		index;
+	char	quote;
 }	t_expand;
 
 typedef struct s_item

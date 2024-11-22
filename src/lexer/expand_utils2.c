@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_dollar_utils.c                              :+:      :+:    :+:   */
+/*   expand_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:16 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 14:03:01 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/22 20:44:09 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,19 @@ char	*find_env(t_condition *condition, char *env_key)
 		temp = temp->next;
 	}
 	return (NULL);
+}
+
+bool	append_char(char **str, char c)
+{
+	char	*new;
+	char	join[2];
+
+	join[0] = c;
+	join[1] = '\0';
+	new = ft_strjoin(*str, join);
+	if (!new)
+		return (false);
+	free(*str);
+	*str = new;
+	return (true);
 }
