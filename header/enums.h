@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 14:28:51 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 18:20:25 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:09:11 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 # define INVALID_FD -2
 # define INPUT_EOF 1
-# define EXIT_NOT_NUM 2
+# define EXIT_NUMERIC 2
+# define EXIT_SYNTAX 2
 # define EXIT_NOT_EXECUTABLE 126
 # define EXIT_NOT_FOUND 127
 # define EXIT_SIGINT 130

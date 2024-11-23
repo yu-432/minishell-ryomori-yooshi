@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:56 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 18:20:53 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:18:01 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 void	execute_builtin(t_condition *condition, t_node *node)
 {
-	if (ft_strncmp(node->argv[0], "echo", 5) == 0)
+	if (!ft_strncmp(node->argv[0], "echo", 5))
 		builtin_echo(node->argv);
-	else if (ft_strncmp(node->argv[0], "export", 7) == 0)
+	else if (!ft_strncmp(node->argv[0], "export", 7))
 		builtin_export(condition, node->argv);
-	else if (ft_strncmp(node->argv[0], "unset", 6) == 0)
+	else if (!ft_strncmp(node->argv[0], "unset", 6))
 		builtin_unset(condition, node->argv);
-	else if (ft_strncmp(node->argv[0], "env", 4) == 0)
+	else if (!ft_strncmp(node->argv[0], "env", 4))
 		builtin_env(condition);
-	else if (ft_strncmp(node->argv[0], "cd", 3) == 0)
+	else if (!ft_strncmp(node->argv[0], "cd", 3))
 		builtin_cd(condition, node->argv);
-	else if (ft_strncmp(node->argv[0], "pwd", 4) == 0)
+	else if (!ft_strncmp(node->argv[0], "pwd", 4))
 		builtin_pwd();
-	else if (ft_strncmp(node->argv[0], "exit", 5) == 0)
+	else if (!ft_strncmp(node->argv[0], "exit", 5))
 		builtin_exit(condition, node);
 	else
 		ft_putstr_fd("error: builtin command not found\n", STDERR_FILENO);

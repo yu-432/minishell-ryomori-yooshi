@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:34 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 14:00:37 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 13:58:26 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,8 @@ static bool	find_set_redirect(t_condition *condition, t_node *node)
 	{
 		if (is_pipe(node->argv[0]))
 			break ;
-		if (is_redirect(node->argv[i]))
-		{
-			if (!set_redirect(condition, node, i))
-				return (false);
-			i++;
-		}
+		if (is_redirect(node->argv[i]) && !set_redirect(condition, node, i++))
+			return (false);
 		i++;
 	}
 	return (true);
@@ -38,10 +34,7 @@ static void	free_node_argv(t_node *node)
 
 	i = 0;
 	while (node->argv[i])
-	{
-		free(node->argv[i]);
-		i++;
-	}
+		free(node->argv[i++]);
 	free(node->argv);
 }
 
@@ -60,8 +53,8 @@ static char	**molding_argv(t_node *node)
 	j = 0;
 	while (i < count)
 	{
-		while (node->argv[j] && node->argv[j][0] == '\0')
-			j++;
+		while (node->argv[j] && node->argv[j++][0] == '\0')//////////////
+			// j++;
 		if (!node->argv[j])
 			break ;
 		if (!is_redirect(node->argv[j]) && !is_heredoc(node->argv[j]))

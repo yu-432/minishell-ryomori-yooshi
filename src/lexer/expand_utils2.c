@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:16 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/22 20:44:09 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:08:03 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ char	*find_env(t_condition *condition, char *env_key)
 	t_item	*temp;
 
 	temp = condition->environ;
-	if (ft_strncmp(env_key, "?\0", 2) == 0)
+	if (!ft_strncmp(env_key, "?\0", 2))
 		return (ft_itoa(condition->exit_status));
 	while (temp)
 	{
-		if (ft_strncmp(temp->key, env_key, ft_strlen(temp->key) + 1) == 0)
+		if (!ft_strncmp(temp->key, env_key, ft_strlen(temp->key) + 1))
 			return (ft_strdup(temp->value));
 		temp = temp->next;
 	}

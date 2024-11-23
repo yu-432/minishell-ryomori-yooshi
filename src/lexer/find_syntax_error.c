@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:29 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 18:11:32 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:02:42 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ static bool	check_quote_error(char *token)
 		if (is_quote(token[i]))
 		{
 			quote = token[i++];
-			while (token[i] && token[i] != quote)
-				i++;
-			if (token[i] != quote)
+			while (token[i] && token[i++] != quote)
+				// i++;//////////////////
+			if (token[i++] != quote)
 				return (put_unclosed_quote_error(quote), false);
-			i++;
+			// i++;//////////////
 		}
 		else
 			i++;

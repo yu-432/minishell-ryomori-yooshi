@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:58:05 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 18:23:10 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:10:36 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	init_condition(t_condition *condition)
 {
 	errno = 0;
 	setup_parent_signal();
-	if (g_sig != 0)
+	if (g_sig)
 	{
 		condition->exit_status = g_sig + 128;
 		g_sig = 0;

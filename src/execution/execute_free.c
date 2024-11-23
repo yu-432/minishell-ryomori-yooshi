@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:45 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 13:59:06 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:13:28 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ void	free_argv(char **argv)
 
 	i = 0;
 	while (argv[i])
-	{
-		free(argv[i]);
-		i++;
-	}
+		free(argv[i++]);
+	// {
+		// i++;
+	// }
 	free(argv);
 	return ;
 }

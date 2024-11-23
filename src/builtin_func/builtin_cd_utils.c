@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:03 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 17:46:33 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:11:30 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	count_cd_arg(char **args)
 	int	count;
 
 	count = 0;
-	while (args[count])
-		count++;
+	while (args[count++])
+		// count++;
 	return (count);
 }

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:51 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 18:13:07 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:09:22 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	put_syntax_error(char *str)
 
 void	put_cd_error(t_condition *cond, char *str, char *perr)
 {
-	cond->exit_status = 1;
+	cond->exit_status = EXIT_FAILURE;
 	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
 	if (perr)
 		perror(NULL);
@@ -50,7 +50,7 @@ void	put_export_error(t_condition *condition, char *argv)
 
 void	export_error(t_condition *cond, char *str, char *perr)
 {
-	cond->exit_status = 1;
+	cond->exit_status = EXIT_FAILURE;
 	ft_putstr_fd("minishell: export: ", STDERR_FILENO);
 	if (perr)
 		perror(NULL);

@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 01:39:14 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 18:21:20 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:09:32 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	numeric_argument_error(char *argment)
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 	ft_putstr_fd(argment, STDERR_FILENO);
 	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-	exit(EXIT_NOT_NUM);
+	exit(EXIT_NUMERIC);
 }
 
 int	tma_error_check(t_condition *condition, char **args)

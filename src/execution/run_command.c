@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:50 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 18:09:40 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 13:46:26 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	count_pipe(t_node *node)
 static bool	init_exec_info(t_exec_info *info, t_node *node)
 {
 	ft_memset(info, 0, sizeof(t_exec_info));
-	info->keep_fd = -2;
+	info->keep_fd = INVALID_FD;
 	info->pipe_count = count_pipe(node);
 	info->pid = ft_calloc(info->pipe_count + 1, sizeof(pid_t));
 	if (!info->pid)

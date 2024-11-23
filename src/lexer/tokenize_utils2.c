@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:42 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 14:04:12 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:04:30 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ int	count_same_char(char *line, char c)
 	int	count;
 
 	count = 0;
-	while (line[count] == c)
-		count++;
+	while (line[count++] == c)
+		// count++;
 	return (count);
 }
 
