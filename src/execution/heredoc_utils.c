@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:13 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 14:00:10 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/24 21:26:58 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,30 @@ void	heredoc_free_exit(char *line, int fd, int exit_status)
 	wrap_close(fd);
 	if (exit_status != -1)
 		exit(exit_status);
+}
+
+bool	expand_quote(char **delimiter)
+{
+	t_expand	info;
+	bool		is_expand;
+
+	if (!init_expand_info(&info))
+		exit(EXIT_FAILURE);
+	is_expand = true;
+	while ((*delimiter)[info.index])
+	{
+		if (is_quote((*delimiter)[info.index]) && info.quote == '\0')
+		{
+			info.quote = (*delimiter)[info.index];
+			is_expand = false;
+		}
+		else if (info.quote == (*delimiter)[info.index])
+			info.quote = '\0';
+		else
+			append_char(&info.new, (*delimiter)[info.index]);
+		info.index++;
+	}
+	free(*delimiter);
+	*delimiter = info.new;
+	return (is_expand);
 }

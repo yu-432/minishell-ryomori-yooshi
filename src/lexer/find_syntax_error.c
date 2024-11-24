@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:29 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 18:11:32 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/24 21:12:55 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,16 @@ static bool	check_pipe_error(t_token_kind kind, t_token *token, \
 	return (true);
 }
 
+static bool	check_redirect_error(t_token *tokenized)
+{
+	if (is_redirect(tokenized->token) || is_heredoc(tokenized->token))
+	{
+		if (!tokenized->next || tokenized->next->kind != TOKEN_WORD)
+			return (put_syntax_error("newline"), false);
+	}
+	return (true);
+}
+
 bool	find_syntax_error(t_token *tokenized)
 {
 	t_token_kind	prev_kind;
@@ -67,6 +77,8 @@ bool	find_syntax_error(t_token *tokenized)
 		if (!check_token_kind(tokenized->kind, tokenized))
 			return (false);
 		if (!check_pipe_error(tokenized->kind, tokenized, prev_kind))
+			return (false);
+		if (!check_redirect_error(tokenized))
 			return (false);
 		if (!check_quote_error(tokenized->token))
 			return (false);

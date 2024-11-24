@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:56:13 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/24 17:20:15 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/24 21:26:48 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,11 @@ static void	heredoc_child_process(t_condition *condition, char *delimiter, \
 {
 	char	*line;
 	int		read_status;
+	bool	is_expand;
 
 	setup_heredoc_signal();
 	wrap_close(fds[IN]);
+	is_expand = expand_quote(&delimiter);
 	read_status = 0;
 	line = NULL;
 	while (true)
@@ -44,7 +46,7 @@ static void	heredoc_child_process(t_condition *condition, char *delimiter, \
 		ft_putstr_fd(HEREDOC_PROMPT, STDERR_FILENO);
 		line = get_line(STDIN_FILENO, &read_status);
 		heredoc_check_status(line, delimiter, read_status, fds[OUT]);
-		if (line && ft_strchr(line, '$'))
+		if (line && is_expand && ft_strchr(line, '$'))
 			expand_heredoc_dollar(condition, &line);
 		ft_putstr_fd(line, fds[OUT]);
 		ft_putstr_fd("\n", fds[OUT]);

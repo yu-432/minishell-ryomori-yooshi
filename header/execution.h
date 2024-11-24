@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:54:28 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/20 14:54:03 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/24 21:27:07 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ bool	exec_heredoc(t_condition *condition, t_node *node);
 char	*get_line(int fd, int *input_status);
 void	heredoc_free_exit(char *line, int fd, int exit_status);
 bool	expand_heredoc_dollar(t_condition *condition, char **line);
+bool	expand_quote(char **delimiter);
 
 //fd_manager
 void	reset_fd(int *fd);

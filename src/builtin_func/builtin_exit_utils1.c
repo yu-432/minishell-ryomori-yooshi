@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:55:17 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/19 17:34:51 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/24 20:08:18 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ int	get_sign_skip0(char **str)
 	if (**str == '-')
 		sign = -1;
 	if (**str == '-' || **str == '+')
-		str++;
+		(*str)++;
 	while (**str == '0')
-		str++;
+		(*str)++;
 	return (sign);
 }
 
