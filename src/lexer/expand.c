@@ -6,7 +6,7 @@
 /*   By: yooshima <yooshima@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 23:57:26 by yooshima          #+#    #+#             */
-/*   Updated: 2024/11/22 20:45:25 by yooshima         ###   ########.fr       */
+/*   Updated: 2024/11/24 17:25:34 by yooshima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,17 @@ bool	expand_single_token(t_condition *condition, t_token *tokenized)
 
 bool	expand_token(t_condition *condition, t_token *tokenized)
 {
-	bool	success;
+	bool			success;
+	t_token_kind	prev_kind;
 
 	success = true;
+	prev_kind = TOKEN_WORD;
 	while (tokenized && success)
 	{
-		if (tokenized->kind == TOKEN_WORD)
+		if (tokenized->kind == TOKEN_WORD && \
+				prev_kind != TOKEN_REDIRECT_HEREDOC)
 			success = expand_single_token(condition, tokenized);
+		prev_kind = tokenized->kind;
 		tokenized = tokenized->next;
 	}
 	if (!success)
