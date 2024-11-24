@@ -16,7 +16,7 @@ void	put_tokenizer_error(char *str)
 {
 	ft_putstr_fd("minishell: tokenizer: ", STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
 }
 
 void	put_unexpected_token_error(char *token)

@@ -74,10 +74,26 @@ static bool	take_word_token(char **line, t_token *tail_token)
 	return (true);
 }
 
+bool	quotation_only_check(char *line)
+{
+	while (*line)
+	{
+		if (strncmp(line, "''", 2) == 0)
+			line += 2;
+		else if (strncmp(line, "\"\"", 2) == 0)
+			line += 2;
+		else
+			return (false);
+	}
+	return (true);
+}
+
 t_token	*tokenizer(char *line)
 {
 	t_token	head;
 
+	if (quotation_only_check(line))
+		return (put_tokenizer_error("Command '' not found"), NULL);
 	ft_memset(&head, 0, sizeof(t_token));
 	while (*line)
 	{
